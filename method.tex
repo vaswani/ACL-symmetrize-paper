@@ -1,7 +1,7 @@
 In translation, we believe that if a string $e$ can be translated
 to a string $f$, then $f$ can be translated to $e$. This intuition
 holds for other tasks as well, for example word or phoneme alignment.
-Therefore, one desireable form of model agreement is in parameter
+Therefore, one desirable form of model agreement is in parameter
 sparsity, that is $P_{0}[f\mid e]=0$ iff $P_{1}[e\mid f]=0$. A possibly
 simpler form of agreement is $P_{0}[e\,,f]=P_{1}[f,\: e]$ which encodes
 equality in joint distributions.
@@ -9,16 +9,14 @@ equality in joint distributions.
 To encourage such types of parameter agreements, we couple the models
 $P_{0},\, P_{1}$ through a regularizer $R$. The objective function
 takes the form:
-
 \[
 \arg\max_{P_{0}\,,P_{1}}L(P_{0}\mid X)+L(P_{1}\mid X)+\lambda R(P_{0},P_{1})
 \]
 where $\lambda\ge0$ is a regularization coefficient to be tuned.
 In practice, we found the following two regularizers useful:
-
 \begin{align*}
-R_{GM}(P_{0},\, P_{1}) & = & \sum_{e,f}\sqrt{P_{0}[f\mid e]\cdot P_{1}[e\mid f]}\\
-R_{CD}(P_{0},\, P_{1}) & = & -\frac{1}{2}\sum_{e,f}(P_{0}[e\mid f]-P_{1}[f\mid e])^{2}
+R_{GM}(P_{0},\, P_{1}) & =  \sum_{e,f}\sqrt{P_{0}[f\mid e]\cdot P_{1}[e\mid f]}\\
+R_{CD}(P_{0},\, P_{1}) & =  -\frac{1}{2}\sum_{e,f}(P_{0}[e\mid f]-P_{1}[f\mid e])^{2}
 \end{align*}
 Where \emph{GM }stands for 'geometric mean' and \emph{CD} for 'conditional
 difference'. 
@@ -47,9 +45,8 @@ simplex, our M-step is an efficiently solvable maximization program.
 Finally, the gradients of the negative regularizers reveal that eaceh
 regularizer encourage agreement in different manners - $R_{GM}$ is
 multiplicative and $R_{CD}$ is additive:
-
-
 \begin{align*}
-\frac{\partial R_{GM}}{\partial P_{i}}=\frac{1}{2}\sqrt{\frac{P_{1-i}}{P_{i}}} & \text{and} & \frac{\partial R_{CD}}{\partial P_{i}}=-(P_{i}-P_{1-i}^{T})
+\frac{\partial R_{GM}}{\partial P_{i}}&=\frac{1}{2}\sqrt{\frac{P_{1-i}}{P_{i}}} \\
+\frac{\partial R_{CD}}{\partial P_{i}}&=-(P_{i}-P_{1-i}^{T})
 \end{align*}
-Where arithmetic operations are performed entry-wise.
+Here, the square root is taken entry-wise.
