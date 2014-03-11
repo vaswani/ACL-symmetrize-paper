@@ -1,0 +1,9 @@
+Given a \emph{target} French sentence, $\mathbf{f_{1}^{J}} =  f_{1}, f_{2}, \ldots , f_{j}, \ldots, f_{J}$, and a \emph{source} English sentence, $\mathbf{e_{1}^{I}} =  e_{1}, e_{2}, \ldots , e_{i}, \ldots, e_{I}$, word alignment models describe the generative process by which the source sentence creates the target using latent alignments $\mathbf{a_{1}^{J}} = a_{1}, a_{2}, \ldots , a_{j}, \ldots, a_{J}$. The alignment variable $a_{j}$ specifies the English word $e_{a_{j}}$ that the French word $f_j$ is aligned to. 
+
+The IBM Models 1--2 and the HMM alignment models have two sets of parameters, the translation probabilities $P_{t}(f_{j} \mid e_{a_{j}})$ and distortion probabilities, $P_{d}(a_{j}\mid a_{j-1},j)$. These models differ in their implementation and estimation of the distortion probabilities, but share the same translation probabilities. The general form of the joint probability  of a target sentence and alignment given the source sentence is:
+
+\begin{equation} \label{eq:joint-prob-align}
+P(\mathbf{f_{1}^{J}}, \mathbf{a_{1}^{J}} \mid \mathbf{e_{1}^{I}})  = \prod_{j=1}^{J} P_{d}(a_{j}\mid a_{j-1},j) P_{t}(f_{j} \mid e_{a_{j}})
+\end{equation}
+
+For details on the implementation of these models, the reader can refer to ~\newcite{och+ney:2003}. The joint model indicates that each French word $f_{j}$ can align to at only one english word $e_{a_j}$, thus allowing only one-to-many alignments. We can treat the english se
