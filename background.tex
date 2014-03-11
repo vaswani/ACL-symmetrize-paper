@@ -1,0 +1,18 @@
+A first step in approaching many machine translation related tasks
+is to formulate a generative story that describes transformations of entities (strings, phonemes) from a source language $L_{E}$ to a target language $L_{F}$. 
+The generative story explicitly construct conditional (and therefore asymmetric) probability distributions of the form $p[f\mid e]$ where $e$ is an entity from $L_{E}$ and $f$ is an entity from $L_{F}$.
+The predominant approach for training generative models is the EM
+framework which iteratively maximizes log-likelihood of the observed
+data $X=\{e_{n},\, f_{n}\}_{n=1}^{N}$ :
+\[
+\max_{P}L(P\mid X)=\max_{P}\sum_{n}logP[f_{n}\mid e_{n}]
+\]
+In a setting where two complementary asymmetric models are trained, we adopt the
+notation $P_{0}[e_{n}\mid f_{n}]$ for one direction and $P_{1}[f_{n}\mid e_{n}]$
+for the other. 
+The two models can be independently trained by maximizing
+each data log-likelihood function separately:
+\begin{align*}
+P_{0}^{*} &= \arg\max_{P_{0}}L(P_{0}\mid X)\\
+P_{1}^{*} &= \arg\max_{P_{1}}L(P_{1}\mid X)
+\end{align*}
