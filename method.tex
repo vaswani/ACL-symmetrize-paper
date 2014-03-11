@@ -13,7 +13,7 @@ takes the form:
 \arg\max_{P_{0}\,,P_{1}}L(P_{0}\mid X)+L(P_{1}\mid X)+\lambda R(P_{0},P_{1})
 \]
 where $\lambda\ge0$ is a regularization coefficient to be tuned.
-In practice, we found the following two regularizers useful:
+In practice, we found the following two regularizers useful:`
 \begin{align*}
 R_{GM}(P_{0},\, P_{1}) & =  \sum_{e,f}\sqrt{P_{0}[f\mid e]\cdot P_{1}[e\mid f]}\\
 R_{CD}(P_{0},\, P_{1}) & =  -\frac{1}{2}\sum_{e,f}(P_{0}[e\mid f]-P_{1}[f\mid e])^{2}
@@ -35,18 +35,18 @@ the E-step expect counts for each event $P_{0}[f\mid e]$ or $P_{1}[e\mid f]$
 are collected separately. In the M-step, the regularized complete
 data log-likelihood function is constructed from the expected counts,
 and is then maximized via projected gradient ascent: at each time
-step, the models $P_{i}$ (for $i\in\{0,1\}$) are updated according
-to the gradient of the regularized objective function $\frac{\partial}{\partial P_{i}}(L(P_{i}\mid X)+\lambda R(P_{i},P_{1-i})$
+step, the models $\PP, \QQ$ are updated according
+to the gradient of the regularized objective function 
+%$\frac{\partial}{\partial \PP}(L(\PP \mid X)+\lambda R(\PP, \QQ)$
 and projected back onto the probability simplex. We used simple stopping
-conditions based on objective function convergence or a fixed number
-of iterations. Since both regularizers are concave on the probability
+conditions based on objective function convergence or a fixed number of iterations. Since both regularizers are concave on the probability
 simplex, our M-step is an efficiently solvable maximization program.
 
-Finally, the gradients of the negative regularizers reveal that eaceh
+Finally, the gradients of the negative regularizers reveal that each 
 regularizer encourage agreement in different manners - $R_{GM}$ is
 multiplicative and $R_{CD}$ is additive:
 \begin{align*}
-\frac{\partial R_{GM}}{\partial P_{i}}&=\frac{1}{2}\sqrt{\frac{P_{1-i}}{P_{i}}} \\
-\frac{\partial R_{CD}}{\partial P_{i}}&=-(P_{i}-P_{1-i}^{T})
+\frac{\partial R_{GM}}{\partial \PP}&=\frac{1}{2}\sqrt{\frac{\QQ}{\PP}} \\
+\frac{\partial R_{CD}}{\partial \PP}&=-(\PP-\QQ^{T})
 \end{align*}
-Here, the square root is taken entry-wise.
+In $R_{GM}$, the square root is taken entry-wise.

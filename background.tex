@@ -8,11 +8,11 @@ data $X=\{e_{n},\, f_{n}\}_{n=1}^{N}$ :
 \max_{P}L(P\mid X)=\max_{P}\sum_{n}logP[f_{n}\mid e_{n}]
 \]
 In a setting where two complementary asymmetric models are trained, we adopt the
-notation $P_{0}[e_{n}\mid f_{n}]$ for one direction and $P_{1}[f_{n}\mid e_{n}]$
+notation $\PP[e_{n}\mid f_{n}]$ for one direction and $\QQ[f_{n}\mid e_{n}]$
 for the other. 
 The two models can be independently trained by maximizing
 each data log-likelihood function separately:
 \begin{align*}
-P_{0}^{*} &= \arg\max_{P_{0}}L(P_{0}\mid X)\\
-P_{1}^{*} &= \arg\max_{P_{1}}L(P_{1}\mid X)
+\PP^{*} &= \arg\max_{\PP}L(\PP\mid X)\\
+\QQ^{*} &= \arg\max_{\QQ}L(\QQ\mid X)
 \end{align*}
