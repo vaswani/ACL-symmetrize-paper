@@ -2,8 +2,8 @@ In translation, we believe that if a string $e$ can be translated
 to a string $f$, then $f$ can be translated to $e$. This intuition
 holds for other tasks as well, for example word or phoneme alignment.
 Therefore, one desirable form of model agreement is in parameter
-sparsity, that is $P_{0}[f\mid e]=0$ iff $P_{1}[e\mid f]=0$. A possibly
-simpler form of agreement is $P_{0}[e\,,f]=P_{1}[f,\: e]$ which encodes
+sparsity, that is $P_{0}(f\mid e) = 0$ iff $P_{1}(e\mid f)=0$. A possibly
+simpler form of agreement is $P_{0}(e\,,f) = P_{1}(f,\: e)$ which encodes
 equality in joint distributions.
 
 To encourage such types of parameter agreements, we couple the models
@@ -15,8 +15,8 @@ takes the form:
 where $\lambda\ge0$ is a regularization coefficient to be tuned.
 In practice, we found the following two regularizers useful:`
 \begin{align*}
-R_{GM}(P_{0},\, P_{1}) & =  \sum_{e,f}\sqrt{P_{0}[f\mid e]\cdot P_{1}[e\mid f]}\\
-R_{CD}(P_{0},\, P_{1}) & =  -\frac{1}{2}\sum_{e,f}(P_{0}[e\mid f]-P_{1}[f\mid e])^{2}
+R_{GM}(P_{0},\, P_{1}) & =  \sum_{e,f}\sqrt{P_{0}(f\mid e)\cdot P_{1}(e\mid f)}\\
+R_{CD}(P_{0},\, P_{1}) & =  -\frac{1}{2}\sum_{e,f}(P_{0}(e\mid f)-P_{1}(f\mid e))^{2}
 \end{align*}
 Where \emph{GM }stands for 'geometric mean' and \emph{CD} for 'conditional
 difference'. 
@@ -31,7 +31,7 @@ its maximum when those distributions are sparse (need example?)
 \subsection{Optimization Procedure}
 
 We take an EM approach for optimization the objective function. In
-the E-step expect counts for each event $P_{0}[f\mid e]$ or $P_{1}[e\mid f]$
+the E-step expect counts for each event $P_{0}(f\mid e)$ or $P_{1}(e\mid f)$
 are collected separately. In the M-step, the regularized complete
 data log-likelihood function is constructed from the expected counts,
 and is then maximized via projected gradient ascent: at each time
