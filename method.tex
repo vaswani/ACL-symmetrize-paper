@@ -1,52 +1,60 @@
-In translation, we believe that if a string $e$ can be translated
-to a string $f$, then $f$ can be translated to $e$. This intuition
-holds for other tasks as well, for example word or phoneme alignment.
-Therefore, one desirable form of model agreement is in parameter
-sparsity, that is $P_{0}(f\mid e) = 0$ iff $P_{1}(e\mid f)=0$. A possibly
-simpler form of agreement is $P_{0}(e\,,f) = P_{1}(f,\: e)$ which encodes
-equality in joint distributions.
-
-To encourage such types of parameter agreements, we couple the models
-$P_{0},\, P_{1}$ through a regularizer $R$. The objective function
-takes the form:
-\[
-\argmax_{P_{0}\,,P_{1}}L(P_{0}\mid X)+L(P_{1}\mid X)+\lambda R(P_{0},P_{1})
-\]
-where $\lambda\ge0$ is a regularization coefficient to be tuned.
-In practice, we found the following two regularizers useful:`
+In translation, we believe that if a word $e$ can be translated
+to a word $f$, then $f$ can be translated to $e$. 
+This intuition holds for other tasks such as word or phoneme alignment.
+Thus, a desirable form of model agreement is parameter
+sparsity agreement: 
 \begin{align*}
-R_{GM}(P_{0},\, P_{1}) & =  \sum_{e,f}\sqrt{P_{0}(f\mid e)\cdot P_{1}(e\mid f)}\\
-R_{CD}(P_{0},\, P_{1}) & =  -\frac{1}{2}\sum_{e,f}(P_{0}(e\mid f)-P_{1}(f\mid e))^{2}
+P_{0}(f\mid e) = 0 \text{ iff } P_{1}(e\mid f)=0
 \end{align*}
-Where \emph{GM }stands for 'geometric mean' and \emph{CD} for 'conditional
-difference'. 
+%A possibly simpler form of agreement is $P_{0}(e\,,f) = P_{1}(f,\: e)$ which encodes
+% equality in joint distributions.
 
-Note that both regularizers are concave on the probability simplex
-- each term in their summation is concave over the region $[0,1]^{2}$,
-and the sum of concave functions is concave. One difference between
-$R_{GM}$ and $R_{CD}$ is that, while both regularizers attain higher
-values when the conditional distributions agree, $R_{GM}$ attains
-its maximum when those distributions are sparse (need example?)
+To encourage this form of parameter agreement we add a regularizer that couples the two models together:
+\begin{align}
+\max_{\PP\,,\QQ}&\,\,L(\PP | X)+L(\QQ | X)+\lambda R(\PP,\, \QQ)
+\end{align}
+where $\lambda\ge0$ is a regularization coefficient to be tuned and
+\begin{align}
+R(\PP, \QQ) = \sum_{e,f}\sqrt{\PP(f\mid e)\QQ(e\mid f)}
+\end{align}
+This regularizer has two attractive properties:
+\begin{itemize}
+\item It is concave on the probability simplex which lends to an efficiently solvable convex optimization program when the log-likelihood terms are themselves concave.
+(concavity proof: each term in the summation is concave over the region $[0,1]^{2}$ and the sum of concave functions is concave)
+\item It encourages parameter sparsity agreement - If $\PP(e \mid f) = 0$ but $\QQ(f\mid e) > 0$, shifting weight away from $QQ(f \mid e)$ could only increase the regularizer value.
+\end{itemize}
+%In practice, we found the following two regularizers useful:`
+%\begin{align*}
+%R_{GM}(P_{0},\, P_{1}) & =  \sum_{e,f}\sqrt{P_{0}(f\mid e)\cdot P_{1}(e\mid f)}\\
+%%R_{CD}(P_{0},\, P_{1}) & =  -\frac{1}{2}\sum_{e,f}(P_{0}(e\mid f)-P_{1}(f\mid e))^{2}
+%\end{align*}
+%Where \emph{GM }stands for 'geometric mean' and \emph{CD} for 'conditional
+%difference'. 
+%
+%Note that both regularizers are concave on the probability simplex
+%- each term in their summation is concave over the region $[0,1]^{2}$,
+%and the sum of concave functions is concave. One difference between
+%$R_{GM}$ and $R_{CD}$ is that, while both regularizers attain higher
+%values when the conditional distributions agree, $R_{GM}$ attains
+%its maximum when those distributions are sparse (need example?)
 
 \subsection{Optimization Procedure}
-
-We take an EM approach for optimization the objective function. In
-the E-step expect counts for each event $P_{0}(f\mid e)$ or $P_{1}(e\mid f)$
-are collected separately. In the M-step, the regularized complete
-data log-likelihood function is constructed from the expected counts,
-and is then maximized via projected gradient ascent: at each time
-step, the models $\PP, \QQ$ are updated according
-to the gradient of the regularized objective function 
+We take an EM approach for optimization the objective function. 
+In the E-step expect counts for each event $P_{0}(f\mid e)$ or $P_{1}(e\mid f)$
+are collected separately. 
+In the M-step, the regularized complete data log-likelihood function is constructed from the expected counts, and is then maximized via projected gradient ascent:
+At each time step, the models $\PP, \QQ$ are updated according to the gradient of the regularized objective function 
 %$\frac{\partial}{\partial \PP}(L(\PP \mid X)+\lambda R(\PP, \QQ)$
-and projected back onto the probability simplex. We used simple stopping
-conditions based on objective function convergence or a fixed number of iterations. Since both regularizers are concave on the probability
-simplex, our M-step is an efficiently solvable maximization program.
+and projected back onto the probability simplex. 
+We used simple stopping conditions based on objective function convergence or a fixed number of iterations.
 
-Finally, the gradients of the negative regularizers reveal that each 
-regularizer encourage agreement in different manners - $R_{GM}$ is
-multiplicative and $R_{CD}$ is additive:
+Inspecting the regularizer's gradient we see that each update brings the two models closer:
 \begin{align*}
-\frac{\partial R_{GM}}{\partial \PP}&=\frac{1}{2}\sqrt{\frac{\QQ}{\PP}} \\
-\frac{\partial R_{CD}}{\partial \PP}&=-(\PP-\QQ^{T})
+\frac{\partial R}{\partial \PP}=\frac{1}{2}\sqrt{\frac{\QQ}{\PP}} 
+\,\,\text{ and }\,\, 
+\frac{\partial R}{\partial \QQ}=\frac{1}{2}\sqrt{\frac{\QQ}{\PP}} 
+%%\\
+%\frac{\partial R_{CD}}{\partial \PP}&=-(\PP-\QQ^{T})
 \end{align*}
-With symmetric terms for the gradient in $\QQ$. Note that the square root is taken entry-wise.
+%
+%With symmetric terms for the gradient in $\QQ$. Note that the square root is taken entry-wise.
