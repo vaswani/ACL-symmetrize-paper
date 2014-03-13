@@ -21,7 +21,7 @@ This regularizer has two attractive properties:
 \begin{itemize}
 \item It is concave on the probability simplex which lends to an efficiently solvable convex optimization program when the log-likelihood terms are themselves concave.
 (concavity proof: each term in the summation is concave over the region $[0,1]^{2}$ and the sum of concave functions is concave)
-\item It encourages parameter sparsity agreement - If $\PP(e \mid f) = 0$ but $\QQ(f\mid e) > 0$, shifting weight away from $QQ(f \mid e)$ could only increase the regularizer value.
+\item It encourages parameter sparsity agreement - If $\PP(e \mid f) = 0$ but $\QQ(f\mid e) > 0$, shifting weight away from $\QQ(f \mid e)$ could only increase the regularizer value.
 \end{itemize}
 %In practice, we found the following two regularizers useful:`
 %\begin{align*}
