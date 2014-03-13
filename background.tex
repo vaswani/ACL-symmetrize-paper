@@ -1,16 +1,16 @@
 A first step in approaching many machine translation related tasks
-is to formulate a generative story that describes transformations of entities (strings, phonemes) from a source language $L_{E}$ to a target language $L_{F}$. 
-The generative story explicitly construct conditional probability distributions of the form $P(f\mid e)$ where $e$ is an entity from $L_{E}$ and $f$ is an entity from $L_{F}$.
+is to formulate a generative story that describes transformations of strings from a source language $L_{E}$ to a target language $L_{F}$. 
+The generative story explicitly construct conditional probability distributions of the form $P(f\mid e)$ where $e$ is an entity from $L_{E}$ and $f$ is a string from $L_{F}$.
 The predominant approach for training generative models is the EM
 framework which iteratively maximizes log-likelihood of the observed
 data $X=\{e_{n},\, f_{n}\}_{n=1}^{N}$:
 \begin{align*}
 \max_{P}L(P\mid X)=\max_{P}\sum_{n}\log P(f_{n}\mid e_{n})
 \end{align*}
-In a setting like word alignment where models are trained in both directions we adopt the notation $\PP(e_{n}\mid f_{n})$ for one direction and $\QQ(f_{n}\mid e_{n})$
+In a setting like word alignment where models are trained in both directions, we adopt the notation $\PP(e_{n}\mid f_{n})$ for one direction and $\QQ(f_{n}\mid e_{n})$
 for the other. 
 The two models can be independently trained by maximizing each data log-likelihood function separately:
 \begin{align*}
 \PP^{*} &= \argmax_{\PP}L(\PP\mid X)\\
-\QQ^{*} &= \argmax_{\QQ}L(\QQ\mid X)
+\QQ^{*} &= \argmax_{\QQ}L(\QQ\mid X).
 \end{align*}

@@ -1,13 +1,16 @@
+We now describe our method, which we call Parameter Agreement Training.
 In translation, we believe that if a word $e$ can be translated
-to a word $f$, then $f$ can be translated to $e$. 
+to a word $f$, then $f$ can be translated to~$e$. 
 This intuition holds for other tasks such as word or phoneme alignment.
 Thus, a desirable form of model agreement is parameter
 sparsity agreement: 
 \begin{align*}
-P_{0}(f\mid e) = 0 \text{ iff } P_{1}(e\mid f)=0
+P_{0}(f\mid e) = 0 \text{ iff } P_{1}(e\mid f)=0.
 \end{align*}
 %A possibly simpler form of agreement is $P_{0}(e\,,f) = P_{1}(f,\: e)$ which encodes
 % equality in joint distributions.
+
+\subsection{Regularization}
 
 To encourage this form of parameter agreement we add a regularizer that couples the two models together:
 \begin{align}
@@ -15,7 +18,7 @@ To encourage this form of parameter agreement we add a regularizer that couples 
 \end{align}
 where $\lambda\ge0$ is a regularization coefficient to be tuned and
 \begin{align}
-R(\PP, \QQ) = \sum_{e,f}\sqrt{\PP(f\mid e)\QQ(e\mid f)}
+R(\PP, \QQ) = \sum_{e,f}\sqrt{\PP(f\mid e)\QQ(e\mid f)} .
 \end{align}
 This regularizer has two attractive properties:
 \begin{itemize}
@@ -39,20 +42,20 @@ This regularizer has two attractive properties:
 %its maximum when those distributions are sparse (need example?)
 
 \subsection{Optimization Procedure}
-We take an EM approach for optimization the objective function. 
-In the E-step expect counts for each event $P_{0}(f\mid e)$ or $P_{1}(e\mid f)$
+We take an EM approach for optimizing the objective function. 
+In the E step, expected counts for each event $P_{0}(f\mid e)$ or $P_{1}(e\mid f)$
 are collected separately. 
-In the M-step, the regularized complete data log-likelihood function is constructed from the expected counts, and is then maximized via projected gradient ascent:
+In the M step, the regularized complete data log-likelihood function is constructed from the expected counts, and is then maximized via projected gradient ascent:
 At each time step, the models $\PP, \QQ$ are updated according to the gradient of the regularized objective function 
 %$\frac{\partial}{\partial \PP}(L(\PP \mid X)+\lambda R(\PP, \QQ)$
 and projected back onto the probability simplex. 
-We used simple stopping conditions based on objective function convergence or a fixed number of iterations.
+We use simple stopping conditions based on objective function convergence or a fixed number of iterations.
 
 Inspecting the regularizer's gradient we see that each update brings the two models closer:
 \begin{align*}
-\frac{\partial R}{\partial \PP}=\frac{1}{2}\sqrt{\frac{\QQ}{\PP}} 
-\,\,\text{ and }\,\, 
-\frac{\partial R}{\partial \QQ}=\frac{1}{2}\sqrt{\frac{\QQ}{\PP}} 
+\frac{\partial R}{\partial \PP}&=\frac{1}{2}\sqrt{\frac{\QQ}{\PP}} 
+&
+\frac{\partial R}{\partial \QQ}&=\frac{1}{2}\sqrt{\frac{\QQ}{\PP}} .
 %%\\
 %\frac{\partial R_{CD}}{\partial \PP}&=-(\PP-\QQ^{T})
 \end{align*}
