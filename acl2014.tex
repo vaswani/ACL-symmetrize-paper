@@ -56,9 +56,10 @@
 \begin{document}
 \maketitle
 \begin{abstract}
-We present a simple approach that encourages jointly trained conditional models to agree on their parameter values. 
-In contrast to methods that encourage agreement on inferences, our method can be applied even without parallel data. 
-We demonstrate that parameter agreement training leads to state-of-the-art F-scores on word alignment, and significantly improves error rates on a back-transliteration task with no parallel data.
+%% this doesn't make a lot of sense
+%We present a simple approach that encourages jointly trained conditional models to agree on their parameter values. In contrast to methods that encourage agreement on inferences, our method can be applied in a wider range of settings.
+%We demonstrate that our method, called parameter agreement training, leads to state-of-the-art accuracies on word alignment, and significantly improves accuracy on back-transliteration with no parallel data -- almost halving the difference between the previous best method and using parallel data.
+
 \end{abstract}
 
 \section{Introduction}
@@ -69,7 +70,7 @@ We demonstrate that parameter agreement training leads to state-of-the-art F-sco
 \label{sec:background}
 \input{background.tex}
 
-\section{Method}
+\section{Parameter Agreement Training}
 \label{sec:method}
 \input{method.tex}
 
@@ -88,7 +89,7 @@ We derived an optimization procedure based on the EM framework, and argued that 
 In contrast to previous work on agreement training, we have demonstrated that our approach can be successfully applied even without parallel data.
 
 
-\bibliographystyle{acl}
+\bibliographystyle{acl2014}
 \bibliography{thesis}
 
 \end{document}

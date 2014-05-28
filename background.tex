@@ -1,16 +1,142 @@
-A first step in approaching many machine translation related tasks
-is to formulate a generative story that describes transformations of entities (strings, phonemes) from a source language $L_{E}$ to a target language $L_{F}$. 
-The generative story explicitly construct conditional probability distributions $P(f\mid e)$ where $e$ is an entity from $L_{E}$ and $f$ is an entity from $L_{F}$.
-The predominant approach for training generative models is the EM
-framework which iteratively maximizes log-likelihood of the observed
-data $X=\{e_{n},\, f_{n}\}_{n=1}^{N}$:
+\subsection{Generative Models}
+We are concerned with learning generative models that describe transformations of a source-language entity $e$ to a target-language entity $f$.
+We consider two different settings for these models.
+
+In the parallel data setting, both source and target entities are observed and the generative story describes how $f$ can arise from $e$.
+Denoting $x = (e, f)$ the model takes the following form:
+\begin{equation}
+\PTheta(x) = p(f \mid e) = \sum_a p(a,\,f \mid e),
+\label{eqn:parallel}
+\end{equation}
+where $a$ denotes a hidden variable that corresponds to unknown choices in the generative story (in our case, $a$ is an alignment, see next subsection) and $\Theta$ denotes the parameters of the model.
+
+In the decipherment setting, only the target entity $f$ is observed and the source entity is considered hidden. 
+Letting $x = (f)$ the decipherment model takes the form:
+\begin{equation}
+\PTheta(x) = p(f) = \sum_{e} p(e) \sum_{a} p(a,\,f \mid e)
+\label{eqn:decipherment}
+\end{equation}
+According to the generative story that follows from this equation, the observed entity $f$ can arise from any source entity $e$ by first selecting $e \sim p(e)$ and then proceeding according to the parallel data generative story.
+
+Training these models entails the same objective - maximizing the observed data log-likelihood $L(\Theta \mid X)$:
 \begin{align*}
-\max_{P}L(P\mid X)=\max_{P}\sum_{n}\log P(f_{n}\mid e_{n})
+\max_{\Theta}\,\,L(\Theta \mid X)
+=&\max_{\Theta}\,\,\log\prod_{n}\PTheta (x_n)\\
+=&\max_{\Theta}\,\,\sum_{n}\log\PTheta (x_n)
 \end{align*}
-In a setting like word alignment where models are trained in both directions we adopt the notation $\PP(e_{n}\mid f_{n})$ for one direction and $\QQ(f_{n}\mid e_{n})$
-for the other. 
-The two models can be independently trained by maximizing each data log-likelihood function separately:
+Where $X=\{e_{n},\, f_{n}\}_{n=1}^{N}$ in the parallel data setting and $X=\{f_{n}\}_{n=1}^{N}$ in the decipherment setting.
+
+Next, we make these generative stories concrete by looking at $p(a, f \mid e)$ and $p(e)$ (if necessary) in two sequence alignment tasks - word alignment and back-transliteration decipherment.
+
+%We make the discussion concrete by discussing two related tasks - word alignment and back-transliteration. 
+
+%The predominant approach for training these generative models 
+
+\subsection{Parallel Data: Word Alignment}
+
+%Keeping the discussion abstract, we consider the general problem of sequence alignment. 
+%In sequence alignment, we are given a sequence $e = (e_1, \ldots, e_I)$ comprising of source language entities and a sequence $f = (f_1, \ldots, f_J)$ comprising of target language entities (concretely, these entities can represent words or phonemes in each language) and are tasked with finding an alignment 
+
+Word alignment is one of the major building blocks in the conventional machine translation pipeline.
+In word alignment, the entity $e = (e_1, \ldots, e_I)$ represents a sentence in the source language and $f = (f_1, \ldots, f_J)$ represents a sentence in the target language. 
+The generative story for the transformation of $e$ to $f$ follows according to \eqn{eqn:parallel} where the hidden variable $a = (a_1, \ldots, a_J)$ corresponds to a sequence of $J$ indices and encodes an asymmetric alignment under which the $j$th target word is aligned to the $a_j$th source word (that is, under the generative story, $f_j$ is thought to be generated from $e_{a_j}$).
+
+The HMM word alignment model is considered both computationally efficient and effective. 
+Since the HMM formulation is not convex, it is common practice to initialized word alignment using the simpler IBM 1 word alignment model.
+Both these models assign the following conditional probability for a fixed sentence pair $(e, f)$ and a fixed alignment $a$:
+\begin{equation}
+p(a, f | e) = \prod_{j=1}^{J} t(f_j \mid e_{a_j})\cdot a(a_j \mid a_{j'})
+\label{eqn:WA}
+\end{equation}
+That is, both models are parameterized using two tables of conditional probability distributions $\Theta=(t, \,a)$. 
+The translation table $t(f_j \mid e_i)$ encodes the probability of translating $e_{a_j}$ to $f_j$ and the distortion table $a$ is a model dependent probability table that quantifies the probability of aligning the $j$th target position with the $a_j$th source position, possibly given a previous alignment decision.
+
+Specifically, IBM model 1 uses a degenerate distortion table that assigns a uniform probability to all possible source positions and the HMM model encodes distortions using a first-order dependency on the previously non null-aligned position $a_{j'}$.
+The exact details behind the HMM distortion parameters are implementation specific and therefore beyond the scope of this paper. See * for details of the GIZA++ implementation and ** for those of the ABA implementation.
+
+\subsection{Decipherment: Back-Transliteration}
+
+\begin{figure*}
+\begin{center}
+\begin{tabular}{c}
+\includegraphics[scale=0.62]{figures/fsts}\tabularnewline
+\end{tabular}
+\caption{\label{font-table} The transliteration generative story as a cascade of FSTs . \textbf{Top:} transliteration of the word ``computer'' to Japanese. \textbf{Bottom:} the reverse process. Each box represents a transducer. In PAT for deciphering transliterations, the two cascades are jointly trained to maximize both the data log-likelihood and the parameter agreement of the two phoneme mapping models (shaded).}
+\label{fig:fsts}
+\end{center}
+\end{figure*}
+
+Transliteration is a mapping of terms between writing systems of different languages. 
+Usually, the mapping tries to preserve the sound of a term as it is uttered in the original language. 
+For example, the word ``computer'' in English is transliterated to Japanese as ``ko n pyu u ta a'' (in Romaji\marginpar{Romaji or Katakana?}). 
+The process restoring transliterated foreign words to their original script is called \emph{back-transliteration}.
+
+Knight and Graehl \shortcite{KG98} suggest a generative story for transliteration of English terms $\vw$ into Japanese terms $\vk$ (see top of Figure \ref{fig:fsts}): 
+\begin{enumerate}
+\item First, a word $\vw$ is generated according to an English language model
+$p(\vw)$.
+\item $\vw$ is then mapped to an English phonemes sequence $\ve=(\ve_1,\ldots,\ve_I)$ according to a pronunciation model.
+\item The phoneme sequence $\ve$ is mapped to a sequence of Japanese phonemes $\vj=(\vj_1,\ldots,\vj_J)$ according to a phoneme mapping model $p(\vj \mid \ve)$.
+\item Finally, the Japanese phoneme sequence $\vj$ is mapped to a
+Japanese word $\vk$ in Katakana.
+\end{enumerate}
+Each model corresponds to an FST that can be constructed and trained independently. 
+In particular, models 1,3,4 are estimated using monolingual data only, whereas the phoneme mapping model $p(\vj \mid \ve)$ is trained over a parallel phoneme corpus $\set{(\ve_{n},\, \vj_{n})}$ in which each English phoneme is restricted to map to one or two Japanese phonemes. 
+
+However, collecting parallel data is a time consuming and laborious process.
+To combat the need for parallel data, Ravi and Knight \shortcite{RK09} suggest a to estimate model 2 in the decipherment setting, for which only Japanese words $K=\set{\vk_n}_{n=1}^{|K|}$ need be collected. 
+Assuming one-to-one transformations for models 2 and 4, the generative process for transliteration is identical to that of \eqn{eqn:decipherment}:
 \begin{align*}
-\PP^{*} &= \argmax_{\PP}L(\PP\mid X)\\
-\QQ^{*} &= \argmax_{\QQ}L(\QQ\mid X)
+p(\vk)=p(\vj)
+=&\sum_\vw p(\vj , \vw)\\
+=&\sum_\ve p(\ve) p(\vj \mid \ve)\\
+=&\sum_\ve p(\ve) \sum_\va  p(\va,  \vj \mid \ve)
 \end{align*}
+Where $\va$ is a \emph{monotone} alignment sequence (i.e., $\va_j \le \va_{j+1}$ for all $1 \le j < |J|$).
+
+
+%Thus, a Japanese phoneme sequence $\vj$ can arise from any English pronunciation sequence $\ve$ that is producible by the language and pronunciation models:
+%$$
+%p(\vj) = \sum_{\ve} p(\ve)\cdot p(\vj \mid \ve)$$
+%As a result, the data log-likelihood takes the form:
+%\begin{align}
+%L(J)& = \sum_{\mathbf{j}\in J} \log \sum_{\mathbf{e}} \PP(\mathbf{j}\mid \mathbf{e})\cdot \PP(\mathbf{e})
+%\end{align}
+%Once the model is trained, back-transliteration (decoding) of Japanese words back to English can be done using the Viterbi algorithm.
+
+%We note a few points:
+%\begin{itemize}
+%\item The computational cost of solving this problem is much higher than the parallel case since we are forced to use the language and pronunciation models during training time. 
+%\item Only the phoneme mapping parameters $P(j_{m}\mid e_{m})$ are trained while
+%the other FSTs' parameters are kept fixed.
+%\end{itemize}
+
+
+
+
+
+
+
+
+
+%We briefly discuss two machine translation related tasks - word alignment and phonetic back-transliteration.
+%Both tasks share a similar generative story that describes how source sequences $e=(e_1, \ldots, e_I)$ (of strings or phonemes) are distorted (reordered) and translated into target sequences $f = (f_1, \ldots, e_J)$.
+%As shall be seen, their sole difference lies in the permitted set of distortions - whereas all alignments are permitted in word alignment, only monotone alignments are allowed in back-transliteration.
+
+
+
+%In machine learning, and machine translation in particular, generative stories describes transformations of entities $e$ (strings, phonemes) from a source language to entities $f$ in a target language.
+%The generative story explicitly construct conditional probability distributions $P(f\mid e)$ where $e$ is an entity from $L_{E}$ and $f$ is an entity from $L_{F}$.
+%The predominant approach for training generative models is the EM
+%framework which iteratively maximizes log-likelihood of the observed
+%data $X=\{e_{n},\, f_{n}\}_{n=1}^{N}$:
+%\begin{align*}
+%\max_{P}L(P\mid X)=\max_{P}\sum_{n}\log P(f_{n}\mid e_{n})
+%\end{align*}
+%In a setting like word alignment where models are trained in both directions, we adopt the notation $\PP(e_{n}\mid f_{n})$ for one direction and $\QQ(f_{n}\mid e_{n})$
+%for the other. 
+%The two models can be independently trained by maximizing each data log-likelihood function separately:
+%\begin{align*}
+%\PP^{*} &= \argmax_{\PP}L(\PP\mid X)\\
+%\QQ^{*} &= \argmax_{\QQ}L(\QQ\mid X).
+%\end{align*}
