@@ -1,31 +1,116 @@
-We now describe our method, which we call Parameter Agreement Training.
-In translation, we believe that if a word $e$ can be translated
-to a word $f$, then $f$ can be translated to~$e$. 
-This intuition holds for other tasks such as word or phoneme alignment.
-Thus, a desirable form of model agreement is parameter
-sparsity agreement: 
+\subsection{Agreement Training}
+In word alignment, it is common practice to train alignment models in both source-to-target and target-to-source directions and then apply symmetrization techniques to the resulting source-to-target and target-to-source alignments. 
+Alignment symmetrization heuristics, such as intersection, union or grow-diag-final-and play a significant role in reducing alignment errors and ultimately improving translation quality.
+The improvement gained by these heuristics suggest that each (directional) model may suffer from different errors, and that those errors can be mitigated by symmetrization.
+
+Observing this, Liang et al. \cite{} formulate Alignment by Agreement - a joint objective function that maximizes both the observed data-likelihoods as well as a measure of agreement between the two models' posteriors.
+Showing significant reductions in alignment AER they demonstrate the effectiveness of jointly learning the models.
+
+However, both the symmetrization heuristics and the Alignment by Agreement joint training depend on the availability of parallel data. 
+In this section we describe our Parameter Agreement Training (PAT) - a method for jointly learning directional models that does not depend on parallel data.
+	
+We follow Liang et al. (2006) in formulating a joint objective function for training the two directional alignment models, but adopt a slightly different notation.
+
+We distinguish between two settings. 
+In the parallel data setting we observe $N$ paired sequences $\set{\vx^n_1}_{n=1}^N=\set{(\ve_n, \vf_n)}_{n=1}^N$. 
+In the decipherment setting we observe two sets of data points $\set{\ve_n}_{n=1}^{N_1}$ and $\set{\vf_n}_{n=1}^{N_2}$
+
+Let $\TA$ and $\TB$ represent the two directional models' parameters.
+The probability of the $n$th sample under the two models is denoted $\pA^n(\TA)$ and $\pB^n(\TB)$.
+Specifically, in the parallel data setting, the directional probabilities of the $n$th sample $(\ve_n, \vf_n)$ are:
 \begin{align*}
-P_{0}(f\mid e) = 0 \text{ iff } P_{1}(e\mid f)=0.
+\pA^n(\TA) = p(\vf_n \mid \ve_n; \TA)\\
+\pB^n(\TB) = p(\ve_n \mid \vf_n; \TB)
 \end{align*}
-%A possibly simpler form of agreement is $P_{0}(e\,,f) = P_{1}(f,\: e)$ which encodes
-% equality in joint distributions.
+whereas in the decipherment setting, the probabilities are simply:
+\begin{align*}
+\pA^n(\TA) = \pA^n(\vf_n; \TA)\\
+\pB^n(\TB) = \pB^n(\ve_n; \TB)
+\end{align*}
 
-\subsection{Regularization}
+Regardless of the two setting, independently optimizing each model entails the maximization of its data likelihood (for $k\in{1,2}$):
+\begin{align*}
+%\max_{\Tk}\,\,L_k(\Tk)= 
+\max_{\Tk}\,\, \log \sum_n \pk^n(\Tk)
+\end{align*}
 
-To encourage this form of parameter agreement we add a regularizer that couples the two models together:
-\begin{align}
-\max_{\PP\,,\QQ}&\,\,L(\PP | X)+L(\QQ | X)+\lambda R(\PP,\, \QQ)
-\end{align}
-where $\lambda\ge0$ is a regularization coefficient to be tuned and
-\begin{align}
-R(\PP, \QQ) = \sum_{e,f}\sqrt{\PP(f\mid e)\QQ(e\mid f)} .
-\end{align}
-This regularizer has two attractive properties:
-\begin{itemize}
-\item It is concave on the probability simplex which lends to an efficiently solvable convex optimization program when the log-likelihood terms are themselves concave.
-(concavity proof: each term in the summation is concave over the region $[0,1]^{2}$ and the sum of concave functions is concave)
-\item It encourages parameter sparsity agreement - If $\PP(e \mid f) = 0$ but $\QQ(f\mid e) > 0$, shifting weight away from $\QQ(f \mid e)$ could only increase the regularizer value.
-\end{itemize}
+To jointly optimize the two models, we introduce a coupling term $R(\TA, \TB)$ that  encodes an agreement measure between the two models. 
+The resulting joint optimization problem takes the following form:
+\begin{equation}
+\max_{\TA, \TB}\,\, \lambda R(\TA, \TB) + \sum_{k\in\set{1,2}} \log \sum_n \pk^n(\Tk)
+\end{equation}
+With $\lambda$ being a tunable coefficient.
+
+\subsection{Parameter Agreement Measure}
+Both the word alignment and transliteration models presented in Section \ref{sec:background} are parameterized by a $t$-table the encodes the probability of word translation or phoneme transliteration.
+Considering these tables in both directions, $t_1$ and $t_2$, we suggest the following parameter agreement measure: 
+\begin{equation}
+R(\TA, \TB) = \sum_{e,f} \sqrt{(t_1(\ve \mid \vf) \cdot t_2(\vf \mid \ve))}
+\end{equation}
+Where $\ve$ and $\vf$ range over all source and target entity types.
+
+Our agreement measure has several appealing properties.
+Using Cauchy-Schwarz, we can bound $R(\TA, \TB) \le \sqrt{|V_E|\cdot|V_F|}$ where $|V_E|, |V_F|$ denote the source and target vocabulary size.
+%\begin{align*}
+%R(\TA, \TB) 
+%%\sum_{e,f} \sqrt{(t_1(\ve \mid \vf) \cdot t_2(\vf \mid \ve))} 
+%\le &\sqrt{ (\sum_{e,f} t_1(\vf \mid \ve)) (\sum_{e,f} t_2(\ve \mid \vf))}\\
+%= &\sqrt{(|V_E|\cdot|V_F|)}
+%\end{align*}
+In the case $|V_E|=|V_F|$ the maximum is attained only when for all entity types $(\ve,\vf)$, $t_1(\vf \mid \ve) = t_2(\ve \mid \vf)$, demonstrating that this agreement term is not biased towards any particular property (e.g, sparsity).
+Thus, the objective is balancing between agreement in magnitude and data likelihood only.
+
+Another appealing property of $R$ is its concavity, which follows since $R$ is the sum of concave functions $h(x, y)=\sqrt{xy}$ over a closed convex set (see proof for $h$ in the appendix).
+
+\textbf{Concavity proof}: To see $h(x,y) = \sqrt{xy}$ is concave over $x,y\in [0,1]$ we show
+$h(\alpha (x_0, y_0) + (1-\alpha)(x_1, y_1)) \ge \alpha h(x_0,y_0) + (1-\alpha) h(x_1, y_1)$:
+\begin{align*}
+&h^2(\alpha (x_0, y_0) + (1-\alpha)(x_1, y_1)) \\
+&= (\alpha x_0 + (1-\alpha) x_1)(\alpha y_0 + (1-\alpha) y_1) \\
+&\ge (\alpha (x_0 y_0) + (1-\alpha) (x_1 y_1))^2 \\
+&= (\alpha h(x_0,y_0) + (1-\alpha) h(x_1,y_1))^2
+\end{align*}
+with the inequality following from Cauchy-Schwarz.
+
+how do we optimize
+E-step
+M-step
+
+other regularization terms considered.
+
+
+
+
+%We now describe our method, which we call Parameter Agreement Training.
+%In translation, we believe that if a word $e$ can be translated
+%to a word $f$, then $f$ can be translated to~$e$. 
+%This intuition holds for other tasks such as word or phoneme alignment.
+%Thus, a desirable form of model agreement is parameter
+%sparsity agreement: 
+%\begin{align*}
+%P_{0}(f\mid e) = 0 \text{ iff } P_{1}(e\mid f)=0.
+%\end{align*}
+%%A possibly simpler form of agreement is $P_{0}(e\,,f) = P_{1}(f,\: e)$ which encodes
+%% equality in joint distributions.
+
+%\subsection{Regularization}
+%To encourage this form of parameter agreement we add a regularizer that couples the two models together:
+%\begin{align}
+%\max_{\PP\,,\QQ}&\,\,L(\PP | X)+L(\QQ | X)+\lambda R(\PP,\, \QQ)
+%\end{align}
+%where $\lambda\ge0$ is a regularization coefficient to be tuned and
+%\begin{align}
+%R(\PP, \QQ) = \sum_{e,f}\sqrt{\PP(f\mid e)\QQ(e\mid f)} .
+%\end{align}
+%This regularizer has two attractive properties:
+%\begin{itemize}
+%\item It is concave on the probability simplex which lends to an efficiently solvable convex optimization program when the log-likelihood terms are themselves concave.
+
+%Concavity proof: 
+%The regularizer is a sum of concave functions defined over a convex set. 
+%each summand is concave  the region $[0,1]^{2}$ and the sum of concave functions is concave)
+%\item It encourages parameter sparsity agreement - If $\PP(e \mid f) = 0$ but $\QQ(f\mid e) > 0$, shifting weight away from $\QQ(f \mid e)$ could only increase the regularizer value.
+%\end{itemize}
 %In practice, we found the following two regularizers useful:`
 %\begin{align*}
 %R_{GM}(P_{0},\, P_{1}) & =  \sum_{e,f}\sqrt{P_{0}(f\mid e)\cdot P_{1}(e\mid f)}\\
@@ -42,10 +127,21 @@ This regularizer has two attractive properties:
 %its maximum when those distributions are sparse (need example?)
 
 \subsection{Optimization Procedure}
-We take an EM approach for optimizing the objective function. 
-In the E step, expected counts for each event $P_{0}(f\mid e)$ or $P_{1}(e\mid f)$
-are collected separately. 
-In the M step, the regularized complete data log-likelihood function is constructed from the expected counts, and is then maximized via projected gradient ascent:
+Our optimization procedure falls under the EM framework.
+In the E-step, each model $\Tk$, $k\in\set{1,2}$ is held fixed and its posterior distribution over the hidden variables is computed per each observation.
+The posterior expression is slightly different under each setting, due to the difference in hidden information:
+\begin{align*}
+\textbf{parallel data}: q_1(\va \mid \ve, \vf) :=& \pA(\va \mid \ve, \vf; \TA) \\
+\textbf{decipherment}: q_1(\va, \ve \mid \vf) :=& \pA(\va, \ve \mid \vf; \TA)
+\end{align*}
+with symmetric expressions for $q_2$. 
+
+In our case, both the word alignment and transliteration models can be seens as instances of FSTs, which implies that the posteriors $q_1$ and $q_2$ can be efficiently computed using dynamic programming.
+
+In the M-step, the posteriors are used to construct the expected complete data log-likelihood. 
+
+In the M-step, the regularized complete data log-likelihood function is constructed using the collected expected counts, and is then maximized via projected gradient ascent.
+
 At each time step, the models $\PP, \QQ$ are updated according to the gradient of the regularized objective function 
 %$\frac{\partial}{\partial \PP}(L(\PP \mid X)+\lambda R(\PP, \QQ)$
 and projected back onto the probability simplex. 
@@ -53,11 +149,10 @@ We use simple stopping conditions based on objective function convergence or a f
 
 Inspecting the regularizer's gradient we see that each update brings the two models closer:
 \begin{align*}
-\frac{\partial R}{\partial \PP}&=\frac{1}{2}\sqrt{\frac{\QQ}{\PP}} 
-&
-\frac{\partial R}{\partial \QQ}&=\frac{1}{2}\sqrt{\frac{\QQ}{\PP}} .
-%%\\
-%\frac{\partial R_{CD}}{\partial \PP}&=-(\PP-\QQ^{T})
+\frac{\partial R}{\partial t_1(\vf\mid\ve)}
+&=\sqrt{\frac{t_2(\ve\mid\vf)}{2 t_1(\vf\mid\ve)}} \\
+\frac{\partial R}{\partial t_2(\ve\mid\vf)}
+&=\sqrt{\frac{t_1(\vf\mid\ve)}{2 t_2(\ve\mid\vf)}}
 \end{align*}
 %
 %With symmetric terms for the gradient in $\QQ$. Note that the square root is taken entry-wise.
