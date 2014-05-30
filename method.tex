@@ -9,37 +9,42 @@ Showing significant reductions in alignment AER they demonstrate the effectivene
 However, both the symmetrization heuristics and the Alignment by Agreement joint training depend on the availability of parallel data. 
 In this section we describe our Parameter Agreement Training (PAT) - a method for jointly learning directional models that does not depend on parallel data.
 	
-We follow Liang et al. (2006) in formulating a joint objective function for training the two directional alignment models, but adopt a slightly different notation.
+We follow Liang et al. (2006) in formulating a joint objective function for training the two directional alignment models. We adopt similar notation denoting the source-to-target direction with subscript 1 and the target-to-source direction with subscript two but diverge when necessary.
 
-We distinguish between two settings. 
-In the parallel data setting we observe $N$ paired sequences $\set{\vx^n_1}_{n=1}^N=\set{(\ve_n, \vf_n)}_{n=1}^N$. 
-In the decipherment setting we observe two sets of data points $\set{\ve_n}_{n=1}^{N_1}$ and $\set{\vf_n}_{n=1}^{N_2}$
+We distinguish between two settings that differ in the observed data.
+
+In the parallel data setting we observe $N$ paired sequences $\set{\vx^n_1}_{n=1}^N=\set{(\ve_n, \vf_n)}_{n=1}^N$ or equivalently $\set{\vx^n_2}_{n=1}^N=\set{(\vf_n, \ve_n)}_{n=1}^N$.
+
+In the decipherment setting we observe two sets of data points $\set{\vx^n_1}_{n=1}^{N_1} = \set{\ve_n}_{n=1}^{N_1}$ and $\set{\vx^n_2}_{n=2}^{N_2} = \set{\vf_n}_{n=1}^{N_2}$.
 
 Let $\TA$ and $\TB$ represent the two directional models' parameters.
-The probability of the $n$th sample under the two models is denoted $\pA^n(\TA)$ and $\pB^n(\TB)$.
-Specifically, in the parallel data setting, the directional probabilities of the $n$th sample $(\ve_n, \vf_n)$ are:
+For $k\in\set{1,2}$, the probability of the $n$th sample under the $k$th model is denoted $\pk(\vx_k^n; \Tk)$.
+Specifically, in the parallel data setting, the directional probability of $\vx_k^n$ under its model is:
 \begin{align*}
-\pA^n(\TA) = p(\vf_n \mid \ve_n; \TA)\\
-\pB^n(\TB) = p(\ve_n \mid \vf_n; \TB)
+\pA(\vx_1^n; \TA) = p(\vf_n \mid \ve_n; \TA)\\
+\pB(\vx_2^n; \TB) = p(\ve_n \mid \vf_n; \TB)
 \end{align*}
-whereas in the decipherment setting, the probabilities are simply:
+whereas in the decipherment setting, the probability is defined:
 \begin{align*}
-\pA^n(\TA) = \pA^n(\vf_n; \TA)\\
-\pB^n(\TB) = \pB^n(\ve_n; \TB)
-\end{align*}
-
-Regardless of the two setting, independently optimizing each model entails the maximization of its data likelihood (for $k\in{1,2}$):
-\begin{align*}
-%\max_{\Tk}\,\,L_k(\Tk)= 
-\max_{\Tk}\,\, \log \sum_n \pk^n(\Tk)
+\pA(\vx_1^n; \TA) = p(\vf_n; \TA)\\
+\pB(\vx_2^n; \TB) = p(\ve_n; \TB)
 \end{align*}
 
-To jointly optimize the two models, we introduce a coupling term $R(\TA, \TB)$ that  encodes an agreement measure between the two models. 
+Regardless of the two setting, independently optimizing each model entails the maximization of its data log-likelihood (for $k\in{1,2}$):
+\begin{align*}
+\max_{\Tk}\,\,L_k(\set{\vx^n_k}; \Tk)= 
+\max_{\Tk}\,\, \log \sum_n \pk(\vx_k^n; \Tk)
+\end{align*}
+
+To jointly optimize the two models, we introduce a coupling term $R(\TA, \TB)$ that  encodes a measure of agreement between the two models' parameters.
 The resulting joint optimization problem takes the following form:
 \begin{equation}
-\max_{\TA, \TB}\,\, \lambda R(\TA, \TB) + \sum_{k\in\set{1,2}} \log \sum_n \pk^n(\Tk)
+\max_{\TA, \TB}\,\, \lambda R(\TA, \TB)
+%+\sum_{k\in\set{1,2}} \log \sum_n \pk(\vx_n; \Tk)
++\sum_{k\in\set{1,2}} L_k(\set{\vx_k^n}; \Tk)
+\label{eqn:joint}
 \end{equation}
-With $\lambda$ being a tunable coefficient.
+With $\lambda\ge0$ being a tunable coefficient.
 
 \subsection{Parameter Agreement Measure}
 Both the word alignment and transliteration models presented in Section \ref{sec:background} are parameterized by a $t$-table the encodes the probability of word translation or phoneme transliteration.
@@ -72,14 +77,7 @@ $h(\alpha (x_0, y_0) + (1-\alpha)(x_1, y_1)) \ge \alpha h(x_0,y_0) + (1-\alpha) 
 \end{align*}
 with the inequality following from Cauchy-Schwarz.
 
-how do we optimize
-E-step
-M-step
-
-other regularization terms considered.
-
-
-
+% TODO: other agreement terms
 
 %We now describe our method, which we call Parameter Agreement Training.
 %In translation, we believe that if a word $e$ can be translated
@@ -127,32 +125,43 @@ other regularization terms considered.
 %its maximum when those distributions are sparse (need example?)
 
 \subsection{Optimization Procedure}
-Our optimization procedure falls under the EM framework.
-In the E-step, each model $\Tk$, $k\in\set{1,2}$ is held fixed and its posterior distribution over the hidden variables is computed per each observation.
-The posterior expression is slightly different under each setting, due to the difference in hidden information:
+Using our concave measure of agreement, the optimization of \eqn{eqn:joint} neatly falls under the EM framework.
+
+In the E-step, each model $\Tk$, $k\in\set{1,2}$ is held fixed and its posterior distribution over the missing data $\vz_k^n$ is computed per each observation $\vx_k^n$.
 \begin{align*}
-\textbf{parallel data}: q_1(\va \mid \ve, \vf) :=& \pA(\va \mid \ve, \vf; \TA) \\
-\textbf{decipherment}: q_1(\va, \ve \mid \vf) :=& \pA(\va, \ve \mid \vf; \TA)
+\textbf{E}: q_k(\vz\kn, \vx\kn) :=& \pk(\vz\kn \mid \vx\kn ; \Tk)
+%\textbf{parallel data}: q_k(\va \mid \ve, \vf) :=& \pA(\va \mid \ve, \vf; \TA) \\
+%\textbf{decipherment}: q_1(\va, \ve \mid \vf) :=& \pA(\va, \ve \mid \vf; \TA)
 \end{align*}
-with symmetric expressions for $q_2$. 
+where in the parallel data setting only the alignment is missing ($\vz\kn = \va\kn$) and in the decipherment setting both the alignment and the origin entity are missing
+($\vz_1^n = (\va_1^n, \ve_n), \vz_2^n = (\va_2^n, \vf_n)$).
 
-In our case, both the word alignment and transliteration models can be seens as instances of FSTs, which implies that the posteriors $q_1$ and $q_2$ can be efficiently computed using dynamic programming.
-
-In the M-step, the posteriors are used to construct the expected complete data log-likelihood. 
-
-In the M-step, the regularized complete data log-likelihood function is constructed using the collected expected counts, and is then maximized via projected gradient ascent.
-
-At each time step, the models $\PP, \QQ$ are updated according to the gradient of the regularized objective function 
-%$\frac{\partial}{\partial \PP}(L(\PP \mid X)+\lambda R(\PP, \QQ)$
-and projected back onto the probability simplex. 
-We use simple stopping conditions based on objective function convergence or a fixed number of iterations.
-
-Inspecting the regularizer's gradient we see that each update brings the two models closer:
+In the M-step, the computed posteriors are used to construct the coupled sum of expected complete data log-likelihoods. The resulting expression is maximized with respect to the model parameters:
+ %$\TA, \TB$:
 \begin{align*}
-\frac{\partial R}{\partial t_1(\vf\mid\ve)}
-&=\sqrt{\frac{t_2(\ve\mid\vf)}{2 t_1(\vf\mid\ve)}} \\
-\frac{\partial R}{\partial t_2(\ve\mid\vf)}
-&=\sqrt{\frac{t_1(\vf\mid\ve)}{2 t_2(\ve\mid\vf)}}
+\textbf{M}: (\TA', \TB') :=& \arg\max_{\TA, \TB}
+\lambda R(\TA,\TB)\\
+&+ \sum_{k, n} q_k(\vz\kn, \vx\kn) \log p_k(\vx\kn, \vz\kn)
 \end{align*}
+with $k\in\set{1,2}$ and $n$ ranging over the appropriate set of samples.
+
+Both the word alignment and transliteration models considered in this paper can be seen as FST instances. This implies an efficient E-step computation, since the posteriors $q_k$ can be efficiently computed using dynamic programming (REFERENCES).
+
+Owing to the concavity of both $R$ and the data log-likelihood functions, the M-step maximization problem is also efficiently solvable using convex programming techniques.
+In practice we implemented a projected gradient descent algorithm where at each step, the current $\TA, \TB$ parameters are updated according to the gradient of the objective, and then projected back onto the probability simplex.
+We used simple stopping conditions based on objective function convergence or a limited number of iterations.
+
+
+%At each time step, the models $\PP, \QQ$ are updated according to the gradient of the regularized objective function 
+%%$\frac{\partial}{\partial \PP}(L(\PP \mid X)+\lambda R(\PP, \QQ)$
+%and projected back onto the probability simplex. 
 %
+%Inspecting the regularizer's gradient we see that each update brings the two models closer:
+%\begin{align*}
+%\frac{\partial R}{\partial t_1(\vf\mid\ve)}
+%&=\sqrt{\frac{t_2(\ve\mid\vf)}{2 t_1(\vf\mid\ve)}} \\
+%\frac{\partial R}{\partial t_2(\ve\mid\vf)}
+%&=\sqrt{\frac{t_1(\vf\mid\ve)}{2 t_2(\ve\mid\vf)}}
+%\end{align*}
+%%
 %With symmetric terms for the gradient in $\QQ$. Note that the square root is taken entry-wise.
