@@ -32,13 +32,15 @@
 %\end{figure*}
 
 In this section we report our experiments on deciphering transliterations.
-To compare our method PAT against independent training, we first reproduced the English-to-Japanese transliteration pipeline of \newcite{RK09} (as described in our section ? and depicted at the top of figure \ref{fig:fsts}) and tried to match their reported results (Unfortunately we were unable to obtain all their FSTs and data). We then constructed the inverse pipeline, required by our method PAT.
+To compare our method PAT against independent training, we first reproduced the English-to-Japanese transliteration pipeline of \newcite{RK09} (as described in section \ref{sec:background} and depicted at the top of figure \ref{fig:fsts}) and tried to match their reported results (Unfortunately we were unable to obtain all their FSTs and data). 
+We then constructed the inverse pipeline, required by our method PAT.
 
 \subsection{The baseline decipherment model}
 To reproduce the English-to-Japanese pipeline, we constructed the following FST models:
 \begin{enumerate}
 \item A unigram language model of English terms, estimated over the top 40K most frequent capitalized words found in the gigaword corpus (no smoothing was applied).
-\item An English pronunciation FST from the CMU pronunciation dictionary (REFERENCE).
+\item An English pronunciation FST from the CMU pronunciation dictionary (REFERENCE?).
+%http://svn.code.sf.net/p/cmusphinx/code/trunk/cmudict
 \item A English-to-Japanese phoneme mapping FST that encodes the phoneme transliteration table $t_1$ (see \eqn{eqn:trans}), constructed based on the best setting reported by \newcite{RK09}. 
 We note that $t_1$ is restricted to either 1-to-1 or 1-to-2 phoneme mappings, maintaining consonant parity. See further details in their paper.
 \item A hand-built Japanese pronunciation FST, provided by Kevin Knight.
@@ -61,7 +63,7 @@ For training data we take the top 50\% most frequent terms from each language mo
 Using the whole set of terms led to poor baseline results, probably since uncommon English terms are not transliterated, and uncommon Katakana terms may be borrowed from languages other than English.
 In any case, it is important to note that the two resulting sets of words are far from being parallel, since they were collected over non-parallel corpora.
 
-EM training of the baseline pipeline was done using the Carmel finite-state toolkit (REFERENCE). 
+EM training of the baseline pipeline was done using the Carmel finite-state toolkit \cite{graehl97}.
 The LM and pronunciation models were held fixed while the parameters of the phoneme mapping model $t_1$ were optimized to maximize likelihood of the observed set of Japanese terms.
 
 Similarly, the PAT objective (\eqn{eqn:joint}) was maximized with respect to the phoneme mapping models $(\TA, \TB) = (t_1, t_2)$, with coefficient $\lambda\in\{1,2,3,4\}$ and all other FSTs fixed (note that $\lambda=0$ corresponds to independent training, i.e. the baseline).
@@ -76,7 +78,7 @@ We compiled a list of 100 US statesmen names (first and last) to be used as a te
 To tune $\lambda$ we used a development set consisting of 50 frequent Japanese terms and their English origin.
 
 For each method, we selected the $t_1$ model that minimized the development back-transliteration error rate over the 15 iterations, $\lambda$ and the so-called stretch-factor 
-$\alpha \in \{1,2,3\}$ that exponentiated the model parameters before decoding (see \cite{RK09}).
+$\alpha \in \{1,2,3\}$ that exponentiated the model parameters before decoding (see \newcite{RK09}).
 back-transliterations were obtained using Viterbi decoding.
 
 Table \ref{tbl:transliteration_results} reports WNER, average normalized edit distance (NED) and the number of $t_1$ parameters with value greater than 0.01 ($t_1>0.01$) as an indication of model sparsity. 

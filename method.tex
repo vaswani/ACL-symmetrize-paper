@@ -3,7 +3,7 @@ In word alignment, it is common practice to train alignment models in both sourc
 Alignment symmetrization heuristics, such as intersection, union or grow-diag-final-and play a significant role in reducing alignment errors and ultimately improving translation quality.
 The improvement gained by these heuristics suggest that each (directional) model may suffer from different errors, and that those errors can be mitigated by symmetrization.
 
-Observing this, Liang et al. \cite{} formulate Alignment by Agreement - a joint objective function that maximizes both the observed data-likelihoods as well as a measure of agreement between the two models' posteriors.
+Observing this, \newcite{liang+:2006:align} formulate Alignment by Agreement - a joint objective function that maximizes both the observed data-likelihoods as well as a measure of agreement between the two models' posteriors.
 Showing significant reductions in alignment AER they demonstrate the effectiveness of jointly learning the models.
 
 However, both the symmetrization heuristics and the Alignment by Agreement joint training depend on the availability of parallel data. 

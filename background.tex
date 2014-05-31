@@ -53,7 +53,7 @@ That is, both models are parameterized using two tables of conditional probabili
 The translation table $t(\vf_j \mid \ve_{\va_j})$ encodes the probability of translating $\ve_{\va_j}$ to $\vf_j$ and the distortion table $a$ is a model dependent probability table that quantifies the probability of aligning the $j$th target position with the $\va_j$th source position, possibly given a previous alignment decision.
 
 Specifically, IBM model 1 uses a degenerate distortion table that assigns a uniform probability to all possible source positions and the HMM model encodes distortions using a first-order dependency on the previously non null-aligned position $\va_{j'}$.
-The exact details behind the HMM distortion parameters are implementation specific and therefore beyond the scope of this paper. See * for details of the GIZA++ implementation and ** for those of the ABA implementation.
+The exact details behind the HMM distortion parameters are implementation specific and therefore beyond the scope of this paper. See \newcite{och+ney:2003} for details of the GIZA++ implementation and \newcite{liang+:2006:align} for those of the ABA implementation.
 
 \subsection{Decipherment: Back-Transliteration}
 

@@ -32,7 +32,7 @@ Alignment is a crucial subtask for many larger NLP problems: Word alignments are
 The goal is to align entities (e.g., words, phonemes) between two sequence, for example English and French sentences, or English phonemes and Japanese phonemes.
 
 The popular models used in these tasks are both \emph{generative} and \emph{directed}, that is, they define a directed sequence of generation events by which one side of the pair (the source) produces the other (the target). 
-For example, the IBM models for word alignment \newcite{brown+alii:1993} describe a stochastic process by which the target sentence is generated from the source sentence via reordering and word-for-word translation.
+For example, the IBM models for word alignment \cite{brown+alii:1993} describe a stochastic process by which the target sentence is generated from the source sentence via reordering and word-for-word translation.
 
 However, this directionality may come with a price as it impose restriction on the inference space - in the word alignment models (IBM 1, 2 and HMM), only one-to-many word alignments (target to source) are possible, which may not fit well for some language pairs (for example, German compound target words usually arise from multiple English source words). 
 To remedy this, we often resort to ad-hoc alignment symmetrization techniques, such as grow-diag-final-and \cite{koehn+:2003}, \emph{after} training. 
@@ -61,7 +61,7 @@ Unfortunately, the resulting model considerably underperforms when compared to t
 %For phoneme alignment,  alleviate the reliance on parallel data and improve monolingual alignment quality over the baseline, but their approach does not encourage model agreement, which can further improve alignment accuracy, as we will show in section~\ref{sec:results}. 
 
 In this paper, we present Parameter Agreement Training (PAT); a method for jointly training (directional) generative models that can be applied even without parallel data.
-Compared to ABA, our approach operates with a different measure of agreement in mind (Section \ref{sec:model})).
+Compared to ABA, our approach operates with a different measure of agreement in mind (Section \ref{sec:method}).
 The general idea can be easily illustrated in the word alignment setting: Consider the two directional word alignment models' translation tables.  
 For any pair of words $e$ and $f$, it seems reasonable that $t(f \mid e)$ is high(low) whenever $t(e \mid f)$ is high(low). 
 This intuition follows simply since word translation is generally invertible \footnote{The word $e$ should be in the set of translations of the translation of $e$}.
