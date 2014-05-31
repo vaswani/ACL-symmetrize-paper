@@ -45,28 +45,29 @@ We note that $t_1$ is restricted to either 1-to-1 or 1-to-2 phoneme mappings, ma
 \end{enumerate}
 
 \newcite{RK09} report back-transliteration whole-name error rates (WNER) on a list of 100 transliterated US senator names (In WNER, a decoding is correct if both the first and last name are decoded correctly).
-Using limited amounts of parallel data they report a 40\% WNER in the
-parallel setting, compared to 73\% WNER on their best decipherment setting.
+They train the FST cascade in both parallel and decipherment settings, obtaining 40\% WNER in the parallel setting (trained over 3.3K word pairs), compared to 73\% WNER on their best decipherment setting (trained over 9.5K Japanese words only).
 
 \subsection{The inverse model}
-On top of the English-to-Japanese pipeline, implementing PAT requires a pipeline in the inverse direction - a Japanese-to-English transliteration pipeline (as depicted at the bottom of figure \ref{fig:fsts}), with similar FST models. 
+On top of the English-to-Japanese pipeline, implementing PAT requires a pipeline in the reverse direction - a Japanese-to-English transliteration pipeline with similar FST models.
 
 We constructed a unigram language model of Katakana terms over the top 25K most frequent Katakana words found in the Japanese news 2005-2008 Leipzig corpora (REFERENCE).
 %(http://corpora.informatik.uni-leipzig.de/download.html)
 
-The remaining required FSTs were obtained by inverting the baseline FSTs (that is, FSTs 2,3,4). in particular, the Japanese-to-English phoneme mapping FST $t_2$ was obtained by inverting $t_1$.
-
+The remaining required FSTs were obtained by inverting the baseline FSTs (that is, FSTs 2,3,4) and the cascase was composed in the reverse order (as depicted at the bottom of figure \ref{fig:fsts}).
+In particular, the Japanese-to-English phoneme mapping FST $t_2$ was obtained by inverting $t_1$.
 
 \subsection{Training}
-For training data we take the top 50\% most frequent terms in their respective language models.
-Using the entire set of terms led to poor baseline results, possibly since uncommon English terms are not transliterated, and uncommon Katakana terms may be borrowed from languages other than English.
+For training data we take the top 50\% most frequent terms from each language models, resulting with a set of 20K English terms and a set of 22.5K Japanese terms.
+Using the whole set of terms led to poor baseline results, probably since uncommon English terms are not transliterated, and uncommon Katakana terms may be borrowed from languages other than English.
 In any case, it is important to note that the two resulting sets of words are far from being parallel, since they were collected over non-parallel corpora.
 
 EM training of the baseline pipeline was done using the Carmel finite-state toolkit (REFERENCE). 
 The LM and pronunciation models were held fixed while the parameters of the phoneme mapping model $t_1$ were optimized to maximize likelihood of the observed set of Japanese terms.
 
-Similarly the PAT objective (\eqn{eqn:joint}) was maximized with respect to the phoneme mapping models $(\TA, \TB) = (t_1, t_2)$, with coefficient $\lambda\in\{1,2,3,4\}$ and all other FSTs fixed (note that $\lambda=0$ corresponds to independent training, i.e. the baseline).
+Similarly, the PAT objective (\eqn{eqn:joint}) was maximized with respect to the phoneme mapping models $(\TA, \TB) = (t_1, t_2)$, with coefficient $\lambda\in\{1,2,3,4\}$ and all other FSTs fixed (note that $\lambda=0$ corresponds to independent training, i.e. the baseline).
 We manipulated Carmel to compute a single E-step and output the expected counts which we then used to formulate the M-step objective. The M-step was solved using our own projected gradient descent implementation (A python implementation of a general purpose PGD solver for convex functions over convex closed sets. to be released).
+
+Finally, to compare against the ordinary parallel data setting, we used Carmel to train the English-to-Japanese phoneme mapping model $t_1$ over 4.2K pairs of English and Japanese phoneme sequences.
 
 Training was limited to 15 EM iterations.
 
@@ -78,7 +79,8 @@ For each method, we selected the $t_1$ model that minimized the development back
 $\alpha \in \{1,2,3\}$ that exponentiated the model parameters before decoding (see \cite{RK09}).
 back-transliterations were obtained using Viterbi decoding.
 
-Table \ref{tbl:transliteration_results} reports WNER, average normalized edit distance (NED) and the number of $t_1$ parameters with value greater than 0.01 ($t_1>0.01$) as an indication of model sparsity.
+Table \ref{tbl:transliteration_results} reports WNER, average normalized edit distance (NED) and the number of $t_1$ parameters with value greater than 0.01 ($t_1>0.01$) as an indication of model sparsity. 
+Figure \ref{fig:mapping} further compares a portion of the best phoneme mapping table learned by the baseline vs. that learned by PAT, depicting the difference in parameter sparsity.
 
 \begin{table}[h]
 \begin{center}
@@ -86,9 +88,9 @@ Table \ref{tbl:transliteration_results} reports WNER, average normalized edit di
 \cline{2-4} 
 \multicolumn{1}{c|}{} & WNER & NED & $t_1> 0.01$\tabularnewline
 \hline 
-Independent & 67\% & 23.18 & 649\tabularnewline
+Independent & 67\% & 23.2 & 649\tabularnewline
 \hline 
-PAT (our) & 59\% & 17.35 & 421\tabularnewline
+PAT (our) & 59\% & 17.3 & 421\tabularnewline
 \hline 
 Parallel Data & 43\% & 10.8 & 152\tabularnewline
 \hline 
@@ -98,7 +100,9 @@ Parallel Data & 43\% & 10.8 & 152\tabularnewline
 \end{center}
 \end{table}
 
-Figure \ref{fig:mapping} compares a portion of the best phoneme mapping table learned by the baseline and PAT, showing a difference in parameter sparsity.
+Using PAT we were able to significantly reduce the decipherment error rate, almost halving the gap between the models trained in the ordinary parallel data and decipherment settings.
+The drop in error rates demonstrates the efficacy of jointly training these models, and of the PAT formulation in particular.
+
 \begin{figure*}[t]
 \begin{center}
 \begin{tabular}{ccc}
