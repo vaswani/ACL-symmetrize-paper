@@ -34,7 +34,7 @@ The goal is to align entities (e.g., words, phonemes) between two sequence, for 
 The popular models used in these tasks are both \emph{generative} and \emph{directed}, that is, they define a directed sequence of generation events by which one side of the pair (the source) produces the other (the target). 
 For example, the IBM models for word alignment \newcite{brown+alii:1993} describe a stochastic process by which the target sentence is generated from the source sentence via reordering and word-for-word translation.
 
-However, this directionality may come with a price as it impose restriction on the inference space - in the word alignment models (IBM 1, 2 and HMM), only one-to-many word alignments (target to source) are possible, which may not fit well for some language pairs (for example, German compound target words usually arise from multiple English source words). 
+However, this directionality may come with a price as it imposes restrictions on the inference space - in the word alignment models (IBM 1, 2 and HMM), only one-to-many word alignments (target to source) are possible, which may not fit well for some language pairs (for example, German compound target words usually arise from multiple English source words). 
 To remedy this, we often resort to ad-hoc alignment symmetrization techniques, such as grow-diag-final-and \cite{koehn+:2003}, \emph{after} training. 
 %However, w
 While post-processing resolves some of the problems, independent training can still lead the two models to divergent local maxima; ones whose disagreeing inferences cannot be fixed by post-processing techniques. 
