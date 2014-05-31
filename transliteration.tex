@@ -58,20 +58,21 @@ We constructed a unigram language model of Katakana terms over the top 25K most 
 The remaining required FSTs were obtained by inverting the baseline FSTs (that is, FSTs 2,3,4) and the cascase was composed in the reverse order (as depicted at the bottom of figure \ref{fig:fsts}).
 In particular, the Japanese-to-English phoneme mapping FST $t_2$ was obtained by inverting $t_1$.
 
-\subsection{Training}
+\subsection{Training and Decoding}
 For training data we take the top 50\% most frequent terms from each language models, resulting with a set of 20K English terms and a set of 22.5K Japanese terms.
 Using the whole set of terms led to poor baseline results, probably since uncommon English terms are not transliterated, and uncommon Katakana terms may be borrowed from languages other than English.
 In any case, it is important to note that the two resulting sets of words are far from being parallel, since they were collected over non-parallel corpora.
 
-EM training of the baseline pipeline was done using the Carmel finite-state toolkit \cite{graehl97}.
-The LM and pronunciation models were held fixed while the parameters of the phoneme mapping model $t_1$ were optimized to maximize likelihood of the observed set of Japanese terms.
+EM training of the baseline was done using the Carmel finite-state toolkit \cite{graehl97}.
+The LM and pronunciation models were held fixed while the parameters of the phoneme mapping model $t_1$ were optimized to maximize the likelihood of the observed set of Japanese terms.
 
-Similarly, the PAT objective (\eqn{eqn:joint}) was maximized with respect to the phoneme mapping models $(\TA, \TB) = (t_1, t_2)$, with coefficient $\lambda\in\{1,2,3,4\}$ and all other FSTs fixed (note that $\lambda=0$ corresponds to independent training, i.e. the baseline).
-We manipulated Carmel to compute a single E-step and output the expected counts which we then used to formulate the M-step objective. The M-step was solved using our own projected gradient descent implementation (A python implementation of a general purpose PGD solver for convex functions over convex closed sets. to be released).
+Similarly, the PAT objective (\eqn{eqn:joint}) was maximized with respect to the phoneme mapping models $(\TA, \TB) = (t_1, t_2)$, with coefficient $\lambda\in\{1,2,3,4\}$ and while holding all other FSTs fixed.
+We manipulated Carmel to compute a single E-step and output the expected counts which we then used to formulate the M-step objective. 
+The M-step was solved using our own projected gradient descent implementation (A python implementation of a general purpose PGD solver for convex functions over convex closed sets. to be released).
 
-Finally, to compare against the ordinary parallel data setting, we used Carmel to train the English-to-Japanese phoneme mapping model $t_1$ over 4.2K pairs of English and Japanese phoneme sequences.
+Finally, to compare against the ordinary parallel data setting, we used Carmel to train the English-to-Japanese phoneme mapping model $t_1$ over 4.2K pairs of English and Japanese phoneme sequences. Training of all models was limited to 15 EM iterations.
 
-Training was limited to 15 EM iterations.
+Back-transliterations were obtained using regular Viterbi decoding. Note that symmetrization heuristics are not applicable, since we have no parallel data.
 
 \subsection{Results}
 We compiled a list of 100 US statesmen names (first and last) to be used as a test set. 
@@ -79,7 +80,6 @@ To tune $\lambda$ we used a development set consisting of 50 frequent Japanese t
 
 For each method, we selected the $t_1$ model that minimized the development back-transliteration error rate over the 15 iterations, $\lambda$ and the so-called stretch-factor 
 $\alpha \in \{1,2,3\}$ that exponentiated the model parameters before decoding (see \newcite{RK09}).
-back-transliterations were obtained using Viterbi decoding.
 
 Table \ref{tbl:transliteration_results} reports WNER, average normalized edit distance (NED) and the number of $t_1$ parameters with value greater than 0.01 ($t_1>0.01$) as an indication of model sparsity. 
 Figure \ref{fig:mapping} further compares a portion of the best phoneme mapping table learned by the baseline vs. that learned by PAT, depicting the difference in parameter sparsity.
