@@ -148,10 +148,15 @@ with $k\in\set{1,2}$ and $n$ ranging over the appropriate set of samples.
 Both the word alignment and transliteration models considered in this paper can be seen as FST instances. This implies an efficient E-step computation, since the posteriors $q_k$ can be efficiently computed using dynamic programming (REFERENCES).
 
 Owing to the concavity of both $R$ and the data log-likelihood functions, the M-step maximization problem is also efficiently solvable using convex programming techniques.
-In practice we implemented a projected gradient descent algorithm where at each step, the current $\TA, \TB$ parameters are updated according to the gradient of the objective, and then projected back onto the probability simplex.
+
+
+In practice only the $t$ parameters are coupled through $R$,  be 
+we implemented a projected gradient descent algorithm where at each step, the current $\TA, \TB$ parameters are updated according to the gradient of the objective, and then projected back onto the probability simplex.
 We used simple stopping conditions based on objective function convergence or a limited number of iterations.
 
+\subsection{Decoding}
 
+TODO
 %At each time step, the models $\PP, \QQ$ are updated according to the gradient of the regularized objective function 
 %%$\frac{\partial}{\partial \PP}(L(\PP \mid X)+\lambda R(\PP, \QQ)$
 %and projected back onto the probability simplex. 

@@ -1,5 +1,5 @@
 \subsection{Generative Models}
-We are concerned with learning generative models that describe transformations of a source-language entity $\ve$ to a target-language entity $f$.
+We are concerned with learning generative models that describe transformations of a source-language entity $\ve$ to a target-language entity $\vf$.
 We consider two different settings for these models.
 
 In the parallel data setting, both source and target entities are observed and the generative story describes how $\vf$ can arise from $\ve$.
@@ -39,12 +39,12 @@ Next, we make these generative stories concrete by looking at the definition of 
 
 Word alignment is one of the major building blocks in the conventional machine translation pipeline.
 In word alignment, the entity $\ve = (\ve_1, \ldots, \ve_I)$ represents a sentence in the source language and $\vf = (\vf_1, \ldots, \vf_J)$ represents a sentence in the target language. 
-The generative story for the transformation of $e$ to $f$ follows according to \eqn{eqn:parallel} where the hidden variable $a = (a_1, \ldots, a_J)$ corresponds to a sequence of $J$ indices and encodes an asymmetric target-to-source alignment under which the $j$th target word is aligned to the $a_j$th source word. 
-In other words, under the generative story, $f_j$ is thought to be generated from $e_{a_j}$.
+The generative story for the transformation of $\ve$ to $\vf$ follows according to \eqn{eqn:parallel} where the hidden variable $\va = (\va_1, \ldots, \va_J)$ corresponds to a sequence of $J$ indices and encodes an asymmetric target-to-source alignment under which the $j$th target word is aligned to the $a_j$th source word. 
+In other words, under the generative story, $\vf_j$ is thought to be generated from $\ve_{\va_j}$.
 
 The HMM word alignment model is considered both computationally efficient and effective. 
 Since the HMM formulation is not convex, it is common practice to initialized word alignment using the simpler IBM 1 word alignment model.
-Both these models assign the following conditional probability for a fixed sentence pair $(e, f)$ and a fixed alignment $a$:
+Both these models assign the following conditional probability for a fixed sentence pair $(\ve, \vf)$ and a fixed alignment $\va$:
 \begin{equation}
 p(\va, \vf \mid \ve) = \prod_{j=1}^{J} t(\vf_j \mid \ve_{\va_j})\cdot a(\va_j \mid \va_{j'})
 \label{eqn:WA}
@@ -62,7 +62,7 @@ The exact details behind the HMM distortion parameters are implementation specif
 \begin{tabular}{c}
 \includegraphics[scale=0.62]{figures/fsts}\tabularnewline
 \end{tabular}
-\caption{\label{font-table} The transliteration generative story as a cascade of FSTs . \textbf{Top:} transliteration of the word ``computer'' to Japanese. \textbf{Bottom:} the reverse process. Each box represents a transducer. In PAT for deciphering transliterations, the two cascades are jointly trained to maximize both the data log-likelihood and the parameter agreement of the two phoneme mapping models (shaded).}
+\caption{\label{font-table} The transliteration generative story as a cascade of FSTs . \textbf{Top:} transliteration of the word ``computer'' to Japanese. \textbf{Bottom:} the reverse process. Each box represents a transducer. PAT jointly trains the two cascades by maximizing both the data log-likelihood and the parameter agreement of the two (shaded) phoneme mapping models. The blank FSTs are held fixed. }
 \label{fig:fsts}
 \end{center}
 \end{figure*}
@@ -72,7 +72,7 @@ Usually, the mapping tries to preserve the sound of a term as it is uttered in t
 For example, the word ``computer'' in English is transliterated to Japanese as ``ko n pyu u ta a'' (in Romaji\marginpar{Romaji or Katakana?}). 
 The process restoring transliterated foreign words to their original script is called \emph{back-transliteration}.
 
-Knight and Graehl \shortcite{KG98} suggest a generative story for transliteration of English terms $\vw$ into Japanese terms $\vk$ (see top of Figure \ref{fig:fsts}): 
+Knight and Graehl \shortcite{KG98} suggest a generative story for the transliteration of an English term $\vw$ into Japanese term $\vk$ (see top of Figure \ref{fig:fsts}): 
 \begin{enumerate}
 \item First, a word $\vw$ is generated according to an English language model
 $p(\vw)$.
@@ -100,6 +100,7 @@ By monotone alignment we mean that $\va_{i}^{\cdot} \le \va_{i+1}^{\cdot}$ and $
 The overall probability of this mapping is then:
 \begin{equation}
 p(\va,  \vj \mid \ve) = \prod_{i=1}^{I} t(\vj[a_{i}^{\tstart}:a_{i}^{\tend}] \mid \ve_{i})
+\label{eqn:trans}
 \end{equation}
 where $t(\vj[a_{i}^\tstart:a_{i}^\tend] \mid \ve_{i})$ denotes the probability of transliterating English phoneme $\ve_i$ to Japanese phoneme(s) $\vj[a_{i}^\tstart:a_{i}^\tend]$.
 
