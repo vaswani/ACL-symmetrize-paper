@@ -46,11 +46,13 @@ The resulting joint optimization problem takes the following form:
 \end{equation}
 With $\lambda\ge0$ being a tunable coefficient.
 
+
 \subsection{Parameter Agreement Measure}
 Both the word alignment and transliteration models presented in Section \ref{sec:background} are parameterized by a $t$-table the encodes the probability of word translation or phoneme transliteration.
 Considering these tables in both directions, $t_1$ and $t_2$, we suggest the following parameter agreement measure: 
 \begin{equation}
 R(\TA, \TB) = \sum_{e,f} \sqrt{(t_1(\ve \mid \vf) \cdot t_2(\vf \mid \ve))}
+\label{eqn:R}
 \end{equation}
 Where $\ve$ and $\vf$ range over all source and target entity types.
 

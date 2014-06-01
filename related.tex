@@ -1,1 +1,12 @@
+From a general machine learning perspective, our proposed method can be classified as unsupervised regularized multi-task learning technique \cite{Evgeniou04,Caruana97}.
+
+
+Our joint objective \eqn{eqn:joint} is inspired by \newcite{liang+:2006:align} which suggest a joint optimization problem for training both directional models. 
+Their proposed agreement measure
+$$\sum_\vx \log \sum_{\vz} p_1(\vz \mid \vx; \TA) p_2(\vz \mid \vx; \TB)$$
+requires access to the posteriors of each sample ($\vx=(\ve, \vf)$) under \emph{both} models.
+It is this dependency on parallel data that limits the applicability of the ABA formulation to the parallel data setting. 
+Therefore, in some sense, our work can be seen as a generalization of \newcite{liang+:2006:align} beyond the parallel data setting.
+
+
 
