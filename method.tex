@@ -74,11 +74,14 @@ $h(\alpha (x_0, y_0) + (1-\alpha)(x_1, y_1)) \ge \alpha h(x_0,y_0) + (1-\alpha) 
 \begin{align*}
 &h^2(\alpha (x_0, y_0) + (1-\alpha)(x_1, y_1)) \\
 &= (\alpha x_0 + (1-\alpha) x_1)(\alpha y_0 + (1-\alpha) y_1) \\
-&\ge (\alpha (x_0 y_0) + (1-\alpha) (x_1 y_1))^2 \\
-&= (\alpha h(x_0,y_0) + (1-\alpha) h(x_1,y_1))^2
+&\ge (\alpha \sqrt{x_0 y_0} + (1-\alpha) \sqrt{x_1 y_1})^2 \\
+&= \left( \alpha h(x_0,y_0) + (1-\alpha) h(x_1,y_1) \right)^2
 \end{align*}
 with the inequality following from Cauchy-Schwarz.
 
+
+
+with the inequality following from the arithmetic mean-geometric mean inequality.
 % TODO: other agreement terms
 
 %We now describe our method, which we call Parameter Agreement Training.
