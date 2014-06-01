@@ -22,6 +22,7 @@
 \usepackage{amsmath}
 \usepackage{amsfonts}
 \usepackage{amssymb}
+\usepackage{color}
 %\DeclareMathOperator*{\argmax}{arg\,max}
 %\DeclareMathOperator*{\argmin}{arg\,min}
 
@@ -58,13 +59,15 @@
 \begin{document}
 \maketitle
 \begin{abstract}
-Learning how to align sequences is a prevalent problem in machine translation and NLP.  
-State of the art approaches model alignment as a directed generative process by which an observed target sequence arises from an observed source sequence.
-We propose an unsupervised approach for jointly learning such directed alignment models by means of maximizing their data likelihood and a measure of model agreement.  
-Contrary to a previous approach (Alignment by Agreement), our method is applicable even without parallel data (i.e., decipherment).
-We test our method on two different tasks - word alignment (with parallel data) and English-to-Japanese back-transliteration (without parallel data).
-On Czech-to-English word alignment, we obtain +0.4pts BLEU compared to GIZA++ alignments. A simple phrase tables combination with a competitive alignment model further gain additional +0.4pts BLEU.
-On the back-transliteration task, our method learns sparser models that are able to obtain significant reductions in whole name error rates, substantially reducing the gap between decipherment and parallel-data trained models by 33\%.
+Learning how to align sequences is a key problem in natural language processing.
+Most approaches model alignment as a directed generative process by which an observed target sequence arises from an observed source sequence. 
+\textbf{In word alignment in particular, it is common practice to train models in both directions and apply symmetrization heuristics.}
+\marginpar{DC: Something needs to be said here about bidirectionality, or it doesn't make sense. \bluetext{TL: fixed}}
+We propose an unsupervised approach for jointly learning bi-directional alignment models by means of maximizing their data likelihoods as well as a measure of model agreement.
+In contrast to the ``alignment by agreement'' approach of Liang et al., our method is applicable even without parallel data.
+We test our method on two different tasks.
+On Czech-English word alignment, we obtain +0.4 BLEU compared to GIZA++ alignments, and combining with alignments from Liang et al.'s model brings the total improvement to +0.8 BLEU.
+On a Japanese-to-English back-transliteration task \emph{without} parallel data, our method, when applied to the decipherment model of Ravi and Knight, learns sparser models that reduce whole-name error rate by 33\% relative to a model trained on parallel data.
 \end{abstract}
 
 \section{Introduction}
