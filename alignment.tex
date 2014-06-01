@@ -33,3 +33,28 @@
 %\caption{Alignment F-score improves.}
 %\end{center}
 %\end{table}
+
+\begin{table*}
+\begin{center} \small
+\renewcommand{\arraystretch}{1.1}
+\begin{tabular}{cc|c|c|c|c|ccc}
+task & data (M) & system & align F1 (\%)  &\multicolumn{3}{c}{\bleu (\%)} \\
+     &      &        &             & 2008 & 2009 & 2010 \\
+\hline
+\multirow{3}{*}{Chi-Eng} & \multirow{3}{*}{9.6+12} & baseline & 64.6  &  23.6 & & \\
+        &       & PAT &  70.0  & 24.1(+0.5) & &  \\
+        &       & ABA  & 70.8  & 24.4 (+0.8) & \\
+        &       & ABA+PAT  &    & 24.5 (+0.9) & \\
+\hline
+\multirow{3}{*}{Cze-Eng} & \multirow{3}{*}{2.1+2.3} & baseline & 65 & & 16.7 & 17.1  \\
+        &       & PAT   & 69.6 & & 17.1 +(0.4)& 17.6 (+0.5)& \\
+        &       & ABA    & 70.4  & & 17.1 +(0.4)&  17.7  (+0.6) &\\
+        &       & ABA+PAT   &  & &  17.4 +(0.7)& 17.9 (+0.8)&
+\end{tabular}
+\end{center}
+\caption{For Czech-English, the year refers to the WMT shared task; for all other language pairs, the year refers to the NIST Open MT Evaluation. 
+%Boldface \bleu{} scores indicate a significant improvement over the baseline ($p<0.01$). % how to format this?
+$^\ast$Half of this test set was also used for tuning feature weights.}
+\label{tab:results}
+\end{table*}
+
