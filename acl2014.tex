@@ -64,12 +64,12 @@ Learning how to align sequences is a key problem in NLP.
 Most approaches model alignment as a directed generative process by which an observed target sequence arises from an observed source sequence. 
 In word alignment in particular, symmetrizing inferences of models trained in both directions (source-to-target and reverse) leads to improved alignments.
 \marginpar{DC: Something needs to be said here about bidirectionality, or it doesn't make sense. \bluetext{TL: fixed}}
-We propose an unsupervised approach for jointly learning bi-directional alignment models by means of maximizing their data likelihoods as well as a measure of model agreement.
-In contrast to the ``alignment by agreement'' approach of Liang et al., our method is applicable even without parallel data.
-We test our method on two different tasks.
-On Czech-English and Chinese-English word alignment, 
-we gain 0.4-0.5 BLEU compared to GIZA++ which, Combined with alignments from Liang et al.'s model brings the total improvement to +0.8 $\pm$ 0.1 BLEU.
-On a Japanese-to-English back-transliteration task \emph{without} parallel data, our method, when applied to the decipherment model of Ravi and Knight, learns sparser models that reduce whole-name error rate by 33\% relative to a model trained on parallel data.
+We propose an unsupervised approach for jointly learning bi-directional alignment models by means of maximizing their data likelihoods and a measure of model agreement.
+In contrast to the ``alignment by agreement'' approach of Liang et al., our method is applicable even \emph{without} parallel data.
+We test our method on two different tasks:
+(1) On Czech-English and Chinese-English word alignment, 
+we gain +0.4-0.5 BLEU compared to GIZA++. Combining with alignments from Liang et al.'s model brings the total improvement to +0.8 $\pm$ 0.1 BLEU.
+(2) On a Japanese-to-English back-transliteration task without parallel data, our method, when applied to the decipherment model of Ravi and Knight, learns sparser models that reduce whole-name error rate by 33\% relative to a model trained on parallel data.
 \end{abstract}
 
 \section{Introduction}
