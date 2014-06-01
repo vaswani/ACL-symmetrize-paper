@@ -38,7 +38,7 @@ We then constructed the inverse pipeline, required by our method PAT.
 \subsection{The Baseline Decipherment Model}
 To reproduce the English-to-Japanese pipeline, we constructed the following FST models:
 \begin{enumerate}
-\item A unigram language model of English terms, estimated over the top 40K most frequent capitalized words found in the gigaword corpus (no smoothing was applied).
+\item A unigram language model (LM) of English terms, estimated over the top 40K most frequent capitalized words found in the gigaword corpus (no smoothing was applied).
 \item An English pronunciation FST from the CMU pronunciation dictionary (REFERENCE?).
 %http://svn.code.sf.net/p/cmusphinx/code/trunk/cmudict
 \item A English-to-Japanese phoneme mapping FST that encodes the phoneme transliteration table $t_1$ (see \eqn{eqn:trans}), constructed based on the best setting reported by \newcite{RK09}. 
@@ -46,16 +46,16 @@ We note that $t_1$ is restricted to either 1-to-1 or 1-to-2 phoneme mappings, ma
 \item A hand-built Japanese pronunciation FST, provided by Kevin Knight.
 \end{enumerate}
 
-\newcite{RK09} report back-transliteration whole-name error rates (WNER) on a list of 100 transliterated US senator names (In WNER, a decoding is correct if both the first and last name are decoded correctly).
+\newcite{RK09} report back-transliteration whole-name error rates (WNER) on a list of 100 transliterated US senator names (In WNER, a decoding is correct if both the first and last name are correctly decoded).
 They train the FST cascade in both parallel and decipherment settings, obtaining 40\% WNER in the parallel setting (trained over 3.3K word pairs), compared to 73\% WNER on their best decipherment setting (trained over 9.5K Japanese words only).
 
 \subsection{The Inverse Model}
 On top of the English-to-Japanese pipeline, implementing PAT requires a pipeline in the reverse direction - a Japanese-to-English transliteration pipeline with similar FST models.
 
-We constructed a unigram language model of Katakana terms over the top 25K most frequent Katakana words found in the Japanese news 2005-2008 Leipzig corpora (REFERENCE).
+We constructed a unigram LM of Katakana terms over the top 25K most frequent Katakana words found in the Japanese news 2005-2008 Leipzig corpora (REFERENCE).
 %(http://corpora.informatik.uni-leipzig.de/download.html)
 
-The remaining required FSTs were obtained by inverting the baseline FSTs (that is, FSTs 2,3,4) and the cascase was composed in the reverse order (as depicted at the bottom of figure \ref{fig:fsts}).
+The remaining required FSTs were obtained by inverting the baseline FSTs (that is, FSTs 2,3,4) and the cascade was composed accordingly (depicted at the bottom of figure \ref{fig:fsts}).
 In particular, the Japanese-to-English phoneme mapping FST $t_2$ was obtained by inverting $t_1$.
 
 \subsection{Training and Decoding}
@@ -68,11 +68,12 @@ The LM and pronunciation models were held fixed while the parameters of the phon
 
 Similarly, the PAT objective (\eqn{eqn:joint}) was maximized with respect to the phoneme mapping models $(\TA, \TB) = (t_1, t_2)$, with coefficient $\lambda\in\{1,2,3,4\}$ and while holding all other FSTs fixed.
 We manipulated Carmel to compute a single E-step and output the expected counts which we then used to formulate the M-step objective. 
-The M-step was solved using our own projected gradient descent implementation (A python implementation of a general purpose PGD solver for convex functions over convex closed sets. to be released).
+The M-step was solved using our own projected gradient descent implementation (A python implementation of a general purpose PGD solver for convex functions over convex closed sets. To be released).
 
 Finally, to compare against the ordinary parallel data setting, we used Carmel to train the English-to-Japanese phoneme mapping model $t_1$ over 4.2K pairs of English and Japanese phoneme sequences. Training of all models was limited to 15 EM iterations.
 
-Back-transliterations were obtained using regular Viterbi decoding. Note that symmetrization heuristics are not applicable, since we have no parallel data.
+Back-transliterations of Japanese terms were obtained using regular Viterbi decoding of the $t_1$ model. 
+Note that symmetrization heuristics are not applicable, since we have no parallel data.
 
 \subsection{Results}
 \begin{figure*}[t]
@@ -83,7 +84,7 @@ Back-transliterations were obtained using regular Viterbi decoding. Note that sy
  \includegraphics[scale=0.4]{figures/model_11_gm}\tabularnewline
  &  & \tabularnewline
 \end{tabular}
-\caption{The 1-1 submatrix of the $t_1$ transliteration table. \textbf{Left}: Independent training. \textbf{Right}: our method (PAT); PAT learns sparser, peaked models.}
+\caption{The 1-to-1 mapping submatrix of the $t_1$ transliteration table. \textbf{Left}: Independent training. \textbf{Right}: our method (PAT); PAT learns sparser, peaked models.}
 \label{fig:mapping}
 \end{center}
 \end{figure*}

@@ -5,7 +5,7 @@ We consider two different settings for these models.
 In the parallel data setting, both source and target entities are observed and the generative story describes how $\vf$ can arise from $\ve$.
 Denoting $\vx = (\ve, \vf)$ the model takes the following form:
 \begin{equation}
-p(\vx; \Theta) = p(\vf \mid \ve) = \sum_a p(\va,\,\vf \mid \ve),
+p(\vx; \Theta) = p(\vf \mid \ve) = \sum_\va p(\va,\,\vf \mid \ve)
 \label{eqn:parallel}
 \end{equation}
 where $\Theta$ denotes the parameters of the model and $\va$ denotes a hidden variable that corresponds to unknown choices taken during the generative process (in our case, $\va$ is an alignment, see next subsection).
@@ -21,10 +21,10 @@ According to the generative story that follows from this equation, the observed 
 Training these models entails the same objective - maximizing the observed data log-likelihood $L(\Theta \mid X)$:
 \begin{align*}
 \max_{\Theta}\,\,L(\Theta \mid X)
-=&\max_{\Theta}\,\,\log\prod_{n}p (\vx_n;\Theta)\\
+%=&\max_{\Theta}\,\,\log\prod_{n}p (\vx_n;\Theta)\\
 =&\max_{\Theta}\,\,\sum_{n}\log p (\vx_n;\Theta)
 \end{align*}
-Where $X=\set{(\ve_{n},\, \vf_{n})}_{n=1}^{N}$ in the parallel data setting and $X=\{\vf_{n}\}_{n=1}^{N}$ in the decipherment setting.
+where $X=\set{(\ve_{n},\, \vf_{n})}_{n=1}^{N}$ in the parallel data setting and $X=\{\vf_{n}\}_{n=1}^{N}$ in the decipherment setting.
 
 Next, we make these generative stories concrete by looking at the definition of $p(\va, \vf \mid \ve)$ and $p(\ve)$ (if necessary) in two sequence alignment tasks - word alignment and back-transliteration decipherment.
 
@@ -39,7 +39,7 @@ Next, we make these generative stories concrete by looking at the definition of 
 
 Word alignment is one of the major building blocks in the conventional machine translation pipeline.
 In word alignment, the entity $\ve = (\ve_1, \ldots, \ve_I)$ represents a sentence in the source language and $\vf = (\vf_1, \ldots, \vf_J)$ represents a sentence in the target language. 
-The generative story for the transformation of $\ve$ to $\vf$ follows according to \eqn{eqn:parallel} where the hidden variable $\va = (\va_1, \ldots, \va_J)$ corresponds to a sequence of $J$ indices and encodes an asymmetric target-to-source alignment under which the $j$th target word is aligned to the $a_j$th source word. 
+The generative story for the transformation of $\ve$ to $\vf$ follows according to \eqn{eqn:parallel} where the hidden variable $\va = (\va_1, \ldots, \va_J)$ corresponds to a sequence of $J$ indices and encodes an asymmetric \emph{target-to-source} alignment under which the $j$th target word is aligned to the $\va_j$th source word. 
 In other words, under the generative story, $\vf_j$ is thought to be generated from $\ve_{\va_j}$.
 
 The HMM word alignment model is considered both computationally efficient and effective. 
@@ -49,7 +49,7 @@ Both these models assign the following conditional probability for a fixed sente
 p(\va, \vf \mid \ve) = \prod_{j=1}^{J} t(\vf_j \mid \ve_{\va_j})\cdot a(\va_j \mid \va_{j'})
 \label{eqn:WA}
 \end{equation}
-That is, both models are parameterized using two tables of conditional probability distributions $\Theta=(t, \,a)$. 
+That is, both models are parameterized using two tables of conditional probability distributions $\Theta=(t, a)$. 
 The translation table $t(\vf_j \mid \ve_{\va_j})$ encodes the probability of translating $\ve_{\va_j}$ to $\vf_j$ and the distortion table $a$ is a model dependent probability table that quantifies the probability of aligning the $j$th target position with the $\va_j$th source position, possibly given a previous alignment decision.
 
 Specifically, IBM model 1 uses a degenerate distortion table that assigns a uniform probability to all possible source positions and the HMM model encodes distortions using a first-order dependency on the previously non null-aligned position $\va_{j'}$.
@@ -62,7 +62,7 @@ The exact details behind the HMM distortion parameters are implementation specif
 \begin{tabular}{c}
 \includegraphics[scale=0.62]{figures/fsts}\tabularnewline
 \end{tabular}
-\caption{\label{font-table} The transliteration generative story as a cascade of FSTs . \textbf{Top:} transliteration of the word ``computer'' to Japanese. \textbf{Bottom:} the reverse process. Each box represents a transducer. PAT jointly trains the two cascades by maximizing both the data log-likelihood and the parameter agreement of the two (shaded) phoneme mapping models. The blank FSTs are held fixed. }
+\caption{\label{font-table} The transliteration generative story as a cascade of FSTs . Each box represents a transducer. \textbf{Top:} transliteration of the word ``computer'' to Japanese. \textbf{Bottom:} the reverse process. PAT jointly trains the two cascades by maximizing both the data log-likelihood and the parameter agreement of the two (shaded) phoneme mapping models. The blank FSTs are held fixed. }
 \label{fig:fsts}
 \end{center}
 \end{figure*}
@@ -84,17 +84,17 @@ Japanese word $\vk$ in Katakana.
 Each of their models is encoded as an FST that can be constructed and trained independently. Knight and Grael estimate FSTs 1,3,4 over monolingual data only, whereas the phoneme mapping model $p(\vj \mid \ve)$ is trained over a parallel phoneme corpus $\set{(\ve_{n},\, \vj_{n})}$ and further restricted such that each English phoneme is allowed to map to either one or two Japanese phonemes only.
 
 However, collecting parallel data is a time consuming, laborious process.
-To combat the need for parallel data, Ravi and Knight \shortcite{RK09} suggest a to estimate model 2 in the decipherment setting, for which only Japanese words $K=\set{\vk_n}_{n=1}^{|K|}$ need be collected. 
+To combat the need for parallel data, Ravi and Knight \shortcite{RK09} suggest to estimate model 2 in the decipherment setting, for which only Japanese words $K=\set{\vk_n}_{n=1}^{|K|}$ need be collected. 
 Assuming one-to-one transformations for models 2 and 4 
 (so that $p(\vw) = p(\ve)$ and $p(\vk) = p(\vj)$) 
 the generative process for transliteration is identical to that of \eqn{eqn:decipherment}:
 \begin{align*}
 p(\vk)=p(\vj)
-=&\sum_\vw p(\vj , \vw)\\
-=&\sum_\vw p(\vw) \cdot p(\vj \mid \ve)\\
+=&\sum_\vw p(\vw)p(\vj \mid \vw)\\
+=&\sum_\ve p(\ve) \cdot p(\vj \mid \ve)\\
 =&\sum_\ve p(\ve) \sum_\va  p(\va,  \vj \mid \ve)
 \end{align*}
-Where $\va=((\va_{1}^{\tstart}, \va_{1}^{\tend}),\ldots,(\va_{I}^{\tstart}, \va_{I}^{\tend}))$ denotes a source-to-target monotone alignment sequence
+Where $\va=((\va_{1}^{\tstart}, \va_{1}^{\tend}),\ldots,(\va_{I}^{\tstart}, \va_{I}^{\tend}))$ denotes a \emph{source-to-target} monotone alignment sequence
 under which $\ve_i$ is mapped to one or two phonemes from $\vj$, denoted $\vj[\va_{i}^{\tstart}:\va_{i}^{\tend}]$.
 By monotone alignment we mean that $\va_{i}^{\cdot} \le \va_{i+1}^{\cdot}$ and $1 \le \va_{i}^{\tstart} \le \va_{i}^{\tend} \le J$ for all $i$.
 The overall probability of this mapping is then:
