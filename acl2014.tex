@@ -22,6 +22,7 @@
 \usepackage{amsmath}
 \usepackage{amsfonts}
 \usepackage{amssymb}
+\usepackage{color}
 %\DeclareMathOperator*{\argmax}{arg\,max}
 %\DeclareMathOperator*{\argmin}{arg\,min}
 
@@ -39,6 +40,8 @@
 %\input{defs}
 
 \title{Parameter Agreement Training with and without Parallel Data}
+%{Joint Training of Alignment Models: with and without Parallel Data}
+
 
 %\author{First Author \\
 %  Affiliation / Address line 1 \\
@@ -57,6 +60,15 @@
 \begin{document}
 \maketitle
 \begin{abstract}
+Learning how to align sequences is a key problem in natural language processing.
+Most approaches model alignment as a directed generative process by which an observed target sequence arises from an observed source sequence. 
+\textbf{In word alignment in particular, it is common practice to train models in both directions and apply symmetrization heuristics.}
+\marginpar{DC: Something needs to be said here about bidirectionality, or it doesn't make sense. \bluetext{TL: fixed}}
+We propose an unsupervised approach for jointly learning bi-directional alignment models by means of maximizing their data likelihoods as well as a measure of model agreement.
+In contrast to the ``alignment by agreement'' approach of Liang et al., our method is applicable even without parallel data.
+We test our method on two different tasks.
+On Czech-English word alignment, we obtain +0.4 BLEU compared to GIZA++ alignments, and combining with alignments from Liang et al.'s model brings the total improvement to +0.8 BLEU.
+On a Japanese-to-English back-transliteration task \emph{without} parallel data, our method, when applied to the decipherment model of Ravi and Knight, learns sparser models that reduce whole-name error rate by 33\% relative to a model trained on parallel data.
 \end{abstract}
 
 \section{Introduction}
@@ -80,12 +92,19 @@
 \label{sec:alignment}
 \input{alignment.tex}
 
+\section{Related Work}
+\input{related.tex}
+
 \section{Conclusion}
-We have presented Parameter Agreement Training (PAT) - an approach for jointly training two conditional models that encourages agreement on parameter values.
-We derived an optimization procedure based on the EM framework, and argued that it is efficiently solvable due to the concavity of our agreement regularizer.
-In contrast to previous work on agreement training, we have demonstrated that our approach can be successfully applied even without parallel data.
+We presented Parameter Agreement Training (PAT) - an unsupervised method for jointly training two bidirectional alignment models that encourages agreement on parameter magnitude and does not depend on the availability of parallel data.
 
+Our formulation is based on the simply observation that the entity translation tables of bi-directional models should maintain a soft notion of invertibility. That is the reverse translation of the translation of an entity is itself.
 
+We developed an efficient, theoretically sound optimization algorithm that falls under the EM framework. We demonstrated our algorithm's effectiveness on two alignment tasks, matching state-of-the-art BLEU scores on the word alignment task (with parallel data), and gaining substantial error reductions in the English-to-Japanese back-transliteration decipherment task.
+
+%We have presented Parameter Agreement Training (PAT) - an approach for jointly training two conditional models that encourages agreement on parameter values.
+%We derived an optimization procedure based on the EM framework, and argued that it is efficiently solvable due to the concavity of our agreement regularizer.
+%In contrast to previous work on agreement training, we have demonstrated that our approach can be successfully applied even without parallel data.
 \bibliographystyle{acl}
 \bibliography{thesis}
 
