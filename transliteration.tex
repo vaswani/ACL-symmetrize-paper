@@ -75,6 +75,18 @@ Finally, to compare against the ordinary parallel data setting, we used Carmel t
 Back-transliterations were obtained using regular Viterbi decoding. Note that symmetrization heuristics are not applicable, since we have no parallel data.
 
 \subsection{Results}
+\begin{figure*}[t]
+\begin{center}
+\begin{tabular}{ccc}
+ &  & \tabularnewline
+ & \includegraphics[scale=0.4]{figures/model_11_vanilla} &
+ \includegraphics[scale=0.4]{figures/model_11_gm}\tabularnewline
+ &  & \tabularnewline
+\end{tabular}
+\caption{The 1-1 submatrix of the $t_1$ transliteration table. \textbf{Left}: Independent training. \textbf{Right}: our method (PAT); PAT learns sparser, peaked models.}
+\label{fig:mapping}
+\end{center}
+\end{figure*}
 We compiled a list of 100 US statesmen names (first and last) to be used as a test set. 
 To tune $\lambda$ we used a development set consisting of 50 frequent Japanese terms and their English origin.
 
@@ -104,23 +116,6 @@ Parallel Data & 43\% & 10.8 & 152\tabularnewline
 
 Using PAT we were able to significantly reduce the decipherment error rate, almost halving the gap between the models trained in the ordinary parallel data and decipherment settings.
 The drop in error rates demonstrates the efficacy of jointly training these models, and of the PAT formulation in particular.
-
-\begin{figure*}[t]
-\begin{center}
-\begin{tabular}{ccc}
- &  & \tabularnewline
- & \includegraphics[scale=0.4]{figures/model_11_vanilla} &
- \includegraphics[scale=0.4]{figures/model_11_gm}\tabularnewline
- &  & \tabularnewline
-\end{tabular}
-\caption{Compared to independent training. PAT (right) learns sparser, peaked models.}
-\label{fig:mapping}
-\end{center}
-\end{figure*}
-
-
-
-
 
 %
 %\subsection{Decipherment Experiments}
