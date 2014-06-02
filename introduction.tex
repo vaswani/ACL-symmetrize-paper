@@ -3,7 +3,7 @@ Word alignments are the backbone for extracting translation rules used in statis
 The goal is to align entities (e.g., words, phonemes) between two sequences, for example, English and French sentences, or English phonemes and Japanese phonemes.
 
 The most common models used in these tasks are both \emph{generative} and \emph{directed}, that is, they define a directed sequence of generation events by which one side of the pair (the source) produces the other (the target). 
-A simple generative process usually involves an entity-to-entity translation table, denoted $t$, that defines the probability of mapping a single source entity $\ve$ to a single target entity $\vf$ (for example, the IBM model word-for-word translation table \cite{brown+alii:1993}).
+The simpler generative processes usually involves an entity-to-entity translation table, denoted $t(\ve \mid \vf)$, that defines the probability of mapping a single source entity $\ve$ to a single target entity $\vf$ (for example, the IBM model translation table \cite{brown+alii:1993}).
 %For example, the IBM 1 word alignment model\cite{brown+alii:1993} describes a stochastic process by which the target sentence is generated from the source sentence via word-for-word translation.
 
 Given that the underlying task (translation, transliteration) seems invertible, 
@@ -19,7 +19,9 @@ While this post-processing resolves some problems it does not address the core p
 A second fundamental problem with training alignment models is the dependence on parallel data.
 In word alignment, most available parallel data is limited to small number of languages.
 Acquiring parallel data beyond these languages, or for tasks other than word alignment, remains a challenging task.
-For example, \newcite{KG98} manually collected thousands of parallel English-Japanese sequences to train their phoneme alignment model. 
+For example, to train their phoneme alignment model \newcite{KG98} manually assembled thousands of parallel English-Japanese terms. 
+%\newcite{KG98} manually collected thousands of parallel English-Japanese sequences to train their phoneme alignment model. 
+
 
 %For example, in \newcite{KG98}, the authors use (some number) \marginpar{insert number} of parallel English-Katana sequences to training phoneme alignment models. While large amounts of parallel data needed for word alignment is readily available for many language pairs, acquiring parallel phoneme sequences for transliteration can be very challenging. 
 
