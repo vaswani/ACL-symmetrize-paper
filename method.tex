@@ -49,13 +49,13 @@ The resulting joint optimization problem takes the following form:
 With $\lambda\ge0$ being a tunable coefficient.
 
 \subsection{Parameter Agreement Measure}
-Both the word alignment and transliteration models presented in Section \ref{sec:background} are parameterized by a $t$-table the encodes the probability of word translation or phoneme transliteration.
+Both the word alignment and transliteration models presented in Section \ref{sec:background} are parameterized by a an entity translation table.
 Considering these tables in both directions, $t_1$ and $t_2$, we suggest the following parameter agreement measure: 
 \begin{equation}
 R(\TA, \TB) = \sum_{e,f} \sqrt{(t_1(\ve \mid \vf) \cdot t_2(\vf \mid \ve))}
 \label{eqn:R}
 \end{equation}
-Where $\ve$ and $\vf$ range over all source and target entity types.
+where $\ve$ and $\vf$ range over all source and target entity types.
 Note that only the $t_\cdot$ parameters are coupled through $R$.
 
 Our agreement measure has several appealing properties.
@@ -66,8 +66,9 @@ Using Cauchy-Schwarz, we can bound $R(\TA, \TB) \le \sqrt{|V_E|\cdot|V_F|}$ wher
 %\le &\sqrt{ (\sum_{e,f} t_1(\vf \mid \ve)) (\sum_{e,f} t_2(\ve \mid \vf))}\\
 %= &\sqrt{(|V_E|\cdot|V_F|)}
 %\end{align*}
-In the case $|V_E|=|V_F|$ the maximum is attained only when for all entity types $(\ve,\vf)$, $t_1(\vf \mid \ve) = t_2(\ve \mid \vf)$, demonstrating that this agreement term is not biased towards any particular property (e.g, sparsity).
-Thus, the objective is balancing between agreement in magnitude and data likelihood only.
+In particular, when $|V_E|=|V_F|$ the maximum is attained on parameter configurations for which $t_1(\vf \mid \ve) = t_2(\ve \mid \vf)$ over all entity pairs.
+% demonstrating that this agreement term is not biased towards any particular property (e.g, sparsity).
+Thus, the objective in \eqn{eqn:joint} is balancing between similarity in parameter magnitude and data likelihood.
 
 Another appealing property of $R$ is its concavity, which follows since $R$ is the sum of concave functions $h(x, y)=\sqrt{xy}$ over a closed convex set (see proof for $h$ in the appendix).
 
@@ -119,7 +120,7 @@ Another appealing property of $R$ is its concavity, which follows since $R$ is t
 %its maximum when those distributions are sparse (need example?)
 
 \subsection{Optimization Procedure}
-Using our concave measure of agreement, the optimization of \eqn{eqn:joint} neatly falls under the EM framework.
+Using our concave agreement measure, optimizing \eqn{eqn:joint} neatly falls under the EM framework.
 
 In the E-step, each model $\Tk$, $k\in\set{1,2}$ is held fixed and its posterior distribution over the missing data $\vz_k^n$ is computed per each observation $\vx_k^n$.
 \begin{align*}
@@ -141,7 +142,9 @@ with $k\in\set{1,2}$ and $n$ ranging over the appropriate set of samples.
 
 Both the word alignment and transliteration models considered in this paper can be encoded as FST instances. This implies an efficient E-step computation, since the posteriors $q_k$ can be efficiently computed using dynamic programming \cite{Eisner02}.
 
-Owing to the concavity of both $R$ and the data log-likelihood functions, the M-step maximization problem is also efficiently solvable using convex programming techniques. We used our own projected gradient descent implementation. At each step, the current $(\TA, \TB)$ parameters are updated according to the gradient of the objective \eqn{eqn:joint}, and then projected back onto the probability simplex.
+Owing to the concavity of both $R$ and the data log-likelihood functions, the M-step maximization problem is also efficiently solvable, using convex programming techniques. 
+
+We used our own projected gradient descent implementation. At each step, the current $(\TA, \TB)$ parameters are updated according to the gradient of the objective \eqn{eqn:joint}, and then projected back onto the probability simplex.
 We used simple stopping conditions based on objective function convergence or a limited number of iterations.
 
 %At each time step, the models $\PP, \QQ$ are updated according to the gradient of the regularized objective function 

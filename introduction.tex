@@ -10,7 +10,7 @@ Given that the underlying task (translation, transliteration) seems invertible,
 one could hope that training these models in both directions (source-to-target and target-to-source) would yield two models that agree on their inferred alignments and their model parameterization.
 Specifically, letting $t_1$ and $t_2$ denote the two models' entity-translation tables, we expect that $t_1(\vf \mid \ve)$ is high if and only if $t_2(\ve \mid \vf)$ is high (intuitively, the translation of the translation is itself).
 
-\marginpar{DC: There are other problems too, right? There is some symmetry that is not being captured by the model.}
+\marginpar{DC: There are other problems too, right? There is some symmetry that is not being captured by the model.\bluetext{TL: modified}}
 However, such model agreement is often not the case. 
 For one, the model's directionality imposes restrictions on the inference space: in the IBM word alignment models, only one-to-many word alignments (target to source) are possible, which may not fit well for some language pairs (for example, German compound target words usually arise from multiple English source words). 
 To remedy this, we often resort to ad-hoc techniques, such as grow-diag-final-and \cite{koehn+:2003}, that heuristically combines alignments in two directions.
