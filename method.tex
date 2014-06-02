@@ -4,11 +4,9 @@ In word alignment, it is common practice to train alignment models in both sourc
 The improvement gained by these post-processing heuristics suggest that each (directional) model suffers from different errors, and that those errors can be mitigated by symmetrization.
 
 Observing this, \newcite{liang+:2006:align} formulate Alignment by Agreement - a joint objective function that maximizes both the observed data-likelihoods as well as a measure of agreement between the two models' posteriors.
-Showing significant reductions in AER they demonstrate the effectiveness of jointly learning the models.
+Showing significant reductions in AER they demonstrate the effectiveness of jointly learning the models. However, both symmetrization heuristics and Alignment by Agreement joint training depend on the availability of parallel data. 
 
-However, both the symmetrization heuristics and the Alignment by Agreement joint training depend on the availability of parallel data. 
-In this section we describe Parameter Agreement Training (PAT) - a method for jointly learning directional models that does not depend on parallel data.
-	
+In this section we describe Parameter Agreement Training (PAT) - a method for jointly learning directional models that does not depend on parallel data. 	
 We follow Liang et al. (2006) in formulating a joint objective function for training the two directional alignment models, however, we distinguish between two settings that differ in the observed data.
 %We adopt similar notation.
 % denoting the source-to-target direction with subscript 1 and the target-to-source direction with subscript 2 but diverge when necessary.
@@ -56,7 +54,7 @@ R(\TA, \TB) = \sum_{e,f} \sqrt{(t_1(\ve \mid \vf) \cdot t_2(\vf \mid \ve))}
 \label{eqn:R}
 \end{equation}
 where $\ve$ and $\vf$ range over all source and target entity types.
-Note that only the $t_\cdot$ parameters are coupled through $R$.
+Note that $R$ disregards the distortion parameters $a$ (if at all present).
 
 Our agreement measure has several appealing properties.
 Using Cauchy-Schwarz, we can bound $R(\TA, \TB) \le \sqrt{|V_E|\cdot|V_F|}$ where $|V_E|, |V_F|$ denote the source and target vocabulary size.
