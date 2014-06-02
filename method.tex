@@ -1,17 +1,17 @@
 \subsection{Agreement Training}
 In word alignment, it is common practice to train alignment models in both source-to-target and target-to-source directions and then apply symmetrization techniques to the resulting source-to-target and target-to-source alignments. 
-Alignment symmetrization heuristics, such as intersection, union or grow-diag-final-and play a significant role in reducing alignment errors and ultimately improving translation quality.
-The improvement gained by these heuristics suggest that each (directional) model may suffer from different errors, and that those errors can be mitigated by symmetrization.
+%Alignment symmetrization heuristics, such as intersection, union or grow-diag-final-and play a significant role in reducing alignment errors and ultimately improving translation quality.
+The improvement gained by these post-processing heuristics suggest that each (directional) model suffers from different errors, and that those errors can be mitigated by symmetrization.
 
 Observing this, \newcite{liang+:2006:align} formulate Alignment by Agreement - a joint objective function that maximizes both the observed data-likelihoods as well as a measure of agreement between the two models' posteriors.
-Showing significant reductions in alignment AER they demonstrate the effectiveness of jointly learning the models.
+Showing significant reductions in AER they demonstrate the effectiveness of jointly learning the models.
 
 However, both the symmetrization heuristics and the Alignment by Agreement joint training depend on the availability of parallel data. 
-In this section we describe our Parameter Agreement Training (PAT) - a method for jointly learning directional models that does not depend on parallel data.
+In this section we describe Parameter Agreement Training (PAT) - a method for jointly learning directional models that does not depend on parallel data.
 	
-We follow Liang et al. (2006) in formulating a joint objective function for training the two directional alignment models. We adopt similar notation denoting the source-to-target direction with subscript 1 and the target-to-source direction with subscript 2 but diverge when necessary.
-
-We distinguish between two settings that differ in the observed data.
+We follow Liang et al. (2006) in formulating a joint objective function for training the two directional alignment models, however, we distinguish between two settings that differ in the observed data.
+%We adopt similar notation.
+% denoting the source-to-target direction with subscript 1 and the target-to-source direction with subscript 2 but diverge when necessary.
 
 In the parallel data setting we observe $N$ paired sequences $\set{\vx^n_1}_{n=1}^N=\set{(\ve_n, \vf_n)}_{n=1}^N$ or equivalently $\set{\vx^n_2}_{n=1}^N=\set{(\vf_n, \ve_n)}_{n=1}^N$.
 
@@ -31,10 +31,12 @@ whereas in the decipherment setting, the probability is defined:
 \end{align*}
 
 Regardless of the two setting, independently optimizing each model entails the maximization of its data log-likelihood (for $k\in{1,2}$):
-\begin{align*}
-\max_{\Tk}\,\,L_k(\set{\vx^n_k}; \Tk)= 
-\max_{\Tk}\,\, \log \sum_n \pk(\vx_k^n; \Tk)
-\end{align*}
+$L_k(\set{\vx^n_k}; \Tk)=\sum_n \log\pk(\vx_k^n; \Tk)$
+%
+%\begin{align*}
+%\max_{\Tk}\,\,L_k(\set{\vx^n_k}; \Tk)= 
+%\max_{\Tk}\,\,  \sum_n \log \pk(\vx_k^n; \Tk)
+%\end{align*}
 
 To jointly optimize the two models, we introduce a coupling term $R(\TA, \TB)$ that  encodes a measure of agreement between the two models' parameters.
 The resulting joint optimization problem takes the following form:
@@ -45,7 +47,6 @@ The resulting joint optimization problem takes the following form:
 \label{eqn:joint}
 \end{equation}
 With $\lambda\ge0$ being a tunable coefficient.
-
 
 \subsection{Parameter Agreement Measure}
 Both the word alignment and transliteration models presented in Section \ref{sec:background} are parameterized by a $t$-table the encodes the probability of word translation or phoneme transliteration.
@@ -69,16 +70,6 @@ In the case $|V_E|=|V_F|$ the maximum is attained only when for all entity types
 Thus, the objective is balancing between agreement in magnitude and data likelihood only.
 
 Another appealing property of $R$ is its concavity, which follows since $R$ is the sum of concave functions $h(x, y)=\sqrt{xy}$ over a closed convex set (see proof for $h$ in the appendix).
-
-\textbf{Concavity proof}: To see $h(x,y) = \sqrt{xy}$ is concave over $x,y\in [0,1]$ we show
-$h(\alpha (x_0, y_0) + (1-\alpha)(x_1, y_1)) \ge \alpha h(x_0,y_0) + (1-\alpha) h(x_1, y_1)$:
-\begin{align*}
-&h^2(\alpha (x_0, y_0) + (1-\alpha)(x_1, y_1)) \\
-&= (\alpha x_0 + (1-\alpha) x_1)(\alpha y_0 + (1-\alpha) y_1) \\
-&\ge \left( \alpha \sqrt{x_0 y_0} + (1-\alpha) \sqrt{x_1 y_1} \right)^2 \\
-&= \left( \alpha h(x_0,y_0) + (1-\alpha) h(x_1,y_1) \right)^2
-\end{align*}
-with the inequality following from Cauchy-Schwarz.
 
 % TODO: other agreement terms
 
