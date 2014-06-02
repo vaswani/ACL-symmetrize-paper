@@ -3,17 +3,16 @@ Word alignments are the backbone for extracting translation rules used in statis
 The goal is to align entities (e.g., words, phonemes) between two sequences, for example, English and French sentences, or English phonemes and Japanese phonemes.
 
 The most common models used in these tasks are both \emph{generative} and \emph{directed}, that is, they define a directed sequence of generation events by which one side of the pair (the source) produces the other (the target). 
-The simpler generative processes usually involves an entity-to-entity translation table, denoted $t(\ve \mid \vf)$, that defines the probability of mapping a single source entity $\ve$ to a single target entity $\vf$ (for example, the IBM model translation table \cite{brown+alii:1993}).
+One typical generation event is entity-to-entity translation, parameterized by a translation table $t(\ve \mid \vf)$ that defines the probability of mapping a single source entity $\ve$ to a single target entity $\vf$ (e.g., the IBM model translation table \cite{brown+alii:1993}).
 %For example, the IBM 1 word alignment model\cite{brown+alii:1993} describes a stochastic process by which the target sentence is generated from the source sentence via word-for-word translation.
 
-Given that the underlying task (translation, transliteration) seems invertible, 
+Considering that the underlying task (translation, transliteration) is invertible, 
 one could hope that training these models in both directions (source-to-target and target-to-source) would yield two models that agree on their inferred alignments and their model parameterization.
-Specifically, letting $t_1$ and $t_2$ denote the two models' entity-translation tables, we expect that $t_1(\vf \mid \ve)$ is high if and only if $t_2(\ve \mid \vf)$ is high (intuitively, the translation of the translation is itself).
+Specifically, letting $t_1$ and $t_2$ denote the two models' entity-translation tables, we would expect that $t_1(\vf \mid \ve)$ is high if and only if $t_2(\ve \mid \vf)$ is high. However, this is typically not the case.
 
 \marginpar{DC: There are other problems too, right? There is some symmetry that is not being captured by the model.\bluetext{TL: modified}}
-However, such model agreement is often not the case. 
 For one, the model's directionality imposes restrictions on the inference space: in the IBM word alignment models, only one-to-many word alignments (target to source) are possible, which may not fit well for some language pairs (for example, German compound target words usually arise from multiple English source words). 
-To remedy this, we often resort to ad-hoc techniques, such as grow-diag-final-and \cite{koehn+:2003}, that heuristically combines alignments in two directions.
+To remedy this, we often resort to ad-hoc techniques, such as grow-diag-final-and \cite{koehn+:2003}, that heuristically combine alignments in two directions.
 While this post-processing resolves some problems it does not address the core problem - unsupervised independent training of each model may very well lead to two local maxima that diverge on their translation parameters and ultimately their inferences.
 
 A second fundamental problem with training alignment models is the dependence on parallel data.
