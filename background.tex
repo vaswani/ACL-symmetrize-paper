@@ -44,9 +44,8 @@ In word alignment, the entity $\ve = (\ve_1, \ldots, \ve_I)$ represents a senten
 The generative story for the transformation of $\ve$ to $\vf$ follows according to \eqn{eqn:parallel} where the hidden variable $\va = (\va_1, \ldots, \va_J)$ corresponds to a sequence of $J$ indices and encodes an asymmetric \emph{target-to-source} alignment under which the $j$th target word is aligned to the $\va_j$th source word. 
 In other words, under the generative story, $\vf_j$ is thought to be generated from $\ve_{\va_j}$.
 
-The HMM word alignment model is considered both computationally efficient and effective. 
-Since the HMM formulation is not convex, it is common practice to initialized word alignment using the simpler IBM 1 word alignment model.
-Both these models assign the following conditional probability for a fixed sentence pair $(\ve, \vf)$ and a fixed alignment $\va$:
+The HMM word alignment model is considered both computationally efficient and effective. However, since its objective is not convex, it is common practice to initialize training using the simpler IBM 1 model.
+Both models assign the following conditional probability for a target sequence $\vf$ given an observed source sequence $\ve$ and a fixed alignment $\va$:
 \begin{equation}
 p(\va, \vf \mid \ve) = \prod_{j=1}^{J} t(\vf_j \mid \ve_{\va_j})\cdot a(\va_j \mid \va_{j'})
 \label{eqn:WA}
@@ -55,7 +54,7 @@ That is, both models are parameterized using two tables of conditional probabili
 The translation table $t(\vf_j \mid \ve_{\va_j})$ encodes the probability of translating $\ve_{\va_j}$ to $\vf_j$ and the distortion table $a$ is a model dependent probability table that quantifies the probability of aligning the $j$th target position with the $\va_j$th source position, possibly given a previous alignment decision.
 
 Specifically, IBM model 1 uses a degenerate distortion table that assigns a uniform probability to all possible source positions and the HMM model encodes distortions using a first-order dependency on the previously non null-aligned position $\va_{j'}$.
-The exact details behind the HMM distortion parameters are implementation specific and therefore beyond the scope of this paper. See \newcite{och+ney:2003} for details of the GIZA++ implementation and \newcite{liang+:2006:align} for those of the ABA implementation.
+The exact details behind the HMM distortion parameters are implementation specific and therefore beyond the scope of this paper. See \cite{och+ney:2003,liang+:2006:align} for the respective GIZA++ and ABA implementation details.
 
 \subsection{Decipherment: Back-Transliteration}
 
@@ -76,14 +75,14 @@ The process restoring transliterated foreign words to their original script is c
 
 Knight and Graehl \shortcite{KG98} suggest a generative story for the transliteration of an English term $\vw$ into Japanese term $\vk$ (see top of Figure \ref{fig:fsts}): 
 \begin{enumerate}
-\item First, a word $\vw$ is generated according to an English language model
+\item First, a word $\vw$ is generated according to an English language model (LM)
 $p(\vw)$.
 \item $\vw$ is then mapped to an English phonemes sequence $\ve=(\ve_1,\ldots,\ve_I)$ according to a pronunciation model.
 \item The phoneme sequence $\ve$ is mapped to a sequence of Japanese phonemes $\vj=(\vj_1,\ldots,\vj_J)$ according to a phoneme mapping model $p(\vj \mid \ve)$.
 \item Finally, the Japanese phoneme sequence $\vj$ is mapped to a
 Japanese word $\vk$ in Katakana.
 \end{enumerate}
-Each of their models is encoded as an FST that can be constructed and trained independently. Knight and Grael estimate FSTs 1,3,4 over monolingual data only, whereas the phoneme mapping model $p(\vj \mid \ve)$ is trained over a parallel phoneme corpus $\set{(\ve_{n},\, \vj_{n})}$ and further restricted such that each English phoneme is allowed to map to either one or two Japanese phonemes only.
+Each of their models is encoded as an FST that can be constructed and trained independently. Knight and Graehl estimate FSTs 1,2,4 over monolingual data only, whereas the phoneme mapping model $p(\vj \mid \ve)$ (\eqn{eqn:parallel}) is trained over a parallel phoneme corpus $\set{(\ve_{n},\, \vj_{n})}$ and further restricted such that each English phoneme is allowed to map to either one or two Japanese phonemes only.
 
 However, collecting parallel data is a time consuming, laborious process.
 To combat the need for parallel data, Ravi and Knight \shortcite{RK09} suggest to estimate model 2 in the decipherment setting, for which only Japanese words $K=\set{\vk_n}_{n=1}^{|K|}$ need be collected. 
@@ -92,7 +91,7 @@ Assuming one-to-one transformations for models 2 and 4
 the generative process for transliteration is identical to that of \eqn{eqn:decipherment}:
 \begin{align*}
 p(\vk)=p(\vj)
-=&\sum_\vw p(\vw)p(\vj \mid \vw)\\
+=&\sum_\vw p(\vw) \cdot p(\vj \mid \vw)\\
 =&\sum_\ve p(\ve) \cdot p(\vj \mid \ve)\\
 =&\sum_\ve p(\ve) \sum_\va  p(\va,  \vj \mid \ve)
 \end{align*}
