@@ -47,17 +47,9 @@ For both ABA and vanilla EM training, we used the publicly available word alignm
 
 \subsubsection{Parameter Agreement Training For Word Alignment}
 
-As described in section~\ref{subsec:optimization}
+As described in section~\ref{subsec:optimization}, in the E-step, we compute expected counts separately from the alignment models in each direction. Specifically, letting $\Theta_{1} = \Theta_{f \rightarrow e}$, and $\Theta_{2} = \Theta_{\mathbf{e} \rightarrow f}$, where $\rightarrow$ indicates the direction of generation in the word alignment generative story, we compute $E_{e \rightarrow f }[C(e,f)] $ and $E_{f \rightarrow e }[C(e,f)] $
 
 \subsection{Posterior Decoding} \label{sec:pos-decoding}
-\noindent
-\textbf{Stadard EM}: Using GIZA++\footnote{https://code.google.com/p/giza-pp/}, the publicly available word alinement toolkit, we trained alignment models by running 
-
-\noindent
-\textbf{ABA}:
-
-\noindent
-\textbf{PAT}:
 
 
 \begin{table*}
@@ -68,9 +60,9 @@ task & data (M) & system & align F1 (\%)  &\multicolumn{3}{c}{\bleu (\%)} \\
      &      &        &             & 2008 & 2009 & 2010 \\
 \hline
 \multirow{3}{*}{Chi-Eng} & \multirow{3}{*}{5.3+6.6} & baseline & 64.6  &  23.6 & & \\
-        &       & PAT &  70.0 (+5.4) & 24.1 (+0.5) & &  \\
+        &       & PAT &  70.0 (+5.4) & 24.0 (+0.4) & &  \\
         &       & ABA  & 70.8 (+6.2)& 24.4 (+0.8) & \\
-        &       & ABA+PAT  &    & 24.5 (+0.9) & \\
+        &       & ABA+PAT  &    & 25.1 (+1.5) & \\
 \hline
 \multirow{3}{*}{Cze-Eng} & \multirow{3}{*}{1.6+1.8} & baseline & 65.0 & & 16.7 & 17.1  \\
         &       & PAT   & 69.6 (+4.6)& & 17.1 (+0.4)& 17.6 (+0.5)& \\
