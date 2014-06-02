@@ -36,22 +36,6 @@
 
 To test the effectiveness of parameter agreement training, we carried out Czech to English and Chinese to English translation experiments, comparing standard EM training, ABA training, and PAT. 
 
-\subsection{Training}
-Following standard practice, we first trained our word alignment models on the following parallel data:
-\begin{itemize}
-\item \textbf{Chinese-English}: selected data from the constrained task of the NIST 2009 Open MT Evaluation.
-\item \textbf{Czech-English}: selected data from the Czech-English News Commentary corpus.
-\end{itemize} 
-
-For both ABA and vanilla EM training, we used the publicly available word alignment toolkits that implement them. GIZA++, the popular word alignment toolkit\footnote{https://code.google.com/p/giza-pp/}, implements EM training of the IBM and HMM alignment models, and the toolkit for for ABA \footnote{http://cs.stanford.edu/~pliang/software/cross-em-aligner-1.3.zip} trains IBM Model~1 and the HMM word alignment model. For both our baseline approaches, we ran two sets of experiments, one with $5$ iterations of Model~1 followed by  $5$ iterations of the HMM alignment model, and another with $10$ iterations of each. We trained word alignment models in both directions for both language pairs, and symmetrized our alignments with \emph{posterior decoding}, as described in \newcite{liang+:2006:align}. We will go over the details of posterior decoding in Section~\ref{sec:pos-decoding}.
-
-\subsubsection{Parameter Agreement Training For Word Alignment}
-
-As described in section~\ref{subsec:optimization}, in the E-step, we compute expected counts separately from the alignment models in each direction. Specifically, letting $\Theta_{1} = \Theta_{f \rightarrow e}$, and $\Theta_{2} = \Theta_{\mathbf{e} \rightarrow f}$, where $\rightarrow$ indicates the direction of generation in the word alignment generative story, we compute $E_{e \rightarrow f }[C(e,f)] $ and $E_{f \rightarrow e }[C(e,f)] $
-
-\subsection{Posterior Decoding} \label{sec:pos-decoding}
-
-
 \begin{table*}
 \begin{center} \small
 \renewcommand{\arraystretch}{1.1}
@@ -60,7 +44,7 @@ task & data (M) & system & align F1 (\%)  &\multicolumn{3}{c}{\bleu (\%)} \\
      &      &        &             & 2008 & 2009 & 2010 \\
 \hline
 \multirow{3}{*}{Chi-Eng} & \multirow{3}{*}{5.3+6.6} & baseline & 64.6  &  23.6 & & \\
-        &       & PAT &  70.9 (+5.4) & 24.0 (+0.4) & &  \\
+        &       & PAT &  70.9 (+6.3) & 24.0 (+0.4) & &  \\
         &       & ABA  & 70.8 (+6.2)& 24.4 (+0.8) & \\
         &       & ABA+PAT  &    & 25.1 (+1.5) & \\
 \hline
@@ -70,7 +54,45 @@ task & data (M) & system & align F1 (\%)  &\multicolumn{3}{c}{\bleu (\%)} \\
         &       & ABA+PAT   &  & &  17.4 (+0.7)& 17.9 (+0.8)&
 \end{tabular}
 \end{center}
-\caption{For Czech-English, the year refers to the WMT shared task; for all other language pairs, the year refers to the NIST Open MT Evaluation.}
+\caption{For Czech-English, the year refers to the WMT shared task; for Chinese-English, the year refers to the NIST Open MT Evaluation.}
 \label{tab:results}
 \end{table*}
 
+
+\subsection{Training}
+Following standard practice, we first trained our word alignment models on the following parallel data:
+\begin{itemize}
+\item \textbf{Chinese-English}: selected data from the constrained task of the NIST 2009 Open MT Evaluation.
+\item \textbf{Czech-English}: selected data from the Czech-English News Commentary corpus.
+\end{itemize} 
+
+For both ABA and vanilla EM training, we used the publicly available word alignment toolkits that implement them. GIZA++, the popular word alignment toolkit\footnote{https://code.google.com/p/giza-pp/}, implements EM training of the IBM and HMM alignment models, and the toolkit for for ABA \footnote{http://cs.stanford.edu/~pliang/software/cross-em-aligner-1.3.zip} trains IBM Model~1 and the HMM word alignment model. For both our baseline approaches and PAT, we ran experiments, one with $n$ iterations of Model~1 followed by  $n$ iterations of the HMM alignment model, where $n={5,10}$. We trained word alignment models in both directions for both language pairs, and symmetrized our alignments with \emph{posterior decoding}, as described in \newcite{liang+:2006:align}. We will go over the details of posterior decoding in Section~\ref{sec:pos-decoding}.
+
+\subsubsection{Parameter Agreement Training For Word Alignment}
+As described in section~\ref{subsec:optimization}, in the E-step, we compute the posterior distribution over alignments in each direction, which amounts to computing the expected counts  $E_1[C(e,f)] $ and $E_2[C(e,f)] $, where $C(e,f)$ is the number of times $e$ is seen aligned to $f$. In the M-step, we use the expected counts to restimate model parameters by maximizing the regularized expected complete data log likelihood. In our work, we only encourage agreement between the translation probabilities $t(e \mid f)$ and $t(f \mid e)$, and leave PAT for the distortion parameters for future work. The estimation of the distortion probabilities is thus left unchanged. The objective function in the M-step for the translation probabilities is 
+
+\begin{align*}
+&\sum_{e,f} \Bigl(  E_1[C(e,f)] \log t(e \mid f)  + \\ 
+&E_2[C(e,f)] \log t(f \mid e) + \sqrt{t(e \mid f)t(f \mid e)} \Bigr), 
+\end{align*}
+
+\noindent
+which is maximized with projected gradient descent. 
+
+\subsection{Prediction With Posterior Decoding} \label{sec:pos-decoding}
+Word alignments are used downstream in the machine translation pipeline to learn translation rules. Having trained our alignment models, we have to predict word alignments for the sentence pairs in our bilingual corpus. By combining the posterior probabilities of the alignments from the models in each direction, \newcite{liang+:2006:align} present two decoding approaches for predicting word alignments:
+
+\begin{itemize}
+\item \textbf{D1}: For every sentence pair $(\mathbf{e},\mathbf{f})$, for each direction $k=\{1,2\}$, keep an alignment $a_j $ if $p(a_j \mid \mathbf{e},\mathbf{f},\Theta_k) \ge \delta$, where $\delta$ is a threshold that controls the tradeoff between precision and recall, and $0< \delta < \infty$. By taking the union or intersection of the alignments in each direction, we can obtain single alignments for $(\mathbf{e},\mathbf{f})$.
+\item \textbf{D2}: For each sentence pair $(\mathbf{e},\mathbf{f})$, multiply the marginals for the alignments in each direction and and keep the alignments that pass a threshold, that is, keep the alignments $a_j$ for which  $p(a_j \mid \mathbf{e},\mathbf{f},\Theta_1) p(a_j \mid \mathbf{e},\mathbf{f},\Theta_2) \ge \delta$. 
+\end{itemize}
+
+For ABA, we used \textbf{D1}, the default decoding approach provided by the toolkit. For vanilla EM training and PAT, we  experimented with both \textbf{D1} and \textbf{D1}, optimizing for alignment F-score on a validation set. 
+
+\subsection{Experiments}
+
+For all our models, we selected alignments by tuning for alignment F-score on a validation set of $460$ hand-aligned Czech-English and $1102$ Chinese-English sentences. $5$ iterations of Model~1 followed by $5$ iterations of the HMM alignment model produced better F-scores for ABA than $10$ iterations of each. For vanilla EM training, we tuned the number of model iterations $n$, and the threshold $\delta$ for alignment F-score using both decoding approaches \textbf{D1} and \textbf{D2} and found that \textbf{D2} worked the best. We carried out the same optimization strategy for PAT, in addition to tuning the regularization penalty $\lambda$, as well. We found $\lambda=300$ to work best for both models. For PAT on Chinese-English, \textbf{D1} with union gave us the best alignment F-score while \textbf{D2} produced slightly better F-scores for Czech-English. Table~\ref{tab:results} summarizes these results. 
+
+We also tested the effect of alignments trained with PAT on translation quality, using a phrase based translation system, MOSES~\cite{koehn2007moses}\footnote{http://www.statmt.org/moses/}. The feature weights were trained discriminatively using MIRA \cite{chiang+alii:2008mira}, and we used a $5$-gram language model trained on the Xinhua portion of English Gigaword (LDC2007T07). For all other parameters, we used the default settings provided by the toolkit. The development data used for discriminative training were: for Chinese-English, data from the NIST 2004 and NIST 2006 test sets from the GALE program (LDC2006E92), and for Czech-English, we used $2051$ sentences from the WMT10 translation workshop. We used case-insensitive IBM \bleu{} (closest reference length) as our metric. 
+
+On both language pairs, PAT performs significantly better than vanilla EM training, and compares favorably with ABA. The \bleu{} difference between PAT and ABA for Chinese-English is not statistically significant according to a bootstrap resampling significance test~\cite{koehn-stat:2004}. Training a translation model on combined alignments from ABA and PAT improved translation quality furthermore, achieving a $1.5$ \bleu{} point improvement on Chinese-English, suggesting that the two approaches might \marginpar{need to think of what to suggest here}. 
