@@ -37,18 +37,18 @@
 To test the effectiveness of PAT on parallel data, we carried out Czech-to-English and Chinese-to-English translation experiments, comparing standard EM training, ABA training, and PAT. 
 
 \begin{table*}
-\begin{center} \small
+\begin{center}
 \renewcommand{\arraystretch}{1.1}
-\begin{tabular}{cc|c|l|l|l|lll}
-task & data ($\times 10^6$) & system & align F1 (\%)  &\multicolumn{3}{c}{\bleu (\%)} \\
+\begin{tabular}{c|c|c|l|l|l|lll}
+task & data (tokens) & system & align F1 (\%)  &\multicolumn{3}{c}{\bleu (\%)} \\
      &      &        &             & 2008 & 2009 & 2010 \\
 \hline
-\multirow{3}{*}{Chi-Eng} & \multirow{3}{*}{5.3+6.6} & baseline & 64.6  &  23.6 & & \\
+\multirow{3}{*}{Chi / Eng} & \multirow{3}{*}{5.3M / 6.6M} & vanilla EM & 64.6  &  23.6 & & \\
         &       & PAT &  70.9 (+6.3) & 24.0 (+0.4) & &  \\
         &       & ABA  & 70.8 (+6.2)& 24.4 (+0.8) & \\
         &       & ABA+PAT  &    & 25.1 (+1.5) & \\
 \hline
-\multirow{3}{*}{Cze-Eng} & \multirow{3}{*}{1.6+1.8} & baseline & 65.0 & & 16.7 & 17.1  \\
+\multirow{3}{*}{Cze / Eng} & \multirow{3}{*}{1.6M / 1.8M} & vanilla EM & 65.0 & & 16.7 & 17.1  \\
         &       & PAT   & 69.6 (+4.6)& & 17.1 (+0.4)& 17.6 (+0.5)& \\
         &       & ABA    & 70.4 (+5.4) & & 17.1 (+0.4)&  17.7  (+0.6) &\\
         &       & ABA+PAT   &  & &  17.4 (+0.7)& 17.9 (+0.8)&
