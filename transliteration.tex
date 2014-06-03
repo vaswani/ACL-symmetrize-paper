@@ -38,7 +38,7 @@ The LM and pronunciation models were held fixed while the parameters of the phon
 
 The PAT objective (\eqn{eqn:joint}) was maximized with respect to the phoneme mapping models $(\TA, \TB) = (t_1, t_2)$, with coefficient $\lambda\in\{1,2,3,4\}$.
 We manipulated Carmel to compute a single E-step and output the posteriors which we then used to formulate the M-step objective. 
-The M-step was solved using our own PGD implementation.\footnote{This implementation is a general purpose PGD solver for convex functions over convex closed sets, and will be released as open-source software.}
+The M-step was solved using our own PGD implementation\footnote{A general purpose PGD solver for convex functions over convex closed sets, and will be released as open-source software.}.
 
 To compare against the ordinary parallel data setting, we trained the English-to-Japanese phoneme mapping model $t_1$ with Carmel. We used 4.2K pairs of English and Japanese phoneme sequences. For all models, training was limited to 15 EM iterations.
 
