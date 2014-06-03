@@ -66,7 +66,7 @@ Following standard practice, we first trained our word alignment models on the f
 \item \textbf{Czech-English}: selected data from the Czech-English News Commentary corpus.
 \end{itemize} 
 
-For both vanilla EM  and ABA training, we used the publicly available word alignment toolkits that implement them. 
+We restricted the sentence length in our parallel data to at most $40$. For both vanilla EM  and ABA training, we used the publicly available word alignment toolkits that implement them. 
 GIZA++,\footnote{https://code.google.com/p/giza-pp/} the popular word alignment toolkit, implements EM training of the IBM and HMM alignment models, 
 The ABA toolkit\footnote{http://cs.stanford.edu/~pliang/software/cross-em-aligner-1.3.zip} trains IBM Model~1 and the HMM word alignment model. 
 Both these baseline approaches and PAT were trained using either 5 iterations of Model~1 and then 5 of HMM, or alternatively 10 iteration each. 
