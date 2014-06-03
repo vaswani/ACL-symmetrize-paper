@@ -5,7 +5,7 @@ The proposed agreement measure
 $\sum_\vx \log \sum_{\vz} p_1(\vz \mid \vx; \TA) p_2(\vz \mid \vx; \TB)$
 requires access to the posteriors of each sample ($\vx=(\ve, \vf)$) under \emph{both} models.
 It is this dependency on parallel data that limits the applicability of the ABA formulation to the parallel data setting. 
-Therefore, in some sense, our work can be viewed as a generalization of \newcite{liang+:2006:align} beyond the parallel data setting. \newcite{graca+alii:2010} also develop an approach that encourages agreement in bidirectional word alignment models. They achieve this by adding constraints on the posterior distributions over word alignments. However, their optimization requires several inference calls over the parallel data, making it unscalable. In addition, they do not compare their approach with Alignment by Agreement, as we do in this work. 
+Therefore, in some sense, our work can be viewed as a generalization of \newcite{liang+:2006:align} beyond the parallel data setting. \newcite{graca+alii:2010} also develop an approach that encourages agreement in bidirectional word alignment models. They achieve this by adding constraints on the posterior distributions over word alignments. However, their optimization requires many inference calls over the parallel data, making it unscalable. 
 
 Current decipherment work seems to focus on large scale MT experiments \cite{Ravi11,Dou13}. 
 We believe our approach would be beneficial in those settings as well.
