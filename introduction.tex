@@ -1,3 +1,4 @@
+\iffalse
 Alignment is a crucial subtask for many NLP problems: 
 Word alignments are the backbone for extracting translation rules used in statistical machine translation; phoneme alignments are used to transliterate words from one language to another. 
 Given two sequences of entities (e.g., words or phonemes), the goal is to find the best correspondence between the two sequences.
@@ -103,4 +104,36 @@ both comparable to the improvements obtained by ABA.
 Interestingly, the improvements are nearly additive: 
 by combining our alignments with those from ABA, we obtain a total improvement of 0.8-1.5 \bleu.
 
+\fi
+
+
+%\section{Combined Version}
+Alignment is a crucial subtask for many NLP problems: 
+Word alignments are the backbone for extracting translation rules used in statistical machine translation; phoneme alignments are used to transliterate words from one language to another. 
+Given two sequences of entities (e.g., words or phonemes), the goal is to find the best correspondence between the two sequences.
+
+The most common models used in these tasks are both \emph{generative} and \emph{directed}; that is, they define a directed sequence of generation events by which one side (the source) produces the other (the target). 
+% DC: I'm not sure what this example contributes at this point
+%One typical generation event is entity-to-entity translation, parameterized by a translation table $t(\ve \mid \vf)$ that defines the probability of mapping a single source entity $\ve$ to a single target entity $\vf$ (for example, the IBM model translation table \cite{brown+alii:1993}).
+%For example, the IBM 1 word alignment model\cite{brown+alii:1993} describes a stochastic process by which the target sentence is generated from the source sentence via word-for-word translation.
+%
+Considering that the underlying tasks are invertible, 
+one could hope that training these models in both directions (source-to-target and target-to-source) would yield two models that agree. % on their model parameterization  and inferred alignments.
+%Specifically, letting $t_1$ and $t_2$ denote the two models' entity-translation tables, we would expect that $t_1(\vf \mid \ve)$ is high if and only if $t_2(\ve \mid \vf)$ is high. 
+However, this is typically not the case, and this leads to some problems.
+
+For one, the model's directionality imposes restrictions on the inference space: in the IBM word alignment models, each target word can align to at most one source word, which may not be appropriate for some language pairs (for example, German compound target words usually arise from multiple English source words). 
+To remedy this, we often resort to ad-hoc techniques, such as grow-diag-final-and \cite{koehn+:2003}, that heuristically combine alignments in two directions.
+While this post-processing resolves some problems, it does not address the core problem -- unsupervised independent training of each model may very well lead to two local maxima that diverge in their parameters and ultimately their inferences. \newcite{liang+:2006:align} suggest an approach they call Alignment by Agreement (ABA) that jointly trains the two directional models by maximizing their individual data likelihoods as well as a model coupling term that rewards agreement between the alignment posteriors of each parallel sentence pair.
+Although their optimization procedure is inexact, their experimental results demonstrate the effectiveness of jointly training bi-directional models.
+However, the dependence of their coupling term on both posteriors means that their approach only works on parallel data.
+
+In this paper, we introduce a framework, called parameter agreement training (PAT), for training directional alignment models jointly. In contrast to ABA, our approach works in both parallel and non-parallel settings, allowing us to apply it to tasks such as transliteration where acquiring parallel data can be challenging. Recent work has begun to explore the use of non-parallel data. \newcite{RK09} train English-to-Japanese transliteration models where only Japanese data is observed. Unfortunately, the resulting model considerably underperforms compared to the same model trained on parallel data. But using PAT, we are able to reduce the whole-name error rate relative to the parallel-data trained model by 33\%.
+
+On Czech-English and Chinese-English word alignment, 
+we obtain improvements in alignment accuracy by up to 6.3 F1 points, 
+and improvements in translation accuracy of up to 0.5 \bleu, 
+both comparable to the improvements obtained by ABA. 
+Interestingly, the improvements are nearly additive: 
+by combining our alignments with those from ABA, we obtain a total improvement of 0.8-1.5 \bleu.
 
