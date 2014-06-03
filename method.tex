@@ -48,7 +48,7 @@ with $\lambda\ge0$ being a tunable hyperparameter.
 Both the word alignment and transliteration models presented in Section \ref{sec:background} are parameterized by a translation table.
 Considering these tables in both directions, $t_1$ and $t_2$, we suggest the following parameter agreement measure: 
 \begin{equation}
-R(\TA, \TB) = \sum_{e,f} \sqrt{t_1(\ve \mid \vf) \cdot t_2(\vf \mid \ve)}
+R(\TA, \TB) = \sum_{e,f} \sqrt{t_1(f \mid e) \cdot t_2(e \mid f)}
 \label{eqn:R}
 \end{equation}
 where $\ve$ and $\vf$ range over all source and target entity types.
@@ -136,11 +136,14 @@ In the M-step, the computed posteriors are used to construct the coupled sum of 
 \lambda R(\TA,\TB)\\
 &\quad {} + \sum_{k, n} q_k(\vz\kn, \vx\kn) \log p_k(\vx\kn, \vz\kn)
 \end{align*}
-with $k\in\set{1,2}$ and $n$ ranging over the appropriate set of samples. For word alignment and transliteration, the above objective function can be defined in term of the expected counts as:
+with $k\in\set{1,2}$ and $n$ ranging over the appropriate set of samples. For the IBM and the HMM word alignment models, the modeling assumptions allow the distortion and the translation parameters to be optimized independently in the M-step. Applying the parameter agreement measure to the translation probabilities (Equation~\ref{eqn:R}), the above objective function can be defined for $t_1(f \mid e)$ and $t_2(e \mid f)$ as:
 \begin{align*}
-&\sum_{e,f}  \E_1[C(e,f)] \log t(e \mid f)  + {}\\ 
-&\quad \E_2[C(e,f)] \log t(f \mid e) + \sqrt{t(e \mid f)t(f \mid e)}, 
+&\sum_{e,f}  \E_1[C(e,f)] \log t_1(f \mid e)  + {}\\ 
+&\quad \E_2[C(e,f)] \log t_2(e \mid f) + \sqrt{t_1(f \mid e)t_2(e \mid f)}, 
 \end{align*}
+
+\noindent
+where the expected counts were computed in the E-step. Since we only encourage agreement between the translation probabilities, the estimation of the distortion probabilities is left unchanged. We leave agreement training of the distortion parameters for future work. 
 
 Owing to the concavity of both $R$ and the data log-likelihood functions, this maximization problem can be efficiently solved using convex programming techniques. 
 We used our own projected gradient descent implementation (PGD). At each step, the current $(\TA, \TB)$ parameters are updated according to the gradient of the M-step objective and then projected back onto the probability simplex. We used simple stopping conditions based on objective function convergence or a limited number of iterations.
