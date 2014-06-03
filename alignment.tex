@@ -69,8 +69,7 @@ Following standard practice, we first trained our word alignment models on the f
 For both vanilla EM  and ABA training, we used the publicly available word alignment toolkits that implement them. 
 GIZA++,\footnote{https://code.google.com/p/giza-pp/} the popular word alignment toolkit, implements EM training of the IBM and HMM alignment models, 
 The ABA toolkit\footnote{http://cs.stanford.edu/~pliang/software/cross-em-aligner-1.3.zip} trains IBM Model~1 and the HMM word alignment model. 
-Both these baseline approaches and PAT were training using either 5 iterations of Model~1 then the 5 of HMM, or alternatively 10 iteration each. 
-We selected the F-score maximizing model. 
+Both these baseline approaches and PAT were trained using either 5 iterations of Model~1 and then 5 of HMM, or alternatively 10 iteration each. 
 Obtaining word alignment models in both directions we symmetrized the resulting alignments with \emph{posterior decoding} \cite{liang+:2006:align}, which we will describe in Section~\ref{sec:pos-decoding}.
 
 \subsection{PAT for Word Alignment}
@@ -108,4 +107,4 @@ The feature weights were trained discriminatively using MIRA \cite{chiang+alii:2
 % from the GALE program (LDC2006E92) %DC: this must refer to the gold word alignments
 for Czech-English, $2051$ sentences from the WMT10 translation workshop. We used case-insensitive IBM \bleu{} (closest reference length) as our metric. 
 
-On both language pairs, PAT performs significantly better than vanilla EM training, and compares favorably with ABA. The \bleu{} difference between PAT and ABA for Chinese-English and Czech is not statistically significant according to a bootstrap resampling significance test~\cite{koehn-stat:2004}. However, the two approaches are not producing the same alignment --- by combining the alignments (simply concatenating two copies of the parallel text with the two alignments): on Chinese-English, the total improvements reaches +1.5 \bleu{}.
+On both language pairs, PAT performs significantly better than vanilla EM training, and compares favorably with ABA. The \bleu{} difference between PAT and ABA for Chinese-English and Czech is not statistically significant according to a bootstrap resampling significance test~\cite{koehn-stat:2004}. However, the two approaches are not producing the same alignments. For example, by combining the alignments (simply concatenating two copies of the parallel text with the two alignments) the total improvements reaches +1.5 \bleu{} on the Chinese-to-English task.
