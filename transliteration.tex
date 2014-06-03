@@ -33,8 +33,7 @@ For training data, we took the top 50\% most frequent terms from each LM, result
 Using the whole set of terms led to poor baseline results, probably since uncommon English terms are not transliterated, and uncommon Katakana terms may be borrowed from languages other than English.
 In any case, it is important to note that the two resulting sets of words are far from being parallel, since they were collected over non-parallel corpora.
 
-Vanilla EM training of the baseline was done using the Carmel finite-state toolkit\footnote{http://www.isi.edu/licensed-sw/carmel/}.% \cite{graehl97}.
-The LM and pronunciation models were held fixed while the parameters of the phoneme mapping model $t_1$ were optimized to maximize the likelihood of the observed set of Japanese terms.
+Vanilla EM training of the baseline was done using the Carmel finite-state toolkit\footnote{http://www.isi.edu/licensed-sw/carmel/}. The LM and pronunciation models were held fixed while the parameters of the phoneme mapping model $t_1$ were optimized to maximize the likelihood of the observed set of Japanese terms.
 
 The PAT objective (\eqn{eqn:joint}) was maximized with respect to the phoneme mapping models $(\TA, \TB) = (t_1, t_2)$, with coefficient $\lambda\in\{1,2,3,4\}$.
 We manipulated Carmel to compute a single E-step and output the posteriors which we then used to formulate the M-step objective. 
