@@ -57,7 +57,7 @@ We note that $t_1$ is restricted to either 1-to-1 or 1-to-2 phoneme mappings, ma
 \end{enumerate}
 
 \newcite{RK09} report back-transliteration whole-name error rates (WNER) on a list of 100 transliterated US senator names (In WNER, a decoding is correct if both the first and last name are correctly decoded).
-They train the FST cascade in both parallel and decipherment settings, obtaining 40\% WNER in the parallel setting (trained over 3.3K word pairs), compared to 73\% WNER on their best decipherment setting (trained over 9.5K Japanese words only).
+They train the FST cascade in both the parallel and non-parallel data settings, obtaining 40\% WNER with parallel data (trained over 3.3K word pairs), compared to 73\% WNER without parallel data (trained over 9.5K Japanese words only).
 
 \subsection{The Inverse Model}
 PAT requires a pipeline in the reverse direction, for transliteration of Japanese to English.
@@ -84,7 +84,7 @@ The M-step was solved using our own PGD implementation\footnote{A general purpos
 To compare against the ordinary parallel data setting, we trained the English-to-Japanese phoneme mapping model $t_1$ with Carmel. We used 4.2K pairs of English and Japanese phoneme sequences. For all models, training was limited to 15 EM iterations.
 
 Finally, back-transliterations of Japanese terms were computed using regular Viterbi decoding of the term with the $t_1$ model only.
-Note that symmetrization heuristics are not applicable, since in decipherment we have no parallel data.
+Note that symmetrization heuristics are not applicable since we have no parallel data.
 
 \subsection{Results}
 \begin{figure*}[t]
@@ -95,7 +95,7 @@ Note that symmetrization heuristics are not applicable, since in decipherment we
  \includegraphics[scale=0.4]{figures/model_11_gm}\tabularnewline
  &  & \tabularnewline
 \end{tabular}
-\caption{The 1-to-1 mapping submatrix of the $t_1$ transliteration table. \textbf{Left}: Independent training. \textbf{Right}: our method (PAT); PAT learns sparser, peaked models.}
+\caption{The 1-to-1 mapping submatrix of the $t_1$ transliteration table. \textbf{Left}: Independent training. \textbf{Right}: PAT; PAT learns sparser, peaked models.}
 \label{fig:mapping}
 \end{center}
 \end{figure*}
@@ -126,7 +126,7 @@ Parallel Data & 43\% & 10.8 & 152\tabularnewline
 \end{center}
 \end{table}
 
-Using PAT we were able to significantly reduce the decipherment error rate, almost halving the gap between the models trained in the ordinary parallel data and decipherment settings.
+Using PAT we were able to significantly reduce the decipherment error rate, almost halving the gap between the models trained in the ordinary parallel data and non-parallel settings.
 The drop in error rates demonstrates the efficacy of jointly training these models, and of the PAT formulation in particular.
 
 
