@@ -127,7 +127,7 @@ q_k(\vz\kn, \vx\kn) & \mathrel{:=} \pk(\vz\kn \mid \vx\kn ; \Tk)
 where, in the parallel data setting, only the alignment is missing ($\vz\kn = \va\kn$) and in the non-parallel data setting, both the alignment and the origin entity are missing
 ($\vz_1^n = (\va_1^n, \ve_n), \vz_2^n = (\va_2^n, \vf_n)$).
 
-Both the word alignment and transliteration models considered in this paper can be encoded as FST instances. This implies that the E-step posteriors $q_k$ can be efficiently computed using dynamic programming \cite{Eisner02}.
+Both the word alignment and transliteration models considered in this paper can be encoded as FST instances. This implies that the E-step posteriors $q_k$ can be efficiently computed using dynamic programming \cite{Eisner02}. Specifically, for the alignment and transliteration models, this amounts to computing the expected counts  $\E_1[C(e,f)] $ and $\E_2[C(e,f)] $, where $C(e,f)$ is the number of times $e$ is seen aligned to $f$ in a alignment sequence. 
 
 In the M-step, the computed posteriors are used to construct the coupled sum of expected complete data log-likelihoods. The resulting expression is maximized with respect to the model parameters:
  %$\TA, \TB$:
@@ -136,12 +136,16 @@ In the M-step, the computed posteriors are used to construct the coupled sum of 
 \lambda R(\TA,\TB)\\
 &\quad {} + \sum_{k, n} q_k(\vz\kn, \vx\kn) \log p_k(\vx\kn, \vz\kn)
 \end{align*}
-with $k\in\set{1,2}$ and $n$ ranging over the appropriate set of samples.
+with $k\in\set{1,2}$ and $n$ ranging over the appropriate set of samples. For word alignment and transliteration, the above objective function can be defined in term of the expected counts as:
+\begin{align*}
+&\sum_{e,f}  \E_1[C(e,f)] \log t(e \mid f)  + {}\\ 
+&\quad \E_2[C(e,f)] \log t(f \mid e) + \sqrt{t(e \mid f)t(f \mid e)}, 
+\end{align*}
 
 Owing to the concavity of both $R$ and the data log-likelihood functions, this maximization problem can be efficiently solved using convex programming techniques. 
-We used our own projected gradient descent implementation (PGD). At each step, the current $(\TA, \TB)$ parameters are updated according to the gradient of the M-step objective and then projected back onto the probability simplex.
-We used simple stopping conditions based on objective function convergence or a limited number of iterations.
+We used our own projected gradient descent implementation (PGD). At each step, the current $(\TA, \TB)$ parameters are updated according to the gradient of the M-step objective and then projected back onto the probability simplex. We used simple stopping conditions based on objective function convergence or a limited number of iterations.
 
+\iffalse
 \subsection{PAT for Word Alignment}
 As described in section~\ref{subsec:optimization}, in the E-step, we compute the posterior distribution over alignments in each direction, which amounts to computing the expected counts  $\E_1[C(e,f)] $ and $\E_2[C(e,f)] $, where $C(e,f)$ is the number of times $e$ is seen aligned to $f$. 
 In the M-step, we use the expected counts to re-estimate model parameters by maximizing the coupled expected complete data log likelihood. 
@@ -154,7 +158,7 @@ Thus, the M-step objective function with respect to the translation probabilitie
 which is maximized with projected gradient descent. 
 
 The estimation of the distortion probabilities is thus left unchanged (count and divide). We leave PAT of the distortion parameters for future work. 
-
+\fi
 
 
 %At each time step, the models $\PP, \QQ$ are updated according to the gradient of the regularized objective function 
