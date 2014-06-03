@@ -96,21 +96,21 @@ we gain +0.4--0.5 BLEU compared to GIZA++. Combining with alignments from Liang 
 \input{alignment.tex}
 
 \section{Conclusion}`
-We presented Parameter Agreement Training (PAT) - an unsupervised method for jointly training two bidirectional alignment models that encourages agreement on parameter magnitude and does not depend on the availability of parallel data.
+We presented Parameter Agreement Training (PAT), an unsupervised method for jointly training two bidirectional alignment models that encourages agreement on parameter values and does not depend on the availability of parallel data.
 
-Our formulation is based on the simple observation that the entity translation tables of bi-directional models should maintain some notion of invertibility - that is, that with high probability, the translation of the translation of an entity should be itself.
+Our formulation is based on the simple observation that the entity translation tables of bi-directional models should maintain some notion of invertibility -- that is, that with high probability, the translation of the translation of an entity should be itself.
 
-We developed an efficient, theoretically sound optimization algorithm that falls under the EM framework. We demonstrated our formulation's effectiveness on two distinct alignment tasks, matching BLEU scores of a state-of-the-art word alignment method, and gaining substantial error reductions in an English-to-Japanese back-transliteration decipherment task.
+We developed an efficient, theoretically sound optimization algorithm that falls under the EM framework. We demonstrated our formulation's effectiveness on two distinct alignment tasks. On word alignment, PAT yielded BLEU improvements comparable to the state-of-the-art ABA word alignment method, and orthogonal in the sense that combining the two methods yielded further improvements. On an English-to-Japanese back-transliteration task without parallel data (where ABA is not applicable), we obtained large reductions in error rate compared to the previous best approach.
 
-\section{Appendix}
-To prove $h(x,y) = \sqrt{xy}$ is concave over $x,y\in [0,1]$ we show $h(\alpha (x_0, y_0) + (1-\alpha)(x_1, y_1)) \ge \alpha h(x_0,y_0) + (1-\alpha) h(x_1, y_1)$:
+\section*{Appendix}
+To prove $h(x,y) = \sqrt{xy}$ is concave over $x,y\in [0,1]$, we show $h(\alpha (x_0, y_0) + (1-\alpha)(x_1, y_1)) \ge \alpha h(x_0,y_0) + (1-\alpha) h(x_1, y_1)$:
 \begin{align*}
 &h^2(\alpha (x_0, y_0) + (1-\alpha)(x_1, y_1)) \\
 &= (\alpha x_0 + (1-\alpha) x_1)(\alpha y_0 + (1-\alpha) y_1) \\
 &\ge \left( \alpha \sqrt{x_0 y_0} + (1-\alpha) \sqrt{x_1 y_1} \right)^2 \\
 &= \left( \alpha h(x_0,y_0) + (1-\alpha) h(x_1,y_1) \right)^2
 \end{align*}
-with the inequality following from Cauchy-Schwarz.
+with the inequality following from the Cauchy-Schwarz inequality.
 
 %We have presented Parameter Agreement Training (PAT) - an approach for jointly training two conditional models that encourages agreement on parameter values.
 %We derived an optimization procedure based on the EM framework, and argued that it is efficiently solvable due to the concavity of our agreement regularizer.
