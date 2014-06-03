@@ -72,20 +72,6 @@ The ABA toolkit\footnote{http://cs.stanford.edu/~pliang/software/cross-em-aligne
 Both these baseline approaches and PAT were trained using either 5 iterations of Model~1 and then 5 of HMM, or alternatively 10 iteration each. 
 Obtaining word alignment models in both directions we symmetrized the resulting alignments with \emph{posterior decoding} \cite{liang+:2006:align}, which we will describe in Section~\ref{sec:pos-decoding}.
 
-\subsection{PAT for Word Alignment}
-As described in section~\ref{subsec:optimization}, in the E-step, we compute the posterior distribution over alignments in each direction, which amounts to computing the expected counts  $\E_1[C(e,f)] $ and $\E_2[C(e,f)] $, where $C(e,f)$ is the number of times $e$ is seen aligned to $f$. 
-In the M-step, we use the expected counts to re-estimate model parameters by maximizing the coupled expected complete data log likelihood. 
-In our work, we only encourage agreement between the translation probabilities $t(e \mid f)$ and $t(f \mid e)$. 
-Thus, the M-step objective function with respect to the translation probabilities is:
-\begin{align*}
-&\sum_{e,f}  \E_1[C(e,f)] \log t(e \mid f)  + {}\\ 
-&\quad \E_2[C(e,f)] \log t(f \mid e) + \sqrt{t(e \mid f)t(f \mid e)}, 
-\end{align*}
-The estimation of the distortion probabilities is thus left unchanged (count and divide). We leave PAT of the distortion parameters for future work. 
-
-\noindent
-which is maximized with projected gradient descent. 
-
 \subsection{Prediction With Posterior Decoding} \label{sec:pos-decoding}
 Word alignments are used downstream in the machine translation pipeline to learn translation rules. Having trained our alignment models, we have to predict word alignments for each sentence pair in our bilingual corpus. 
 By combining the posterior probabilities of the alignments from the models in each direction, \newcite{liang+:2006:align} present two decoding approaches for predicting word alignments:
