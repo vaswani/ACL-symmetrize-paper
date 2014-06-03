@@ -139,6 +139,8 @@ On Czech-English and Chinese-English word alignment,
 we obtain improvements in alignment accuracy by up to 6.3 F1 points, 
 and improvements in translation accuracy of up to 0.5 \bleu, 
 both comparable to the improvements obtained by ABA. 
-Interestingly, the improvements are nearly additive: 
+Interestingly, the ABA and PAT improvements are nearly additive: 
 by combining our alignments with those from ABA, we obtain a total improvement of 0.8-1.5 \bleu.
+
+Computationally, our resulting objective function can be efficiently optimized using EM, where the E-step remains unchanged and the M-step reduces to an instance of convex programming. 
 
