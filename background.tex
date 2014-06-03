@@ -26,10 +26,10 @@ Training these models entails the same objective function -- maximizing the obse
 \begin{align*}
 \max_{\Theta}\,\,L(\Theta \mid X)
 %=&\max_{\Theta}\,\,\log\prod_{n}p (\vx_n;\Theta)\\
-=&\max_{\Theta}\,\,\sum_{n}\log p (\vx_n;\Theta)
+=&\max_{\Theta}\,\,\sum_{n}\log p (\vx^n;\Theta)
 \end{align*}
 %_{n=1}^{N}
-where $X=\set{(\ve_{n},\, \vf_{n})}_n$ in the parallel data setting and $X=\set{(\vf_{n})}_n$ in the non-parallel data setting.
+where $X=\set{(\ve^n,\, \vf^n)}_n$ in the parallel data setting and $X=\set{(\vf^n)}_n$ in the non-parallel data setting.
 
 Next, we make these generative stories concrete by explicitly defining $p(\va, \vf \mid \ve)$ and $p(\ve)$ (if necessary) in two sequence alignment tasks -- word alignment and back-transliteration decipherment.
 
@@ -90,7 +90,7 @@ Japanese word $\vk$ in Katakana.
 Each of their models is encoded as an FST that can be constructed and trained independently. Knight and Graehl estimate FSTs 1,2,4 over monolingual data only, whereas the phoneme mapping model $p(j \mid e)$ (\eqn{eqn:parallel}) is trained over a parallel phoneme corpus $\set{(\ve_{n},\, \vj_{n})}$ and further restricted such that each English phoneme is allowed to map to either one or two Japanese phonemes only.
 
 However, collecting parallel data is a time consuming, laborious process.
-To combat the need for parallel data, Ravi and Knight \shortcite{RK09} suggest to estimate model 2 from non-parallel data. %, for which only Japanese words $K=\set{\vk_n}_{n=1}^{|K|}$ need be collected. 
+To combat the need for parallel data, Ravi and Knight \shortcite{RK09} suggest to estimate model 2 from non-parallel data. %, for which only Japanese words $K=\set{\vk^n}_{n=1}^{|K|}$ need be collected. 
 Assuming one-to-one transformations for models 2 and 4 
 (so that $p(\vw) = p(\ve)$ and $p(\vk) = p(\vj)$) 
 the generative process for transliteration is identical to that of \eqn{eqn:decipherment}:
