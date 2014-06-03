@@ -4,7 +4,7 @@ In this section we present our experiments on deciphering transliterations.
 We first reproduced the English-to-Japanese transliteration pipeline of \newcite{RK09} (as described in Section \ref{sec:background} and depicted at the top of Figure \ref{fig:fsts}) and tried to match their reported results.\footnote{Unfortunately, we were unable to obtain all their FSTs and data.}
 We then constructed the reverse Japanese-to-English pipeline, required for PAT, and compared the two approaches.
 
-\subsection{The Baseline Decipherment Model}
+\subsection{Baseline Decipherment Model}
 To reproduce the English-to-Japanese pipeline, we constructed the following FST models:
 \begin{enumerate}
 \item A unigram language model (LM) of English terms, estimated over the top 40K most frequent capitalized words found in the Gigaword corpus (without smoothing).
@@ -18,7 +18,7 @@ We note that $t_1$ is restricted to either 1-to-1 or 1-to-2 phoneme mappings, ma
 \newcite{RK09} report back-transliteration whole-name error rates (WNER) on a list of 100 transliterated US senator names (In WNER, a decoding is correct if both the first and last name are correctly decoded).
 They train the FST cascade in both the parallel and non-parallel data settings, obtaining 40\% WNER with parallel data (trained over 3.3K word pairs), compared to 73\% WNER without parallel data (trained over 9.5K Japanese words only).
 
-\subsection{The Inverse Model}
+\subsection{Inverse Model}
 PAT requires a pipeline in the reverse direction, for transliteration of Japanese to English.
 % - a Japanese-to-English transliteration pipeline with similar FST models.
 We constructed a unigram LM of Katakana terms over the top 25K most frequent Katakana words found in the Japanese news 2005-2008 Leipzig corpora (REFERENCE).
