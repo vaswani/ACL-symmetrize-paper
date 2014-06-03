@@ -9,21 +9,21 @@ Showing significant reductions in AER, they demonstrate the effectiveness of joi
 In this section, we describe Parameter Agreement Training (PAT), a method for jointly learning directional models that does not depend on parallel data. 	
 We follow Liang et al. (2006) in formulating a joint objective function for training the two directional alignment models, but define the agreement measure in a way that can be applied either to the parallel data or non-parallel data setting.
 
-In the parallel data setting, we observe $N$ paired sequences $\set{\vx^n_1}_{n=1}^N=\set{(\ve_n, \vf_n)}_{n=1}^N$ or, equivalently, $\set{\vx^n_2}_{n=1}^N=\set{(\vf_n, \ve_n)}_{n=1}^N$.
+In the parallel data setting, we observe $N$ paired sequences $\set{\vx^n_1}_{n=1}^N=\set{(\ve^n, \vf^n)}_{n=1}^N$ or, equivalently, $\set{\vx^n_2}_{n=1}^N=\set{(\vf^n, \ve^n)}_{n=1}^N$.
 
-In the non-parallel data setting, we observe two sets of data points $\set{\vx^n_1}_{n=1}^{N_1} = \set{\ve_n}_{n=1}^{N_1}$ and $\set{\vx^n_2}_{n=2}^{N_2} = \set{\vf_n}_{n=1}^{N_2}$.
+In the non-parallel data setting, we observe two sets of data points $\set{\vx^n_1}_{n=1}^{N_1} = \set{\ve^n}_{n=1}^{N_1}$ and $\set{\vx^n_2}_{n=2}^{N_2} = \set{\vf^n}_{n=1}^{N_2}$.
 
 Let $\TA$ and $\TB$ represent the two directional models' parameters.
 For $k\in\set{1,2}$, the probability of the $n$th sample under the $k$th model is denoted $\pk(\vx_k^n; \Tk)$.
 Specifically, in the parallel data setting, the directional probability of $\vx_k^n$ under its model is:
 \begin{align*}
-\pA(\vx_1^n; \TA) = p(\vf_n \mid \ve_n; \TA)\\
-\pB(\vx_2^n; \TB) = p(\ve_n \mid \vf_n; \TB)
+\pA(\vx_1^n; \TA) = p(\vf^n \mid \ve^n; \TA)\\
+\pB(\vx_2^n; \TB) = p(\ve^n \mid \vf^n; \TB)
 \end{align*}
 whereas in the non-parallel data setting, the probability is defined:
 \begin{align*}
-\pA(\vx_1^n; \TA) = p(\vf_n; \TA)\\
-\pB(\vx_2^n; \TB) = p(\ve_n; \TB)
+\pA(\vx_1^n; \TA) = p(\vf^n; \TA)\\
+\pB(\vx_2^n; \TB) = p(\ve^n; \TB)
 \end{align*}
 
 In either case, independently optimizing each model entails the maximization of its data log-likelihood (for $k\in{1,2}$):
@@ -38,7 +38,7 @@ To jointly optimize the two models, a coupling term $R(\TA, \TB)$ is introduced,
 The resulting joint optimization problem takes the following form:
 \begin{equation}
 \max_{\TA, \TB}\,\, \lambda R(\TA, \TB)
-%+\sum_{k\in\set{1,2}} \log \sum_n \pk(\vx_n; \Tk)
+%+\sum_{k\in\set{1,2}} \log \sum_n \pk(\vx^n; \Tk)
 +\sum_{k\in\set{1,2}} L_k(\set{\vx_k^n}; \Tk)
 \label{eqn:joint}
 \end{equation}
@@ -126,7 +126,7 @@ q_k(\vz\kn, \vx\kn) & \mathrel{:=} \pk(\vz\kn \mid \vx\kn ; \Tk)
 %\textbf{decipherment}: q_1(\va, \ve \mid \vf) :=& \pA(\va, \ve \mid \vf; \TA)
 \end{align*}
 where, in the parallel data setting, only the alignment is missing ($\vz\kn = \va\kn$) and in the non-parallel data setting, both the alignment and the origin entity are missing
-($\vz_1^n = (\va_1^n, \ve_n), \vz_2^n = (\va_2^n, \vf_n)$).
+($\vz_1^n = (\va_1^n, \ve^n), \vz_2^n = (\va_2^n, \vf^n)$).
 
 Both the word alignment and transliteration models considered in this paper can be encoded as FST instances. This implies that the E-step posteriors $q_k$ can be efficiently computed using dynamic programming \cite{Eisner02}. Specifically, for the alignment and transliteration models, this amounts to computing the expected counts  $\E_1[C(e,f)] $ and $\E_2[C(e,f)] $, where $C(e,f)$ is the number of times $e$ is seen aligned to $f$ in a alignment sequence. 
 
@@ -140,7 +140,7 @@ In the M-step, the computed posteriors are used to construct the coupled sum of 
 with $k\in\set{1,2}$ and $n$ ranging over the appropriate set of samples. For the IBM and the HMM word alignment models, the modeling assumptions allow the distortion and the translation parameters to be optimized independently in the M-step. Applying the parameter agreement measure to the translation probabilities (Equation~\ref{eqn:R}), the above objective function can be defined for $t_1(f \mid e)$ and $t_2(e \mid f)$ as:
 \begin{align*}
 &\sum_{e,f}  \E_1[C(e,f)] \log t_1(f \mid e)  + {}\\ 
-&\quad \E_2[C(e,f)] \log t_2(e \mid f) + \sqrt{t_1(f \mid e)t_2(e \mid f)}, 
+&\quad \E_2[C(e,f)] \log t_2(e \mid f) + \sqrt{t_1(f \mid e)t_2(e \mid f)}
 \end{align*}
 
 \noindent
