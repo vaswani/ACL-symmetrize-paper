@@ -8,7 +8,7 @@ We then constructed the reverse Japanese-to-English pipeline, required for PAT, 
 To reproduce the English-to-Japanese pipeline, we constructed the following FST models:
 \begin{enumerate}
 \item A unigram language model (LM) of English terms, estimated over the top 40K most frequent capitalized words found in the Gigaword corpus (without smoothing).
-\item An English pronunciation FST from the CMU pronunciation dictionary. %(REFERENCE?).
+\item An English pronunciation FST from the CMU pronunciation dictionary\footnote{http://www.speech.cs.cmu.edu/cgi-bin/cmudict}. %(REFERENCE?).
 %http://svn.code.sf.net/p/cmusphinx/code/trunk/cmudict
 \item A English-to-Japanese phoneme mapping FST that encodes the phoneme transliteration table $t_1$ (see \eqn{eqn:trans}), constructed based on the best setting reported by \newcite{RK09}. 
 We note that $t_1$ is restricted to either 1-to-1 or 1-to-2 phoneme mappings, maintaining consonant parity. See further details in their paper.
@@ -21,7 +21,7 @@ They train the FST cascade in both the parallel and non-parallel data settings, 
 \subsection{Inverse Model}
 PAT requires a pipeline in the reverse direction, for transliteration of Japanese to English.
 % - a Japanese-to-English transliteration pipeline with similar FST models.
-We constructed a unigram LM of Katakana terms over the top 25K most frequent Katakana words found in the Japanese news 2005-2008 Leipzig corpora.
+We constructed a unigram LM of Katakana terms over the top 25K most frequent Katakana words found in the Japanese news 2005-2008 Leipzig corpora\footnote{http://corpora.uni-leipzig.de/}.
 % (REFERENCE).
 %(http://corpora.informatik.uni-leipzig.de/download.html)
 
@@ -33,7 +33,7 @@ For training data, we took the top 50\% most frequent terms from each LM, result
 Using the whole set of terms led to poor baseline results, probably since uncommon English terms are not transliterated, and uncommon Katakana terms may be borrowed from languages other than English.
 In any case, it is important to note that the two resulting sets of words are far from being parallel, since they were collected over non-parallel corpora.
 
-Vanilla EM training of the baseline was done using the Carmel finite-state toolkit \cite{graehl97}.
+Vanilla EM training of the baseline was done using the Carmel finite-state toolkit\footnote{http://www.isi.edu/licensed-sw/carmel/}.% \cite{graehl97}.
 The LM and pronunciation models were held fixed while the parameters of the phoneme mapping model $t_1$ were optimized to maximize the likelihood of the observed set of Japanese terms.
 
 The PAT objective (\eqn{eqn:joint}) was maximized with respect to the phoneme mapping models $(\TA, \TB) = (t_1, t_2)$, with coefficient $\lambda\in\{1,2,3,4\}$.
