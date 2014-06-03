@@ -118,7 +118,7 @@ Another appealing property of $R$ is its concavity, which follows since $R$ is t
 \subsection{Optimization Procedure}\label{subsec:optimization}
 Using a concave agreement measure, the optimization of \eqn{eqn:joint} neatly falls under the EM framework.
 
-In the E step, each model $\Tk$, $k\in\set{1,2}$ is held fixed and its posterior distribution over the missing data $\vz_k^n$ is computed per each observation $\vx_k^n$:
+In the E-step, each model $\Tk$, $k\in\set{1,2}$ is held fixed and its posterior distribution over the missing data $\vz_k^n$ is computed per each observation $\vx_k^n$:
 \begin{align*}
 q_k(\vz\kn, \vx\kn) & \mathrel{:=} \pk(\vz\kn \mid \vx\kn ; \Tk)
 %\textbf{parallel data}: q_k(\va \mid \ve, \vf) :=& \pA(\va \mid \ve, \vf; \TA) \\
@@ -129,7 +129,7 @@ where, in the parallel data setting, only the alignment is missing ($\vz\kn = \v
 
 Both the word alignment and transliteration models considered in this paper can be encoded as FST instances. This implies that the E-step posteriors $q_k$ can be efficiently computed using dynamic programming \cite{Eisner02}.
 
-In the M step, the computed posteriors are used to construct the coupled sum of expected complete data log-likelihoods. The resulting expression is maximized with respect to the model parameters:
+In the M-step, the computed posteriors are used to construct the coupled sum of expected complete data log-likelihoods. The resulting expression is maximized with respect to the model parameters:
  %$\TA, \TB$:
 \begin{align*}
 (\TA', \TB') & \mathrel{:=} \arg\max_{\TA, \TB}
@@ -141,6 +141,21 @@ with $k\in\set{1,2}$ and $n$ ranging over the appropriate set of samples.
 Owing to the concavity of both $R$ and the data log-likelihood functions, this maximization problem can be efficiently solved using convex programming techniques. 
 We used our own projected gradient descent implementation (PGD). At each step, the current $(\TA, \TB)$ parameters are updated according to the gradient of the M-step objective and then projected back onto the probability simplex.
 We used simple stopping conditions based on objective function convergence or a limited number of iterations.
+
+\subsection{PAT for Word Alignment}
+As described in section~\ref{subsec:optimization}, in the E-step, we compute the posterior distribution over alignments in each direction, which amounts to computing the expected counts  $\E_1[C(e,f)] $ and $\E_2[C(e,f)] $, where $C(e,f)$ is the number of times $e$ is seen aligned to $f$. 
+In the M-step, we use the expected counts to re-estimate model parameters by maximizing the coupled expected complete data log likelihood. 
+In our work, we only encourage agreement between the translation probabilities $t(e \mid f)$ and $t(f \mid e)$. 
+Thus, the M-step objective function with respect to the translation probabilities is:
+\begin{align*}
+&\sum_{e,f}  \E_1[C(e,f)] \log t(e \mid f)  + {}\\ 
+&\quad \E_2[C(e,f)] \log t(f \mid e) + \sqrt{t(e \mid f)t(f \mid e)}, 
+\end{align*}
+which is maximized with projected gradient descent. 
+
+The estimation of the distortion probabilities is thus left unchanged (count and divide). We leave PAT of the distortion parameters for future work. 
+
+
 
 %At each time step, the models $\PP, \QQ$ are updated according to the gradient of the regularized objective function 
 %%$\frac{\partial}{\partial \PP}(L(\PP \mid X)+\lambda R(\PP, \QQ)$
