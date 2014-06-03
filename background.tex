@@ -68,7 +68,7 @@ The exact details behind the HMM distortion parameters are implementation specif
 \begin{tabular}{c}
 \includegraphics[scale=0.62]{figures/fsts}\tabularnewline
 \end{tabular}
-\caption{\label{font-table} The transliteration generative story as a cascade of FSTs . Each box represents a transducer. \textbf{Top:} transliteration of the word ``computer'' to Japanese. \textbf{Bottom:} the reverse process. PAT jointly trains the two cascades by maximizing both the data log-likelihood and the parameter agreement of the two (shaded) phoneme mapping models. The blank FSTs are held fixed. }
+\caption{\label{font-table} The transliteration generative story as a cascade of wFSTs. Each box represents a transducer. \textbf{Top:} transliteration of the word ``computer'' to Japanese. \textbf{Bottom:} the reverse process. PAT jointly trains the two cascades by maximizing both the data log-likelihood and the parameter agreement of the two (shaded) phoneme mapping models. The blank wFSTs are held fixed. }
 \label{fig:fsts}
 \end{center}
 \end{figure*}
@@ -87,7 +87,7 @@ $p(\vw)$.
 \item Finally, the Japanese phoneme sequence $\vj$ is mapped to a
 Japanese word $\vk$ in Katakana.
 \end{enumerate}
-Each of their models is encoded as an FST that can be constructed and trained independently. Knight and Graehl estimate FSTs 1,2,4 over monolingual data only, whereas the phoneme mapping model $p(j \mid e)$ (\eqn{eqn:parallel}) is trained over a parallel phoneme corpus $\set{(\ve_{n},\, \vj_{n})}$ and further restricted such that each English phoneme is allowed to map to either one or two Japanese phonemes only.
+Each of their models is encoded as a weighted Finite-State Transducer (wFST) that can be constructed and trained independently. Knight and Graehl estimate wFSTs 1,2,4 over monolingual data only, whereas the phoneme mapping model $p(j \mid e)$ (\eqn{eqn:parallel}) is trained over a parallel phoneme corpus $\set{(\ve_{n},\, \vj_{n})}$ and further restricted such that each English phoneme is allowed to map to either one or two Japanese phonemes only.
 
 However, collecting parallel data is a time consuming, laborious process.
 To combat the need for parallel data, Ravi and Knight \shortcite{RK09} suggest to estimate model 2 from non-parallel data. %, for which only Japanese words $K=\set{\vk^n}_{n=1}^{|K|}$ need be collected. 

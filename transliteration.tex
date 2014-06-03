@@ -1,22 +1,22 @@
 
 
 In this section we present our experiments on deciphering transliterations.
-We first reproduced the English-to-Japanese transliteration pipeline of \newcite{RK09} (as described in Section \ref{sec:background} and depicted at the top of Figure \ref{fig:fsts}) and tried to match their reported results\footnote{Unfortunately, we were unable to obtain all their FSTs and data.}.
+We first reproduced the English-to-Japanese transliteration pipeline of \newcite{RK09} (as described in Section \ref{sec:background} and depicted at the top of Figure \ref{fig:fsts}) and tried to match their reported results\footnote{Unfortunately, we were unable to obtain all their wFSTs and data.}.
 We then constructed the reverse Japanese-to-English pipeline, required for PAT, and compared the two approaches.
 
 \subsection{Baseline Decipherment Model}
-To reproduce the English-to-Japanese pipeline, we constructed the following FST models:
+To reproduce the English-to-Japanese pipeline, we constructed the following wFST models:
 \begin{enumerate}
 \item A unigram language model (LM) of English terms, estimated over the top 40K most frequent capitalized words found in the Gigaword corpus (without smoothing).
-\item An English pronunciation FST from the CMU pronunciation dictionary\footnote{http://www.speech.cs.cmu.edu/cgi-bin/cmudict}. %(REFERENCE?).
+\item An English pronunciation wFST from the CMU pronunciation dictionary\footnote{http://www.speech.cs.cmu.edu/cgi-bin/cmudict}. %(REFERENCE?).
 %http://svn.code.sf.net/p/cmusphinx/code/trunk/cmudict
-\item A English-to-Japanese phoneme mapping FST that encodes the phoneme transliteration table $t_1$ (see \eqn{eqn:trans}), constructed based on the best setting reported by \newcite{RK09}. 
+\item A English-to-Japanese phoneme mapping wFST that encodes the phoneme transliteration table $t_1$ (see \eqn{eqn:trans}), constructed based on the best setting reported by \newcite{RK09}. 
 We note that $t_1$ is restricted to either 1-to-1 or 1-to-2 phoneme mappings, maintaining consonant parity. See further details in their paper.
-\item A hand-built Japanese pronunciation to Katakana FST \cite{RK09}.
+\item A hand-built Japanese pronunciation to Katakana wFST \cite{RK09}.
 \end{enumerate}
 
 \newcite{RK09} report back-transliteration whole-name error rates (WNER) on a list of 100 transliterated US senator names (In WNER, a decoding is correct if both the first and last name are correctly decoded).
-They train the FST cascade in both the parallel and non-parallel data settings, obtaining 40\% WNER with parallel data (trained over 3.3K word pairs), compared to 73\% WNER without parallel data (trained over 9.5K Japanese words only).
+They train the wFST cascade in both the parallel and non-parallel data settings, obtaining 40\% WNER with parallel data (trained over 3.3K word pairs), compared to 73\% WNER without parallel data (trained over 9.5K Japanese words only).
 
 \subsection{Inverse Model}
 PAT requires a pipeline in the reverse direction, for transliteration of Japanese to English.
@@ -25,8 +25,8 @@ We constructed a unigram LM of Katakana terms over the top 25K most frequent Kat
 % (REFERENCE).
 %(http://corpora.informatik.uni-leipzig.de/download.html)
 
-The remaining required FSTs were obtained by inverting the baseline FSTs (that is, FSTs 2,3,4), and the cascade was composed accordingly (depicted at the bottom of Figure \ref{fig:fsts}).
-In particular, by inverting $t_1$, we obtained a Japanese-to-English FST $t_2$ that allows only 2-to-1 or 1-to-1 phoneme mappings.
+The remaining required wFSTs were obtained by inverting the baseline wFSTs (that is, wFSTs 2,3,4), and the cascade was composed accordingly (depicted at the bottom of Figure \ref{fig:fsts}).
+In particular, by inverting $t_1$, we obtained a Japanese-to-English wFST $t_2$ that allows only 2-to-1 or 1-to-1 phoneme mappings.
 
 \subsection{Training and Decoding}
 For training data, we took the top 50\% most frequent terms from each LM, resulting in a set of 20K English terms and a set of 22.5K Japanese terms.
