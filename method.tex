@@ -128,7 +128,7 @@ q_k(\vz\kn, \vx\kn) & \mathrel{:=} \pk(\vz\kn \mid \vx\kn ; \Tk)
 where, in the parallel data setting, only the alignment is missing ($\vz\kn = \va\kn$) and in the non-parallel data setting, both the alignment and the origin entity are missing
 ($\vz_1^n = (\va_1^n, \ve^n), \vz_2^n = (\va_2^n, \vf^n)$).
 
-Both the word alignment and transliteration models considered in this paper can be encoded as FST instances. This implies that the E-step posteriors $q_k$ can be efficiently computed using dynamic programming \cite{Eisner02}. Specifically, for the alignment and transliteration models, this amounts to computing the expected counts  $\E_1[C(e,f)] $ and $\E_2[C(e,f)] $, where $C(e,f)$ is the number of times $e$ is seen aligned to $f$ in a alignment sequence. 
+Both the word alignment and transliteration models considered in this paper can be encoded as wFST instances. This implies that the E-step posteriors $q_k$ can be efficiently computed using dynamic programming \cite{Eisner02}. Specifically, for the alignment and transliteration models, this amounts to computing the expected counts  $\E_1[C(e,f)] $ and $\E_2[C(e,f)] $, where $C(e,f)$ is the number of times $e$ is seen aligned to $f$ in a alignment sequence. 
 
 In the M-step, the computed posteriors are used to construct the coupled sum of expected complete data log-likelihoods. The resulting expression is maximized with respect to the model parameters:
  %$\TA, \TB$:
