@@ -3,17 +3,15 @@ In word alignment, it is common practice to train alignment models in both sourc
 %Alignment symmetrization heuristics, such as intersection, union or grow-diag-final-and play a significant role in reducing alignment errors and ultimately improving translation quality.
 The improvement gained by these post-processing heuristics suggest that each (directional) model suffers from different errors, and that those errors can be mitigated by symmetrization.
 
-Observing this, \newcite{liang+:2006:align} formulate Alignment by Agreement - a joint objective function that maximizes both the observed data-likelihoods as well as a measure of agreement between the two models' posteriors.
-Showing significant reductions in AER they demonstrate the effectiveness of jointly learning the models. However, both symmetrization heuristics and Alignment by Agreement joint training depend on the availability of parallel data. 
+Observing this, \newcite{liang+:2006:align} formulate Alignment by Agreement, which maximizes both the observed data-likelihoods as well as a measure of agreement between the two models' posteriors.
+Showing significant reductions in AER, they demonstrate the effectiveness of jointly learning the models. However, because both symmetrization heuristics and Alignment by Agreement try to create agreement between the inferences of the two models, they necessarily run the two models on the same data, which must be parallel.
 
-In this section we describe Parameter Agreement Training (PAT) - a method for jointly learning directional models that does not depend on parallel data. 	
-We follow Liang et al. (2006) in formulating a joint objective function for training the two directional alignment models, however, we distinguish between two settings that differ in the observed data.
-%We adopt similar notation.
-% denoting the source-to-target direction with subscript 1 and the target-to-source direction with subscript 2 but diverge when necessary.
+In this section, we describe Parameter Agreement Training (PAT), a method for jointly learning directional models that does not depend on parallel data. 	
+We follow Liang et al. (2006) in formulating a joint objective function for training the two directional alignment models, but define the agreement measure in a way that can be applied either to the parallel data or non-parallel data setting.
 
-In the parallel data setting we observe $N$ paired sequences $\set{\vx^n_1}_{n=1}^N=\set{(\ve_n, \vf_n)}_{n=1}^N$ or equivalently $\set{\vx^n_2}_{n=1}^N=\set{(\vf_n, \ve_n)}_{n=1}^N$.
+In the parallel data setting, we observe $N$ paired sequences $\set{\vx^n_1}_{n=1}^N=\set{(\ve_n, \vf_n)}_{n=1}^N$ or, equivalently, $\set{\vx^n_2}_{n=1}^N=\set{(\vf_n, \ve_n)}_{n=1}^N$.
 
-In the decipherment setting we observe two sets of data points $\set{\vx^n_1}_{n=1}^{N_1} = \set{\ve_n}_{n=1}^{N_1}$ and $\set{\vx^n_2}_{n=2}^{N_2} = \set{\vf_n}_{n=1}^{N_2}$.
+In the non-parallel data setting, we observe two sets of data points $\set{\vx^n_1}_{n=1}^{N_1} = \set{\ve_n}_{n=1}^{N_1}$ and $\set{\vx^n_2}_{n=2}^{N_2} = \set{\vf_n}_{n=1}^{N_2}$.
 
 Let $\TA$ and $\TB$ represent the two directional models' parameters.
 For $k\in\set{1,2}$, the probability of the $n$th sample under the $k$th model is denoted $\pk(\vx_k^n; \Tk)$.
@@ -22,13 +20,13 @@ Specifically, in the parallel data setting, the directional probability of $\vx_
 \pA(\vx_1^n; \TA) = p(\vf_n \mid \ve_n; \TA)\\
 \pB(\vx_2^n; \TB) = p(\ve_n \mid \vf_n; \TB)
 \end{align*}
-whereas in the decipherment setting, the probability is defined:
+whereas in the non-parallel data setting, the probability is defined:
 \begin{align*}
 \pA(\vx_1^n; \TA) = p(\vf_n; \TA)\\
 \pB(\vx_2^n; \TB) = p(\ve_n; \TB)
 \end{align*}
 
-Regardless of the two setting, independently optimizing each model entails the maximization of its data log-likelihood (for $k\in{1,2}$):
+In either case, independently optimizing each model entails the maximization of its data log-likelihood (for $k\in{1,2}$):
 $L_k(\set{\vx^n_k}; \Tk)=\sum_n \log\pk(\vx_k^n; \Tk)$
 %
 %\begin{align*}
@@ -36,7 +34,7 @@ $L_k(\set{\vx^n_k}; \Tk)=\sum_n \log\pk(\vx_k^n; \Tk)$
 %\max_{\Tk}\,\,  \sum_n \log \pk(\vx_k^n; \Tk)
 %\end{align*}
 
-To jointly optimize the two models,a coupling term $R(\TA, \TB)$ is introduces, which  encodes a measure of agreement between the two models.
+To jointly optimize the two models, a coupling term $R(\TA, \TB)$ is introduced, which encodes a measure of agreement between the two models.
 The resulting joint optimization problem takes the following form:
 \begin{equation}
 \max_{\TA, \TB}\,\, \lambda R(\TA, \TB)
@@ -44,31 +42,31 @@ The resulting joint optimization problem takes the following form:
 +\sum_{k\in\set{1,2}} L_k(\set{\vx_k^n}; \Tk)
 \label{eqn:joint}
 \end{equation}
-With $\lambda\ge0$ being a tunable coefficient.
+with $\lambda\ge0$ being a tunable hyperparameter.
 
 \subsection{Parameter Agreement Measure}
-Both the word alignment and transliteration models presented in Section \ref{sec:background} are parameterized by a an entity translation table.
+Both the word alignment and transliteration models presented in Section \ref{sec:background} are parameterized by a translation table.
 Considering these tables in both directions, $t_1$ and $t_2$, we suggest the following parameter agreement measure: 
 \begin{equation}
-R(\TA, \TB) = \sum_{e,f} \sqrt{(t_1(\ve \mid \vf) \cdot t_2(\vf \mid \ve))}
+R(\TA, \TB) = \sum_{e,f} \sqrt{t_1(\ve \mid \vf) \cdot t_2(\vf \mid \ve)}
 \label{eqn:R}
 \end{equation}
 where $\ve$ and $\vf$ range over all source and target entity types.
 Note that $R$ disregards the distortion parameters $a$ (if at all present).
 
 Our agreement measure has several appealing properties.
-Using Cauchy-Schwarz, we can bound $R(\TA, \TB) \le \sqrt{|V_E|\cdot|V_F|}$ where $|V_E|, |V_F|$ denote the source and target vocabulary size.
+Using the Cauchy-Schwarz inequality, we can bound $R(\TA, \TB) \le \sqrt{|V_E|\cdot|V_F|}$ where $|V_E|, |V_F|$ denote the source and target vocabulary size.
 %\begin{align*}
 %R(\TA, \TB) 
 %%\sum_{e,f} \sqrt{(t_1(\ve \mid \vf) \cdot t_2(\vf \mid \ve))} 
 %\le &\sqrt{ (\sum_{e,f} t_1(\vf \mid \ve)) (\sum_{e,f} t_2(\ve \mid \vf))}\\
 %= &\sqrt{(|V_E|\cdot|V_F|)}
 %\end{align*}
-In particular, when $|V_E|=|V_F|$ the maximum is attained on parameter configurations for which $t_1(\vf \mid \ve) = t_2(\ve \mid \vf)$ over all entity pairs.
+In particular, when $|V_E|=|V_F|$, the maximum is attained on parameter configurations for which $t_1(\vf \mid \ve) = t_2(\ve \mid \vf)$ over all entity pairs.
 % demonstrating that this agreement term is not biased towards any particular property (e.g, sparsity).
-Thus, the objective in \eqn{eqn:joint} is balancing between similarity in parameter magnitude and data likelihood. \marginpar{\bluetext{TL: this seems like a good place to say something about invertibility}}
+Thus, the objective in \eqn{eqn:joint} balances between similarity in parameter magnitude and data likelihood. \marginpar{\bluetext{TL: this seems like a good place to say something about invertibility}}
 
-Another appealing property of $R$ is its concavity, which follows since $R$ is the sum of concave functions $h(x, y)=\sqrt{xy}$ over a closed convex set (see proof for $h$ in the appendix).
+Another appealing property of $R$ is its concavity, which follows since $R$ is the sum of concave functions $h(x, y)=\sqrt{xy}$ over a closed convex set (see appendix for proof).
 
 % TODO: other agreement terms
 
@@ -120,27 +118,27 @@ Another appealing property of $R$ is its concavity, which follows since $R$ is t
 \subsection{Optimization Procedure}\label{subsec:optimization}
 Using a concave agreement measure, the optimization of \eqn{eqn:joint} neatly falls under the EM framework.
 
-In the E-step, each model $\Tk$, $k\in\set{1,2}$ is held fixed and its posterior distribution over the missing data $\vz_k^n$ is computed per each observation $\vx_k^n$.
+In the E step, each model $\Tk$, $k\in\set{1,2}$ is held fixed and its posterior distribution over the missing data $\vz_k^n$ is computed per each observation $\vx_k^n$:
 \begin{align*}
-\textbf{E}: q_k(\vz\kn, \vx\kn) :=& \pk(\vz\kn \mid \vx\kn ; \Tk)
+q_k(\vz\kn, \vx\kn) & \mathrel{:=} \pk(\vz\kn \mid \vx\kn ; \Tk)
 %\textbf{parallel data}: q_k(\va \mid \ve, \vf) :=& \pA(\va \mid \ve, \vf; \TA) \\
 %\textbf{decipherment}: q_1(\va, \ve \mid \vf) :=& \pA(\va, \ve \mid \vf; \TA)
 \end{align*}
-where in the parallel data setting only the alignment is missing ($\vz\kn = \va\kn$) and in the decipherment setting both the alignment and the origin entity are missing
+where, in the parallel data setting, only the alignment is missing ($\vz\kn = \va\kn$) and in the non-parallel data setting, both the alignment and the origin entity are missing
 ($\vz_1^n = (\va_1^n, \ve_n), \vz_2^n = (\va_2^n, \vf_n)$).
-
-In the M-step, the computed posteriors are used to construct the coupled sum of expected complete data log-likelihoods. The resulting expression is maximized with respect to the model parameters:
- %$\TA, \TB$:
-\begin{align*}
-\textbf{M}: (\TA', \TB') :=& \arg\max_{\TA, \TB}
-\lambda R(\TA,\TB)\\
-&+ \sum_{k, n} q_k(\vz\kn, \vx\kn) \log p_k(\vx\kn, \vz\kn)
-\end{align*}
-with $k\in\set{1,2}$ and $n$ ranging over the appropriate set of samples.
 
 Both the word alignment and transliteration models considered in this paper can be encoded as FST instances. This implies that the E-step posteriors $q_k$ can be efficiently computed using dynamic programming \cite{Eisner02}.
 
-Owing to the concavity of both $R$ and the data log-likelihood functions, the M-step maximization problem can be efficiently solved using convex programming techniques. 
+In the M step, the computed posteriors are used to construct the coupled sum of expected complete data log-likelihoods. The resulting expression is maximized with respect to the model parameters:
+ %$\TA, \TB$:
+\begin{align*}
+(\TA', \TB') & \mathrel{:=} \arg\max_{\TA, \TB}
+\lambda R(\TA,\TB)\\
+&\quad {} + \sum_{k, n} q_k(\vz\kn, \vx\kn) \log p_k(\vx\kn, \vz\kn)
+\end{align*}
+with $k\in\set{1,2}$ and $n$ ranging over the appropriate set of samples.
+
+Owing to the concavity of both $R$ and the data log-likelihood functions, this maximization problem can be efficiently solved using convex programming techniques. 
 We used our own projected gradient descent implementation (PGD). At each step, the current $(\TA, \TB)$ parameters are updated according to the gradient of the M-step objective and then projected back onto the probability simplex.
 We used simple stopping conditions based on objective function convergence or a limited number of iterations.
 

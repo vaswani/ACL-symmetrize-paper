@@ -4,8 +4,8 @@
 We are concerned with learning generative models that describe transformations of a source-language sequence $\ve$ to a target-language sequence $\vf$.
 We consider two different settings for these models.
 
-In the parallel data setting, both $\vx = (\ve, \vf)$ are observed. 
-The generative story assigns the following probability to the event that $\vf$ arises from $\ve$:
+In the parallel data setting, both $\ve$ and $\vf$ are observed, so that the data consists of instances $\vx = (\ve, \vf)$. 
+The generative story assigns the following probability to the event that $\vf$ arises from~$\ve$:\marginpar{DC: one way to fix the abuse of notation is to explicitly write $p(\ve)$ here.}
 \begin{equation}
 p(\vx; \Theta) = p(\vf \mid \ve) = \sum_\va p(\va,\,\vf \mid \ve)
 \label{eqn:parallel}
@@ -13,24 +13,24 @@ p(\vx; \Theta) = p(\vf \mid \ve) = \sum_\va p(\va,\,\vf \mid \ve)
 where $\Theta$ denotes the model parameters and $\va$ denotes a hidden variable that corresponds to unknown choices taken of the generative process.
 %(in our case, $\va$ is an alignment, see next subsection).
 
-In the decipherment setting, only the target entity $\vf$ is observed and the source entity $\ve$ is considered hidden. 
-Letting $\vx = (\vf)$ the decipherment model takes the form:
+In the non-parallel data setting, only the target entity $\vf$ is observed and the source entity $\ve$ is considered hidden. 
+Letting $\vx = (\vf)$, the model takes the form:
 \begin{equation}
-p(\vx; \Theta) = p(\vf) = \sum_{\ve} p(\ve) \sum_{\va} p(\va,\,\vf \mid \ve)
+p(\vx; \Theta) = p(\vf) = \sum_{\ve} p(\ve) \sum_{\va} p(\va,\,\vf \mid \ve).
 \label{eqn:decipherment}
 \end{equation}
-That is, according to the decipherment generative story, the observed entity $\vf$ can arise from any source entity $\ve$ by first selecting $\ve \sim p(\ve)$ and then proceeding according to the parallel data generative story.
+That is, the observed entity $\vf$ can arise from any source entity $\ve$ by first selecting $\ve \sim p(\ve)$ and then proceeding according to the parallel data generative story.
 
-Training these models entails the same objective - maximizing the observed data log-likelihood $L(\Theta \mid X)$:
+Training these models entails the same objective function -- maximizing the observed data log-likelihood $L(\Theta \mid X)$:
 \begin{align*}
 \max_{\Theta}\,\,L(\Theta \mid X)
 %=&\max_{\Theta}\,\,\log\prod_{n}p (\vx_n;\Theta)\\
 =&\max_{\Theta}\,\,\sum_{n}\log p (\vx_n;\Theta)
 \end{align*}
 %_{n=1}^{N}
-where $X=\set{(\ve_{n},\, \vf_{n})}_n$ in the parallel data setting and $X=\set{(\vf_{n})}_n$ in the decipherment setting.
+where $X=\set{(\ve_{n},\, \vf_{n})}_n$ in the parallel data setting and $X=\set{(\vf_{n})}_n$ in the non-parallel data setting.
 
-Next, we make these generative stories concrete by explicitly defining $p(\va, \vf \mid \ve)$ and $p(\ve)$ (if necessary) in two sequence alignment tasks - word alignment and back-transliteration decipherment.
+Next, we make these generative stories concrete by explicitly defining $p(\va, \vf \mid \ve)$ and $p(\ve)$ (if necessary) in two sequence alignment tasks -- word alignment and back-transliteration decipherment.
 
 %We make the discussion concrete by discussing two related tasks - word alignment and back-transliteration. 
 
