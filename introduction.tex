@@ -118,13 +118,13 @@ The most common models used in these tasks are both \emph{generative} and \emph{
 %For example, the IBM 1 word alignment model\cite{brown+alii:1993} describes a stochastic process by which the target sentence is generated from the source sentence via word-for-word translation.
 %
 Considering that the underlying tasks are invertible, 
-one could hope that training these models in both directions (source-to-target and target-to-source) would yield two models that agree. % on their model parameterization  and inferred alignments.
+one could hope that training these models in both directions (source-to-target and target-to-source) would yield two models that agree on their model parameterization  and inferred alignments.
 %Specifically, letting $t_1$ and $t_2$ denote the two models' entity-translation tables, we would expect that $t_1(\vf \mid \ve)$ is high if and only if $t_2(\ve \mid \vf)$ is high. 
-However, this is typically not the case, and this leads to some problems.
+However, this is typically not the case, which leads to some problems.
 
 For one, the model's directionality imposes restrictions on the inference space: in the IBM word alignment models, each target word can align to at most one source word, which may not be appropriate for some language pairs (for example, German compound target words usually arise from multiple English source words). 
 To remedy this, we often resort to ad-hoc techniques, such as grow-diag-final-and \cite{koehn+:2003}, that heuristically combine alignments in two directions.
-While this post-processing resolves some problems, it does not address the core problem -- unsupervised independent training of each model may very well lead to two local maxima that diverge in their parameters and ultimately their inferences. \newcite{liang+:2006:align} suggest an approach they call Alignment by Agreement (ABA) that jointly trains the two directional models by maximizing their individual data likelihoods as well as a model coupling term that rewards agreement between the alignment posteriors of each parallel sentence pair.
+While this post-processing resolves some problems, it does not address the core problem -- unsupervised independent training of each model can lead to two local maxima that diverge in their parameters and ultimately their inferences. \newcite{liang+:2006:align} suggest an approach they call Alignment by Agreement (ABA) that jointly trains the two directional models by maximizing their individual data likelihood as well as a model coupling term that rewards agreement between the alignment posteriors of each parallel sentence pair.
 Although their optimization procedure is inexact, their experimental results demonstrate the effectiveness of jointly training bi-directional models.
 However, the dependence of their coupling term on both posteriors means that their approach only works on parallel data.
 
@@ -140,7 +140,7 @@ we obtain improvements in alignment accuracy by up to 6.3 F1 points,
 and improvements in translation accuracy of up to 0.5 \bleu, 
 both comparable to the improvements obtained by ABA. 
 Interestingly, the ABA and PAT improvements are nearly additive: 
-by combining our alignments with those from ABA, we obtain a total improvement of 0.8-1.5 \bleu.
+by combining our alignments with those from ABA, we obtain a total improvement of 0.7-1.5 \bleu.
 
-Computationally, our resulting objective function can be efficiently optimized using EM, where the E-step remains unchanged and the M-step reduces to an instance of convex programming. 
+Computationally, our resulting objective function can be efficiently optimized using EM, where the E-step remains unchanged and the M-step reduces to an instance of convex programming.
 
