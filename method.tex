@@ -143,7 +143,7 @@ with $k\in\set{1,2}$ and $n$ ranging over the appropriate set of samples. For th
 \end{align*}
 
 \noindent
-where the expected counts were computed in the E-step. Since we only encourage agreement between the translation probabilities, the estimation of the distortion probabilities is left unchanged. We leave agreement training of the distortion parameters for future work. 
+where the expected counts were computed in the E-step. This objective function applies for the $t_1(f \mid e)$ and $t_2(e \mid f)$ parameters in transliteration as well. Since we only encourage agreement between $t_1$ and $t_2$, the estimation of the distortion probabilities is left unchanged. We leave agreement training of the distortion parameters for future work. 
 
 Owing to the concavity of both $R$ and the data log-likelihood functions, this maximization problem can be efficiently solved using convex programming techniques. 
 We used our own projected gradient descent implementation (PGD). At each step, the current $(\TA, \TB)$ parameters are updated according to the gradient of the M-step objective and then projected back onto the probability simplex. We used simple stopping conditions based on objective function convergence or a limited number of iterations.
