@@ -16,7 +16,7 @@ where $\Theta$ denotes the model parameters and $\va$ denotes a hidden variable 
 In the non-parallel data setting, only the target entity $\vf$ is observed and the source entity $\ve$ is considered hidden. 
 Letting $\vx = (\vf)$, the model takes the form:
 \begin{equation}
-p(\vx; \Theta) = p(\vf) = \sum_{\ve} p(\ve) \sum_{\va} p(\va,\,\vf \mid \ve).
+p(\vx; \Theta) = p(\vf) = \sum_{\ve} p(\ve) \sum_{\va} p(\va,\,\vf \mid \ve)
 \label{eqn:decipherment}
 \end{equation}
 That is, the observed entity $\vf$ can arise from any source entity $\ve$ by first selecting $\ve \sim p(\ve)$ and then proceeding according to the parallel data generative story.
