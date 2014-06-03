@@ -54,7 +54,7 @@ task & data ($\times 10^6$) & system & align F1 (\%)  &\multicolumn{3}{c}{\bleu 
         &       & ABA+PAT   &  & &  17.4 (+0.7)& 17.9 (+0.8)&
 \end{tabular}
 \end{center}
-\caption{For Czech-English, the year refers to the WMT shared task; for Chinese-English, the year refers to the NIST Open MT Evaluation.}
+\caption{For Czech-English, the year refers to the WMT shared task; for Chinese-English, the year refers to the NIST Open MT Evaluation. Both ABA and PAT obtain statistically significant results over vanilla EM training, and combining ABA and PAT alignments also improves \bleu{} score significantly, with $p<0.05$ for both. The \bleu{} difference between ABA and PAT is not statistically significant.  }
 \label{tab:results}
 \end{table*}
 
@@ -97,5 +97,4 @@ We also tested the effect of alignments trained with PAT on translation quality,
 % from the GALE program (LDC2006E92) %DC: this must refer to the gold word alignments
 for Czech-English, $2051$ sentences from the WMT10 translation workshop. We used case-insensitive IBM \bleu{} (closest reference length) as our metric. 
 
-On both language pairs, PAT performs significantly better than vanilla EM training, and compares favorably with ABA. The \bleu{} difference between PAT and ABA for Chinese-English is not statistically significant according to a bootstrap resampling significance test~\cite{koehn-stat:2004}.\marginpar{DC: What about the other differences, are they significant?} 
-However, the two approaches are not doing the same thing, as can be seen by combining the alignments (simply concatenating two copies of the parallel text with the two alignments): on Chinese-English, the total improvements reaches +1.5 \bleu{}.
+On both language pairs, PAT performs significantly better than vanilla EM training, and compares favorably with ABA. The \bleu{} difference between PAT and ABA for Chinese-English and Czech is not statistically significant according to a bootstrap resampling significance test~\cite{koehn-stat:2004}. However, the two approaches are not doing the same thing, as can be seen by combining the alignments (simply concatenating two copies of the parallel text with the two alignments): on Chinese-English, the total improvements reaches +1.5 \bleu{}.
