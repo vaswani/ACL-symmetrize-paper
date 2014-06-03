@@ -1,11 +1,12 @@
 \subsection{Generative Models}
-\marginpar{DC: In my opinion, this subsection could be dropped}
+%\marginpar{DC: In my opinion, this subsection could be dropped}
 
 We are concerned with learning generative models that describe transformations of a source-language sequence $\ve$ to a target-language sequence $\vf$.
 We consider two different settings for these models.
 
 In the parallel data setting, both $\ve$ and $\vf$ are observed, so that the data consists of instances $\vx = (\ve, \vf)$. 
-The generative story assigns the following probability to the event that $\vf$ arises from~$\ve$:\footnote{With a slight notation abuse for $p(\vx;\Theta).$}\marginpar{DC: one way to fix the abuse of notation is to explicitly write $p(\ve)$ here.}
+The generative story assigns the following probability to the event that $\vf$ arises from~$\ve$:\footnote{With a slight notation abuse for $p(\vx;\Theta).$}
+%\marginpar{DC: one way to fix the abuse of notation is to explicitly write $p(\ve)$ here.}
 \begin{equation}
 p(\vx; \Theta) = p(\vf \mid \ve) = \sum_\va p(\va,\,\vf \mid \ve)
 \label{eqn:parallel}
