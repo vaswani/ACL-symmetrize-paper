@@ -69,7 +69,7 @@ In contrast to the Alignment by Agreement approach of Liang et al., our method w
 We test our method on two tasks:
 (1) On Czech-English and Chinese-English word alignment, 
 we gain +0.4--0.5 \bleu compared to GIZA++. 
-Combining with alignments from Liang et al.'s model brings the total improvement to +0.8--1.5 BLEU
+Combining with alignments from Liang et al.'s model brings the total improvement to +0.8--1.5 \bleu
 (2) On Japanese-to-English back-transliteration \emph{without} parallel data, our method, applied to the decipherment model of Ravi and Knight, learns sparser models that reduce whole-name error rate, relative to a model trained on parallel data, by 33\%.
 \end{abstract}
 
@@ -101,7 +101,7 @@ We presented Parameter Agreement Training (PAT), an unsupervised method for join
 
 Our formulation is based on the simple observation that the entity translation tables of bi-directional models should maintain some notion of invertibility -- that is, that with high probability, the translation of the translation of an entity should be itself.
 
-We developed an efficient, theoretically sound optimization algorithm that falls under the EM framework. We demonstrated our formulation's effectiveness on two distinct alignment tasks. On word alignment, PAT yielded BLEU improvements comparable to the state-of-the-art ABA word alignment method, and orthogonal in the sense that combining the two methods yielded further improvements. On an English-to-Japanese back-transliteration task without parallel data (where ABA is not applicable), we obtained large reductions in error rate compared to the previous best approach.
+We developed an efficient, theoretically sound optimization algorithm that falls under the EM framework. We demonstrated our formulation's effectiveness on two distinct alignment tasks. On word alignment, PAT yielded \bleu improvements comparable to the state-of-the-art ABA word alignment method, and orthogonal in the sense that combining the two methods yielded further improvements. On an English-to-Japanese back-transliteration task without parallel data (where ABA is not applicable), we obtained large reductions in error rate compared to the previous best approach.
 
 \section*{Appendix}
 To prove $h(x,y) = \sqrt{xy}$ is concave over $x,y\in [0,1]$, we show $h(\alpha (x_0, y_0) + (1-\alpha)(x_1, y_1)) \ge \alpha h(x_0,y_0) + (1-\alpha) h(x_1, y_1)$:
