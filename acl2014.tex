@@ -61,16 +61,31 @@
 \begin{document}
 \maketitle
 \begin{abstract}
-Aligning sequences (for example, word alignment on parallel text) is a key problem in NLP.
-Most alignment models are asymmetric (a source sequence generates a target sequence) even though the phenomenon being modeled is basically symmetric. 
-%For example, combining word alignments in both directions leads to improved results.
-We propose a method for jointly learning bidirectional alignment models by maximizing their likelihoods and a measure of model agreement.
-In contrast to the Alignment by Agreement approach of Liang et al., our method works even \emph{without} parallel data.
-We test our method on two tasks:
-(1) On Czech-English and Chinese-English word alignment, 
-we gain +0.4--0.5 \bleu compared to GIZA++. 
-Combining with alignments from Liang et al.'s model brings the total improvement to +0.7--1.5 \bleu
-(2) On Japanese-to-English back-transliteration \emph{without} parallel data, our method, applied to the decipherment model of Ravi and Knight, learns sparser models that reduce whole-name error rate, relative to a model trained on parallel data, by 33\%.
+
+In "Alignment by Agreement" (ABA) Liang. et al. propose to train two directional word alignment models by maximizing their joint data-likelihood and a term that measures their inferences agreements.
+Inspired by their method, we develop a joint training approach for general sequence alignment that relies on the simple intuition that a back-translation of a translation should likely be itself.
+By coupling the two models through their parameters (as opposed to through their inferences) our method remains applicable to all word-based alignment models and furthermore extends to alignment \emph{without} parallel data.
+Our proposed algorithm is mathematically sound and enjoys convergence guarantees by properties of generalized EM.
+We test our method on two sequence alignment tasks:
+(1) On Czech-English and Chinese-English our method attains significant F- and BLEU score improvements compared to both giza++ and ABA.
+(2) On Japanese-to-English back-transliteration without parallel data, our method, applied to the decipherment model of Ravi and Knight, learns sparser models that reduce whole-name error rate by 33\% relative to a model trained on parallel data, as well as significantly beats a previous approach by Markos et al.
+
+
+
+%Transferring information (such as words or sentences) from a source to target language is a natural language phenomenon that is intuitively invertible - the translation of the translation of an entity is likely to be itself.
+%In NLP however, the commonplace generative models describing such phenomena are directional, 
+%Left unchecked, independently training two such directional models often leads to trained models that diverge from 
+
+%Sequence alignment is a key problem in NLP (e.g., word alignment on parallel text).
+%Common alignment models are based on a directed generative story which views one sequence as a source, and the other, as being generated a source a source sequence into a target sequence, even though the phenomenon being modeled is itself invertible (translation, transliteration)
+%%For example, combining word alignments in both directions leads to improved results.
+%We propose a method for jointly learning bi-directional alignment models by maximizing their likelihoods, coupled  a measure of model agreement.
+%In contrast to the Alignment by Agreement approach of Liang et al., our method works even \emph{without} parallel data 
+%We test our method on two tasks:
+%(1) On Czech-English and Chinese-English word alignment, 
+%we gain +0.4--0.5 \bleu compared to GIZA++. 
+%Combining with alignments from Liang et al.'s model brings the total improvement to +0.7--1.5 \bleu
+%(2) On Japanese-to-English back-transliteration \emph{without} parallel data, our method, applied to the decipherment model of Ravi and Knight, learns sparser models that reduce whole-name error rate, relative to a model trained on parallel data, by 33\%.
 \end{abstract}
 
 \section{Introduction}
