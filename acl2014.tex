@@ -65,7 +65,7 @@
 In "Alignment by Agreement" (ABA) Liang. et al. propose to train two directional word alignment models by maximizing their joint data-likelihood and a term that measures their inferences agreements.
 Inspired by their method, we develop a joint training approach for general sequence alignment that relies on the simple intuition that a back-translation of a translation should likely be itself.
 By coupling the two models through their parameters (as opposed to through their inferences) our method remains applicable to all word-based alignment models and furthermore extends to alignment \emph{without} parallel data.
-Our proposed algorithm is mathematically sound and enjoys convergence guarantees by properties of generalized EM.
+Our proposed algorithm is mathematically sound and enjoys convergence guarantees by virtue of generalized EM.
 We test our method on two sequence alignment tasks:
 (1) On Czech-English and Chinese-English our method attains significant F- and BLEU score improvements compared to both giza++ and ABA.
 (2) On Japanese-to-English back-transliteration without parallel data, our method, applied to the decipherment model of Ravi and Knight, learns sparser models that reduce whole-name error rate by 33\% relative to a model trained on parallel data, as well as significantly beats a previous approach by Markos et al.
@@ -96,7 +96,7 @@ We test our method on two sequence alignment tasks:
 \label{sec:background}
 \input{background.tex}
 
-\section{Parameter Agreement Training}
+\section{PAT: Parameter Agreement Training}
 \label{sec:method}
 \input{method.tex}
 
