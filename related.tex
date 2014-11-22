@@ -1,14 +1,50 @@
-From a general machine learning perspective, our proposed method can be classified as an unsupervised regularized multi-task learning technique \cite{Evgeniou04,Caruana97}.
+%We describe two baseline approaches, contrast them with MIR and discuss other related work.
 
-Our joint objective (\eqn{eqn:joint}) is inspired by ABA \cite{liang+:2006:align}, which suggests a joint optimization problem for training both directional models. 
-The proposed agreement measure
-$\sum_\vx \log \sum_{\vz} p_1(\vz \mid \vx; \TA) p_2(\vz \mid \vx; \TB)$
-requires access to the posteriors of each sample ($\vx=(\ve, \vf)$) under \emph{both} models.
-It is this dependency on parallel data that limits the applicability of the ABA formulation to the parallel data setting. 
-Therefore, in some sense, our work can be viewed as a generalization of \newcite{liang+:2006:align} beyond the parallel data setting. \newcite{graca+alii:2010} also develop an approach that encourages agreement in bidirectional word alignment models. They achieve this by adding constraints on the posterior distributions over word alignments. However, their optimization requires many inference calls over the parallel data, making it unscalable. 
+\subsection{Parallel Data Baseline: $\method{ABA}$}
+Our approach is most similar to ``Alignment by Agreement'' \cite{liang+:2006:align} who first proposed a single joint objective for two word alignment models.
+The difference between our objective (\eqn{eqn:joint}) and theirs lies in their proposed regularizer which rewards the per-sample agreement of the two models' posteriors:
+$$\sum_n \log \sum_\vz  p_1(\vz\mid \vx^n)\cdot p_2(\vz\mid \vx^n)$$
+Where $\vx^n = (\ve^n, \vf^n)$ and $\vz$ ranges over the set of possible alignments between $\ve^n$ and $\vf^n$.
 
-Current decipherment work seems to focus on large scale MT experiments \cite{Ravi11,Dou13}. 
-We believe our approach would be beneficial in those settings as well.
+\newcite{liang+:2006:align} note that proper EM optimization of their regularized joint objective leads to an intractable E-step. 
+%(computing the normalization constant per sample over the set of all possible alignments is a \#P-complete problem even for IBM model 1.)
+Unable to exactly and efficiently compute posteriors, they resort to a product-of-marginals heuristic which breaks EM's convergence guarantees, but has a closed-form solution and works well in practice.
+
+$\method{MIR}$ regularization has both theoretical and practical advantages over $\method{ABA}$ which makes our method more convenient and broadly applicable:
+%\begin{itemize}
+%\item 
+(1) By regularizing for posterior agreement, $\method{ABA}$ is restricted to a parallel data scenario, whereas by regularizing model parameters $\method{MIR}$ can be applied with or without parallel data.
+%\item
+(2) More advanced models (such as fertility-based word alignment models) already resort to approximation techniques when compute posteriors. Further using $\method{ABA}$'s product-of-marginals heuristic, we run the risk of getting highly inaccurate posteriors (specifically, even 0 valued posteriors).
+\marginpar{\bluetext{it is also unclear how to apply ABA at all}} 
+In contrast, $\method{MIR}$ does not add any heuristics - the modified M-step can be computed exactly and efficiently using convex optimization techniques.
+%\end{itemize}
+
+\subsection{Non-Parallel Data Baseline: $\method{bi\mbox{-}EM}$}
+\newcite{Mylonakis2007} address an entity substitution decipherment task without parallel data. They reparameterize two directional models using a single joint and re-normalized parameterization. Specifically, each directional model, originally consisting of a t-table only, is reparameterized:
+\begin{equation*}
+\tA(f\mid e) = \frac{\theta_{e,f}}{\sum_{f} \theta_{e,f}}
+\,\,\text{ and }\,\,
+\tB(e\mid f) = \frac{\theta_{e,f}}{\sum_{e} \theta_{e,f}}
+\end{equation*}
+They then formulate an optimization program in $\theta$, maximizing the likelihood of monolingual observations from both languages:
+\begin{equation*}
+\max_\theta L_1(\set{\vf^n}; \theta) + L_2(\set{\ve^n}; \theta)
+\end{equation*}
+where for example 
+$$L_1(\set{\vf^n}; \theta) = \log \prod_n \sum_\ve p(\ve) \prod_{m} t_1(\vf^n_m\mid\ve_m)$$
+with $p(\ve)$ denoting the probability of $\ve$ according to a source language model.
+
+Using their method, \newcite{Mylonakis2007} report improved results on POS-tagging and monotone noun sequence translation without parallel data.
+In the Appendix we discuss their algorithm $\method{bi\mbox{-}EM}$ and argue that the M-step solution does not correspond to an MLE solution and therefore erroneous. Nevertheless, due to their reported improved results, we regarded $\method{bi\mbox{-}EM}$ as a competitive baseline for $\method{MIR}$.
+
+
+\subsection{Other Related Work}
+%From a general machine learning perspective, our proposed method can be classified as an unsupervised regularized multi-task learning technique \cite{Evgeniou04,Caruana97}.
+
+\newcite{graca+alii:2010} also develop an approach that encourages bidirectional word alignment agreement, which they achieve by placing constraints on the word alignment posterior distributions. However, their optimization requires many inference calls over the parallel data, making it hard to scale.
+
+Beyond parallel data, $\method{MIR}$ can also be applied to large-scale MT decipherment \cite{Ravi11,Dou13}, where, so far, only a single directional model was used.
 %
 %Bi-directional Conversion Between Graphemes and Phonemes Using a Joint N-gram Model. \bluetext{TL: This paper discusses a \textbf{joint} grapheme-to-phoneme model, trained on parallel data -- It may be out of scope.}
 %

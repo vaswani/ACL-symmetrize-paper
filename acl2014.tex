@@ -16,7 +16,7 @@
 
 \documentclass[11pt]{article}
 \usepackage[a4paper]{geometry}
-\usepackage{acl2014}
+\usepackage{naaclhlt2015}
 \usepackage{times}
 \usepackage{url}
 \usepackage{latexsym}
@@ -24,6 +24,7 @@
 \usepackage{amsfonts}
 \usepackage{amssymb}
 \usepackage{color}
+\usepackage{arydshln}
 %\DeclareMathOperator*{\argmax}{arg\,max}
 %\DeclareMathOperator*{\argmin}{arg\,min}
 
@@ -40,8 +41,7 @@
 % in the camera-ready version and ask you to change it back.
 %\input{defs}
 
-\title{Parameter Agreement Training:\\ Sequence Alignment with and without Parallel Data}
-%{Joint Training of Alignment Models: with and without Parallel Data}
+\title{Model Invertibility Regularization for\\Sequence Alignment With or Without Parallel Data}
 
 
 %\author{First Author \\
@@ -71,7 +71,6 @@ We test our method on two sequence alignment tasks:
 (2) On Japanese-to-English back-transliteration without parallel data, our method, applied to the decipherment model of Ravi and Knight, learns sparser models that reduce whole-name error rate by 33\% relative to a model trained on parallel data, as well as significantly beats a previous approach by Markos et al.
 
 
-
 %Transferring information (such as words or sentences) from a source to target language is a natural language phenomenon that is intuitively invertible - the translation of the translation of an entity is likely to be itself.
 %In NLP however, the commonplace generative models describing such phenomena are directional, 
 %Left unchecked, independently training two such directional models often leads to trained models that diverge from 
@@ -90,48 +89,48 @@ We test our method on two sequence alignment tasks:
 
 \section{Introduction}
 \label{sec:introduction}
-\input{introduction.tex}
+\input{introduction.tex}`
 
 \section{Background}
 \label{sec:background}
 \input{background.tex}
 
-\section{PAT: Parameter Agreement Training}
+\section{Model Invertibility Regularization}
 \label{sec:method}
 \input{method.tex}
 
-\section{Related Work}
+\section{Baselines and Related Work}
 \input{related.tex}
 
-\section{Transliteration Without Parallel Text}
-\label{sec:transliteration}
-\input{transliteration.tex}
-
-\section{Word Alignment}
+\section{Word Alignment and MT Experiments}
 \label{sec:alignment}
 \input{alignment.tex}
 
+\section{Transliteration Deciphering Experiment}
+\label{sec:transliteration}
+\input{transliteration.tex}
+
+
 \section{Conclusion}
-We presented Parameter Agreement Training (PAT), an unsupervised method for jointly training two bidirectional alignment models that encourages agreement on parameter values and does not depend on the availability of parallel data.
+We presented Model Invertibility Regularization ($\method{MIR}$), an unsupervised method for jointly training two bidirectional alignment models that encourages agreement on parameter values and does not depend on the availability of parallel data.
 
 %Our formulation is based on the simple observation that the entity translation tables of bi-directional models should maintain some notion of invertibility -- that is, that with high probability, the translation of the translation of an entity should be itself.
 
-We developed an efficient, theoretically sound optimization algorithm that falls under the EM framework. We demonstrated our formulation's effectiveness on two distinct alignment tasks. On word alignment, PAT yielded \bleu improvements comparable to the Alignment by Agreement method \cite{liang+:2006:align}, and orthogonal in the sense that combining the two methods yielded further improvement (up to 1.5 \bleu). On an English-to-Japanese back-transliteration task without parallel data (where ABA is not applicable), we obtained 33\% reduction in error rate compared to the previous best approach.
-
-\section*{Appendix}
-To prove $h(x,y) = \sqrt{xy}$ is concave over $x,y\in [0,1]$, we show $h(\alpha (x_0, y_0) + (1-\alpha)(x_1, y_1)) \ge \alpha h(x_0,y_0) + (1-\alpha) h(x_1, y_1)$:
-\begin{align*}
-&h^2(\alpha (x_0, y_0) + (1-\alpha)(x_1, y_1)) \\
-&= (\alpha x_0 + (1-\alpha) x_1)(\alpha y_0 + (1-\alpha) y_1) \\
-&\ge \left( \alpha \sqrt{x_0 y_0} + (1-\alpha) \sqrt{x_1 y_1} \right)^2 \\
-&= \left( \alpha h(x_0,y_0) + (1-\alpha) h(x_1,y_1) \right)^2
-\end{align*}
-with the inequality following from the Cauchy-Schwarz inequality.
+We developed an efficient, theoretically sound optimization algorithm that falls under the EM framework. We demonstrated our formulation's effectiveness on two distinct alignment tasks. On word alignment, $\method{MIR}$ yielded \bleu improvements comparable to the Alignment by Agreement method \cite{liang+:2006:align}, and orthogonal in the sense that combining the two methods yielded further improvement (up to 1.5 \bleu). On an English-to-Japanese back-transliteration task without parallel data (where $\method{ABA}$ is not applicable), we obtained 33\% reduction in error rate compared to the previous best approach.
+%\section*{Appendix}
+%To prove $h(x,y) = \sqrt{xy}$ is concave over $x,y\in [0,1]$, we show $h(\alpha (x_0, y_0) + (1-\alpha)(x_1, y_1)) \ge \alpha h(x_0,y_0) + (1-\alpha) h(x_1, y_1)$:
+%\begin{align*}
+%&h^2(\alpha (x_0, y_0) + (1-\alpha)(x_1, y_1)) \\
+%&= (\alpha x_0 + (1-\alpha) x_1)(\alpha y_0 + (1-\alpha) y_1) \\
+%&\ge \left( \alpha \sqrt{x_0 y_0} + (1-\alpha) \sqrt{x_1 y_1} \right)^2 \\
+%&= \left( \alpha h(x_0,y_0) + (1-\alpha) h(x_1,y_1) \right)^2
+%\end{align*}
+%with the inequality following from the Cauchy-Schwarz inequality.
 
 %We have presented Parameter Agreement Training (PAT) - an approach for jointly training two conditional models that encourages agreement on parameter values.
 %We derived an optimization procedure based on the EM framework, and argued that it is efficiently solvable due to the concavity of our agreement regularizer.
 %In contrast to previous work on agreement training, we have demonstrated that our approach can be successfully applied even without parallel data.
-\bibliographystyle{acl}
+\bibliographystyle{naaclhlt2015}
 \bibliography{thesis}
 
 \end{document}

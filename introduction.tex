@@ -6,28 +6,28 @@ In NLP however, the commonplace generative models describing such phenomena are 
 Left unchecked, independently training two such directional models (source-to-target and target-to-source) often yields two models that diverge from this invertibility intuition. 
 
 Specifically, in word alignment it is well known that the alignments inferred by a model trained in one direction often mismatch those inferred by a model trained in the reverse direction.
-To remedy this disparity (and other shortcomings), we usually resort to ad-hoc alignment symmetrization techniques such as grow-diag-final-and \cite{koehn+:2003} that heuristically combine alignments from both directions.
+To remedy the disparity (and other shortcomings), we usually resort to ad-hoc alignment symmetrization techniques such as grow-diag-final-and \cite{koehn+:2003} that heuristically combine alignments from both directions.
 
-
-\newcite{liang+:2006:align} suggest a more fundamental approach they call ``Alignment by Agreement'' (ABA) which jointly trains the two models by maximizing their individual data-likelihoods along with a model coupling term that rewards agreement between their alignment posteriors (computed over each parallel sentence pair).
+\newcite{liang+:2006:align} suggest a more fundamental approach they call ``Alignment by Agreement'' (ABA) which jointly trains the two models by maximizing their individual data-likelihoods along with a regularizer that rewards agreement between their alignment posteriors (computed over each parallel sentence pair).
 Although their EM-like optimization procedure is heuristic, 
 \marginpar{\bluetext{"we use a heuristic approximation which nonetheless works well in practice."}} 
 their experimental results demonstrate the effectiveness of jointly training bidirectional models. 
 
-In this paper we develop a different approach for jointly training bi-directional sequence alignment models called PAT (``Parameter Agreement Training'').
+In this paper we develop a different approach for jointly training bi-directional sequence alignment models called MIR (``Model Invertibility Regularization'').
 Our approach has several benefits over that of Liang et al.: 
 (1) In the context of word alignment, a single implementation extends to all the ordinary word-based alignment models, allowing us to experiment with the more advanced fertility based models with ease.
-(2) PAT can be applied to sequence alignment even without access to parallel data at all.
-(3) Our proposed algorithm faithfully follows the generalized EM recipe, thus possessing convergence guarantees.
+(2) MIR can be applied to sequence alignment even without access to parallel data at all.
+(3) The MIR algorithm faithfully follows the generalized EM recipe and so possesses theoretical convergence guarantees.
 
-The key idea facilitating the extension to more complex models and other data settings is in our coupling term which regularizes the model parameters, as opposed to their inferences. Specifically, our model coupling term was designed to reward model pairs whose entity-translation tables match the intuition described above ("the back-translation of the translation is itself").
+The key idea facilitating the extension to more complex models and to different data settings is in our regularizer, which regularizes the model parameters as opposed to their inferences. 
+Specifically, our regularizer was designed to reward model pairs whose entity-translation tables respect our intuition regarding the invertibility of the alignment task.
 
-We tested and compared PAT to competitive baselines on two sequence alignment tasks - word alignment and back-transliteration without parallel data (a.k.a. ``Decipherment'').
+We tested and compared MIR to competitive baselines on two sequence alignment tasks - word alignment and back-transliteration without parallel data (a.k.a. ``Decipherment'').
 On Czech-English and Chinese-English word alignment, restricted to the HMM model, our approach attains F- and BLEU score improvement that are quantitatively comparable to those of ABA, but qualitatively different so that combining both alignments yields additive gains over each method independently. 
 We further apply our approach to the fertility based word alignment models showing significant gains in BLEU compared to ordinary models.
 
-On English-Japanese back-transliteration decipherment we applied PAT to the cascade of FSTs approach proposed by \newcite{RK09}. 
-Using PAT, we were able to reduce the whole-name error-rate relative to a model trained on parallel data by 33\%, as well as significantly outperform a more competitive jointly trained baseline by Markos et al.
+On English-Japanese back-transliteration decipherment we applied MIR to the cascade of FSTs approach proposed by \newcite{RK09}. 
+Using MIR, we were able to reduce the whole-name error-rate relative to a model trained on parallel data by 33\%, as well as significantly outperform a more competitive jointly trained baseline by Markos et al.
 
 
 
