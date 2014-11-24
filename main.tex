@@ -1,49 +1,22 @@
-%
-% File acl2014.tex
-%
-% Contact: koller@ling.uni-potsdam.de, yusuke@nii.ac.jp
-%%
-%% Based on the style files for ACL-2013, which were, in turn,
-%% Based on the style files for ACL-2012, which were, in turn,
-%% based on the style files for ACL-2011, which were, in turn, 
-%% based on the style files for ACL-2010, which were, in turn, 
-%% based on the style files for ACL-IJCNLP-2009, which were, in turn,
-%% based on the style files for EACL-2009 and IJCNLP-2008...
-
-%% Based on the style files for EACL 2006 by 
-%%e.agirre@ehu.es or Sergi.Balari@uab.es
-%% and that of ACL 08 by Joakim Nivre and Noah Smith
-
 \documentclass[11pt]{article}
 \usepackage[a4paper]{geometry}
 \usepackage{naaclhlt2015}
-\usepackage{times}
+%\usepackage{times}
 \usepackage{url}
-\usepackage{latexsym}
+%\usepackage{latexsym}
 \usepackage{amsmath}
-\usepackage{amsfonts}
-\usepackage{amssymb}
+%\usepackage{amsfonts}
+%\usepackage{amssymb}
 \usepackage{color}
 \usepackage{arydshln}
-%\DeclareMathOperator*{\argmax}{arg\,max}
-%\DeclareMathOperator*{\argmin}{arg\,min}
 
 \usepackage{graphicx}
 \usepackage{xspace}
 \usepackage{multirow}
 
-
 %\setlength\titlebox{5cm}
 
-% You can expand the titlebox if you need extra space
-% to show all the authors. Please do not make the titlebox
-% smaller than 5cm (the original size); we will check this
-% in the camera-ready version and ask you to change it back.
-%\input{defs}
-
 \title{Model Invertibility Regularization:\\Sequence Alignment With or Without Parallel Data}
-
-
 %\author{First Author \\
 %  Affiliation / Address line 1 \\
 %  Affiliation / Address line 2 \\
@@ -58,17 +31,18 @@
 
 \input{math_definition.tex}
 
+\usepackage{txfonts}
+
 \begin{document}
 \maketitle
 \begin{abstract}
-We present "Model Invertibility Regularization" ($\method{MIR}$), a method for jointly training two directional word alignment models.
-Our method is most similar to "Alignment by Agreement" $\method{ABA}$ \cite{liang+:2006:align} which maximizing the regularized data-likelihoods of both models jointly.
-Inspired by their method, we develop a joint training approach for general sequence alignment that relies on the simple intuition that a (back-)translation of a translation should likely be itself.
-By coupling the two models through their parameters, as opposed to through their inferences, our method remains applicable to all word-based alignment models and furthermore extends to alignment \emph{without} parallel data.
-Our proposed algorithm is mathematically sound and enjoys convergence guarantees of EM.
-We tested $\method{MIR}$ on two tasks:
-(1) On Czech-English and Chinese-English word alignment our method attains significant F- and BLEU score improvements compared to both giza++ and $\method{ABA}$.
-(2) On Japanese-to-English back-transliteration without parallel data, applied to the decipherment model of Ravi and Knight, $\method{MIR}$ learns sparser models that close the gap in whole-name error rate by 33\% relative to a model trained on parallel data, as well as significantly beats a previous joint model approach by \newcite{Mylonakis2007}.
+We present Model Invertibility Regularization (\method{MIR}), a method for jointly training two directional word alignment models
+that relies on the simple intuition that the back-translation of a translation should likely be itself.
+By coupling the two models through their parameters (as opposed to through their inferences, as in Liang et al.'s Alignment by Agreement (ABA) method), our method remains applicable to all IBM-style alignment models and as well as to alignment without parallel data.
+Our proposed algorithm is mathematically sound and enjoys the convergence guarantees of EM.
+We tested \method{MIR} on two tasks:
+(1)~On Czech-English and Chinese-English word alignment, our method attains significant F- and BLEU score improvements compared to both GIZA++ and \method{ABA}.
+(2)~On Japanese-to-English back-transliteration without parallel data, applied to the decipherment model of Ravi and Knight, \method{MIR} learns sparser models that close the gap in whole-name error rate by 33\% relative to a model trained on parallel data, and significantly beats a previous approach by Mylonakis et al.
 
 %In "Alignment by Agreement" (ABA) Liang. et al. propose to train two directional word alignment models by maximizing their joint data-likelihood and a term that measures their inferences agreements.
 %Inspired by their method, we develop a joint training approach for general sequence alignment that relies on the simple intuition that a back-translation of a translation should likely be itself.
@@ -121,12 +95,12 @@ We tested $\method{MIR}$ on two tasks:
 
 
 \section{Conclusion}
-We presented Model Invertibility Regularization ($\method{MIR}$), an unsupervised method for jointly training two bidirectional sequence alignment models with or without parallel data.
-Our formulation is based on the simple observation that the alignment tasks at hand are inherently invertible and encourages the entity translation tables in both bidirectional models to behave more like psuedo-inverses.
+We presented Model Invertibility Regularization (\method{MIR}), an unsupervised method for jointly training two bidirectional sequence alignment models with or without parallel data.
+Our formulation is based on the simple observation that the alignment tasks at hand are inherently invertible and encourages the translation tables in both models to behave more like pseudo-inverses of each other.
 
-We derived an efficient, theoretically sound EM algorithm and demonstrated our method's effectiveness on two distinct alignment tasks. On word alignment, $\method{MIR}$ yielded \bleu improvements comparable to the Alignment by Agreement method \cite{liang+:2006:align}, and orthogonal in the sense that combining the two methods yielded further improvement (up to 1.5 \bleu). On English-Japanese back-transliteration without parallel data, we obtain significant error rate reduction beating two baseline methods \cite{RK09,Mylonakis2007}. 
+We derived an efficient, theoretically sound EM algorithm and demonstrated our method's effectiveness on two different alignment tasks. On word alignment, \method{MIR} yielded \bleu improvements comparable to the Alignment by Agreement method \cite{liang+:2006:align}, and orthogonal in the sense that combining the two methods yielded further improvement (up to 1.5 \bleu). On Japanese-English back-transliteration without parallel data, we obtain significant error rate reduction beating two baseline methods \cite{RK09,Mylonakis2007}. 
 
-As future work, we consider applying $\method{MIR}$ on large-scale MT decipherment \cite{Ravi11,Dou13}, where, so far, only a single directional model was used.
+As future work, we will consider applying $\method{MIR}$ on large-scale MT decipherment \cite{Ravi11,Dou13}, where, so far, only a single directional model has been used.
 %\section*{Appendix}
 %To prove $h(x,y) = \sqrt{xy}$ is concave over $x,y\in [0,1]$, we show $h(\alpha (x_0, y_0) + (1-\alpha)(x_1, y_1)) \ge \alpha h(x_0,y_0) + (1-\alpha) h(x_1, y_1)$:
 %\begin{align*}
