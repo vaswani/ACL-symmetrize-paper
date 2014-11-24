@@ -12,15 +12,15 @@ p(\vf \mid \ve; \Theta) = \sum_\va p(\va,\,\vf \mid \ve)
 where $\Theta$ denotes the model parameters and $\va$ denotes a hidden variable that corresponds to unknown choices taken of the generative process.
 %(in our case, $\va$ is an alignment, see next subsection).
 
-In the non-parallel data setting, only the target entity $\vf$ is observed and the source entity $\ve$ is considered hidden. 
+In the non-parallel data setting, only the target entity $\vf$ is observed and the source entity $\ve$ is hidden. 
 The model assigns the following probability to the observed data:
 \begin{equation}
 p(\vf; \Theta) = \sum_{\ve} p(\ve) \sum_{\va} p(\va,\,\vf \mid \ve)
 \label{eqn:decipherment}
 \end{equation}
-I.e., an observed $\vf$ can arise from any sequence $\ve$ by first selecting $\ve \sim p(\ve)$ and then proceeding according to the parallel data generative story.
+I.e., the sequence $\vf$ can arise from any sequence $\ve$ by first selecting $\ve \sim p(\ve)$ and then proceeding according to the parallel data generative story.
 
-Unsupervised training of such models entails maximizing the log-likelihood $L(\Theta)$:
+Unsupervised training of such models entails maximizing the data log-likelihood $L(\Theta)$:
 \begin{align*}
 \arg\max_{\Theta}\,\,L(\Theta)
 %=&\max_{\Theta}\,\,\log\prod_{n}p (\vx_n;\Theta)\\
