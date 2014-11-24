@@ -1,32 +1,33 @@
 The transfer of information between languages is a common natural language phenomenon that is intuitively invertible. 
-For example, in transliteration, a source-language word is mapped to a different language's writing system under a sound preserving mapping (say,``computer'' to Japanese Romaji, ''konpyutaa``). The original word should then be easily recoverable from its transliterated version.
-Similarly in translation, the back-translation of a translation of a word is likely to be that same word itself.
+For example, in transliteration, a source-language word is mapped to a different language's writing system under a sound preserving mapping (say,``computer'' to Japanese Romaji, ``konpyutaa''). The original word should then be easily recoverable from its transliterated version.
+Similarly, in translation, the back-translation of a translation of a word is likely to be that same word itself.
 
-In NLP however, the commonplace generative models describing such phenomena are directional, only concerning with the transfer of source-language entities to target-language entities or vice versa, but not both.
-Left unchecked, independently training two such directional models (source-to-target and target-to-source) often yields two models that diverge from this invertibility intuition. Specifically, in word alignment, the alignments inferred by a model trained in one direction often mismatch those inferred by a model trained in the reverse direction.
+In NLP, however, commonly-used generative models describing such phenomena are directional, only concerned with the transfer of source-language symbols to target-language symbols or vice versa, but not both directions.
+Left unchecked, independently training two such directional models (source-to-target and target-to-source) often yields two models that diverge from this invertibility intuition. In word alignment, this can lead to disagreements between the alignments inferred by a model trained in one direction and those inferred by a model trained in the reverse direction.
 To remedy this disparity (and other shortcomings), it is common to turn to alignment symmetrization techniques such as grow-diag-final-and \cite{koehn+:2003} which heuristically combine alignments from both directions.
 
-\newcite{liang+:2006:align} suggest a more fundamental approach they call ``Alignment by Agreement'' ($\method{ABA}$) which jointly trains the two models by maximizing their data-likelihoods along with a regularizer that rewards agreement between their alignment posteriors (computed over each parallel sentence pair).
+\marginpar{DC: Consider mentioning MIR before ABA}
+\newcite{liang+:2006:align} suggest a more fundamental approach they call Alignment by Agreement ($\method{ABA}$), which jointly trains the two models by maximizing their data-likelihoods along with a regularizer that rewards agreement between their alignment posteriors (computed over each parallel sentence pair).
 Although their EM-like optimization procedure is heuristic, 
 \marginpar{\bluetext{"we use a heuristic approximation which nonetheless works well in practice."}} 
-their alignment experimental results demonstrate the effectiveness in jointly training bidirectional models. 
+it proves effective at jointly training bidirectional models. 
 
-In this paper we develop a different approach for jointly training bi-directional sequence alignment models called ``Model Invertibility Regularization'', denoted $\method{MIR}$ (Section \ref{sec:method})
-Our approach has several benefits over $\method{ABA}$:
-(1) $\method{MIR}$ can be applied to sequence alignment even without parallel data.
-(2) A single implementation extends to all IBM models, including the fertility based models.
-(3) The $\method{MIR}$ algorithm faithfully follows the EM recipe and inherits its theoretical convergence guarantees.
+In this paper we develop a different approach for jointly training bidirectional sequence alignment models called Model Invertibility Regularization, or \method{MIR} (Section \ref{sec:method}).
+Our approach has several benefits over \method{ABA}:
+First, \method{MIR} can be applied to sequence alignment even without parallel data.
+Second, a single implementation extends to all IBM models, including the fertility based models.
+Finally, the \method{MIR} algorithm faithfully follows the EM recipe and inherits its theoretical convergence guarantees.
 
 The key idea facilitating the extension to complex models and to non-parallel data settings is in our regularizer, which operates on the model parameters as opposed to their inferences. 
-Specifically, $\method{MIR}$ was designed to reward model pairs whose entity-translation tables respect the invertibility intuition.
+Specifically, \method{MIR} was designed to reward model pairs whose translation tables respect the invertibility intuition.
 
-We tested $\method{MIR}$ against competitive baselines on two sequence alignment tasks - word alignment and back-transliteration without parallel data.
+We tested \method{MIR} against competitive baselines on two sequence alignment tasks: word alignment and back-transliteration without parallel data.
 
-On Czech-English and Chinese-English word alignment (Section \ref{sec:alignment}), restricted to the HMM model, our approach attains F- and BLEU score improvement that are quantitatively comparable to those of ABA, but qualitatively different so that combining both alignments yields additive gains over each method independently. 
-We further apply our approach to the fertility based word alignment models showing significant gains in BLEU compared to ordinary models.
+On Czech-English and Chinese-English word alignment (Section \ref{sec:alignment}), restricted to the HMM model, our approach attains F- and BLEU score improvements that are quantitatively comparable to those of ABA, but qualitatively different, so that combining both alignments yields additive gains over each method by itself.
+We further apply our approach to the fertility-based IBM Model 4, showing significant gains in BLEU compared to ordinary models.\marginpar{DC: what are ordinary models}
 
-On English-Japanese back-transliteration decipherment (Section \ref{sec:transliteration}) we applied $\method{MIR}$ to the cascade of wFSTs approach proposed by \newcite{RK09}.
-Using $\method{MIR}$, we were able to reduce the whole-name error-rate relative to a model trained on parallel data by 33\%, as well as significantly outperform the joint model of \newcite{Mylonakis2007}.
+On English-Japanese back-transliteration decipherment (Section \ref{sec:transliteration}), we apply \method{MIR} to the cascade of wFSTs approach proposed by \newcite{RK09}.
+Using \method{MIR}, we are able to reduce the whole-name error-rate relative to a model trained on parallel data by 33\%, as well as significantly outperform the joint model of \newcite{Mylonakis2007}.
 
 
 
