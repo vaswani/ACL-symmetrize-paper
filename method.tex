@@ -1,33 +1,34 @@
 
 In this section we propose a method for jointly training two word alignment models, a source-to-target model $\TA$ and a target-to-source model $\TB$, by regularizing their parameters to respect the invertibility of the alignment task. 
-We therefore named our method \emph{Model Invertibility Regularization} (MIR).
+We therefore name our method \emph{Model Invertibility Regularization} (\method{MIR}).
 
-Specifically, our regularizer operates on the t-tables parameters $\tA, \tB$ of the two models, as follows:
+\subsection{Regularizer}
+
+Our regularizer operates on the t-table parameters $\tA, \tB$ of the two models, as follows:
 Let matrices $T_1, T_2$ denote the t-tables $\tA, \tB$ in matrix form and consider their multiplication $T=T_1 T_2$. 
-The resulting matrix $T$ is a stochastic square matrix of dimension $|V_1|\times|V_1|$ where $|V_1|$ represents the size of the source-language vocabulary.
+The resulting matrix $T$ is a stochastic square matrix of dimension $|V_1|\times|V_1|$ where $|V_1|$ is the size of the source-language vocabulary.
 Each entry $T_{ij}$ represents the total probability mass mapped from source word $e_i$ to source word $e_j$ by first applying the source-to-target mapping $T_1$ and then the target-to-source mapping $T_2$.
 
-In particular, each diagonal entry $T_{ii}$ holds the probability of mapping a source entity back onto itself, a quantity we intuitively believe should be high.
-We therefore (initially) consider the trace of $T$:
-$$Tr[T]=\sum_i T_{ii}=\sum_{e,f}t_{1}(f\mid e)t_{2}(e\mid f)$$
-We further note that~$Tr[T]=Tr[T_{1}T_{2}]=Tr[T_{2}T_{1}]$ so that the trace just as equally captures how much the target entities map onto themselves.
+In particular, each diagonal entry $T_{ii}$ holds the probability of mapping a source symbol back onto itself, a quantity we intuitively believe should be high.
+We therefore (initially) consider maximizing the trace of~$T$:
+$$Tr[T]=\sum_i T_{ii}=\sum_{e,f}t_{1}(f\mid e)\; t_{2}(e\mid f)$$
+We further note that~$Tr[T]=Tr[T_{1}T_{2}]=Tr[T_{2}T_{1}]$, so that the trace captures equally well how much the target symbols map onto themselves.
+Since $T$ is stochastic, setting it to the identity matrix $I$ maximizes its trace. In other words, the more $T_1$ and $T_2$ behave as (pseudo-)inverses of each other, the higher the trace is. This exactly fits with our intuition regarding invertibility.
 
-Now, since $T$ is stochastic, setting it to the identity matrix $I$ maximizes the trace $Tr[T]$. In other words, the more $T_1$ and $T_2$ behave as (pseudo-)inverses of each other, the higher the trace would be. This exactly fits with our intuition regarding invertibility.
-
-Unfortunately however, the trace is not concave in both $T_1$ and $T_2$, a property which will become desirable in optimization.
-Therefore, we modify the trace regularizer to a similar term:
+Unfortunately, however, the trace is not concave in both $T_1$ and $T_2$, a property which will become desirable in optimization.
+Therefore, we modify the trace regularizer to a similar regularizer which is concave:
 \begin{equation}
 \label{eqn:R}
-R(t_{1},t_{2})=\sum_{e,f}\sqrt{t_{1}(f\mid e)t_{2}(e\mid f)}
+R(t_{1},t_{2})=\sum_{e,f}\sqrt{t_{1}(f\mid e) \; t_{2}(e\mid f)}
 \end{equation}
-Concavity of $R$ in both $t_1, t_2$ follows by observating that it is a sum of concave functions - each term in the summation is a geometric mean, which is concave in its parameters.
+Concavity of $R$ in both $t_1, t_2$ follows by observing that it is a sum of concave functions -- each term in the summation is a geometric mean, which is concave in its parameters.
 
-\subsection{A Joint Objective Function}
+\subsection{Joint objective function}
 
-We consider two data scenarios for $\method{MIR}$ -
+We consider two data scenarios for \method{MIR}.
 In the parallel data setting, we observe $N$ paired sequences $\set{\vx^n_1}_{n=1}^N=\set{(\ve^n, \vf^n)}_{n=1}^N$ or, equivalently, $\set{\vx^n_2}_{n=1}^N=\set{(\vf^n, \ve^n)}_{n=1}^N$.
 
-In the non-parallel one, two datasets are observed $\set{\vx^n_1}_{n=1}^{N_1}=\set{\ve^n}_{n=1}^{N_1}$ and $\set{\vx^n_2}_{n=1}^{N_2}=\set{\vf^n}_{n=1}^{N_2}$.
+In the non-parallel setting, two datasets are observed $\set{\vx^n_1}_{n=1}^{N_1}=\set{\ve^n}_{n=1}^{N_1}$ and $\set{\vx^n_2}_{n=1}^{N_2}=\set{\vf^n}_{n=1}^{N_2}$.
 
 The probability of the $n$th sample under the $k$th ($k\in\set{1,2}$) model $\Tk$ is denoted $\pk(\vx_k^n; \Tk)$.
 Specifically, in the parallel data setting, the directional probability of $\vx_k^n$ under its model is:
@@ -40,17 +41,18 @@ whereas in the non-parallel data setting, the probability is defined:
 \pA(\vx_1^n; \TA) = p(\vf^n; \TA)\\
 \pB(\vx_2^n; \TB) = p(\ve^n; \TB)
 \end{align*}
+\marginpar{DC: I feel that the x notation is over-complex. Would it help to not try to unify the parallel and non-parallel cases?}
 
-Using the definitions above and the $\method{MIR}$ regularizer $R$ (Eq. \ref{eqn:R}), we formulate an optimization program for maximizing the regularized log-likelihoods $\{{L_k}\}_{k=1,2}$ of the observed data:
+Using the definitions above and the \method{MIR} regularizer $R$ (Eq. \ref{eqn:R}), we formulate an optimization program for maximizing the regularized log-likelihoods $\{{L_k}\}_{k=1,2}$ of the observed data:\marginpar{DC: The use of symbols $t$ and $\Theta$ for nearly the same thing can be confusing.}
 \begin{equation}
 \max_{\TA, \TB}\,\, \lambda R(t_1, t_2)
 %+\sum_{k\in\set{1,2}} \log \sum_n \pk(\vx^n; \Tk)
-+\sum_{k\in\set{1,2}} L_k(\set{\vx_k^n}; \Tk)
++\sum_{k\in\set{1,2}} L_k(\set{\vx_k^n}; \Tk),
 \label{eqn:joint}
 \end{equation}
-Where $\lambda\ge0$ is a tunable hyperparameter.
+where $\lambda\ge0$ is a tunable hyperparameter.
 
-We defer the discussion on the relationship and merits of our approach with respect to $\method{ABA}$ \cite{liang+:2006:align} to Section \ref{sec:related}.
+We defer the discussion on the relationship and merits of our approach with respect to \method{ABA} \cite{liang+:2006:align} to Section \ref{sec:related}.
 
 
 %\subsection{remove me}
@@ -171,19 +173,20 @@ We defer the discussion on the relationship and merits of our approach with resp
 %%values when the conditional distributions agree, $R_{GM}$ attains
 %%its maximum when those distributions are sparse (need example?)
 
+\subsection{Optimization procedure}\label{subsec:optimization}
+Using our concave regularizer, \method{MIR} optimization (\eqn{eqn:joint}) neatly falls under the MAP-EM framework \cite{Dempster:1977,??}\marginpar{insert reference to MAP-EM} and inherits the convergence properties of the underlying algorithms.
+%
+In MAP-EM, there is an E step and an M step as in standard EM. The E step is identical to the standard E step; the M step maximizes the complete-data log-likelihood plus the regularization term.
+%
+In the case of \method{MIR}, the E-step can be carried out independently for each model. 
+%In this sense, $\method{MIR}$ is orthogonal to the complexity of the models' inference space.
+The only extra work is in the M-step, which optimizes a single (concave) objective function.
 
-
-\subsection{Optimization Procedure}\label{subsec:optimization}
-Using our concave regularizer, $\method{MIR}$ optimization (\eqn{eqn:joint}) neatly falls under the EM framework \cite{Dempster:1977} and inherits the convergence properties of the underlying algorithms.
-On a high level, since $\method{MIR}$ simply regularizes the model parameters, The E-step can be carried out independently for each model. 
-In this sense, $\method{MIR}$ is orthogonal to the complexity of the models' inference space.
-The additional algorithmic cost incurred by adding the regularizer resides in the M-step, which optimizes a single (concave) objective function as described below.
-
-Specifically, In the E-step, each model $\Tk$, $k\in\set{1,2}$ is held fixed and its posterior distribution over the missing data $\vz_k^n$ is computed per each observation, $\vx_k^n$:
+Specifically, in the E-step, each model $\Tk$, $k\in\set{1,2}$ is held fixed and its posterior distribution over the missing data $\vz_k^n$\marginpar{DC: z appears out of the blue} is computed per each observation, $\vx_k^n$:
 $$q_k(\vz\kn, \vx\kn) \mathrel{:=} \pk(\vz\kn \mid \vx\kn ; \Tk)$$
 %\textbf{parallel data}: q_k(\va \mid \ve, \vf) :=& \pA(\va \mid \ve, \vf; \TA) \\
 %\textbf{decipherment}: q_1(\va, \ve \mid \vf) :=& \pA(\va, \ve \mid \vf; \TA)
-where, in the parallel data setting, only the alignment is missing ($\vz\kn = \va\kn$) and in the non-parallel data setting, both alignment and origin entity are missing
+where, in the parallel data setting, only the alignment is missing ($\vz\kn = \va\kn$) and in the non-parallel data setting, both alignment and source symbol are missing
 ($\vz_1^n = (\va_1^n, \ve^n), \vz_2^n = (\va_2^n, \vf^n)$).
 
 In the M-step, the computed posteriors are used to define a convex optimization program that maximizes the regularized sum of expected complete-data log-likelihoods:
@@ -193,18 +196,18 @@ In the M-step, the computed posteriors are used to define a convex optimization 
 \max_{\TA, \TB}
 \lambda R(t_1,t_2)
 +
-\sum_{\scriptscriptstyle n;k\in\set{1,2}} q_k(\vz\kn, \vx\kn) \log p_k(\vx\kn, \vz\kn)
+\sum_{k\in\set{1,2}} \sum_n  q_k(\vz\kn, \vx\kn) \log p_k(\vx\kn, \vz\kn)
 \end{align*}
-Where $n$ ranges over the appropriate sample set.
+where $n$ ranges over the appropriate sample set.\marginpar{DC: two different $n$'s can be misleading}
 
-On a more operative level, for models $\Tk$ that can be encoded as wFST (such as the IBM and HMM word alignment models) the E-step posteriors $q_k$ can be carried out efficiently and exactly using dynamic programming \cite{Eisner02}. 
-Other models resort to approximation techniques - for example, the fertility-based word alignment models apply hill-climbing and sampling heuristics in order to efficiently estimate the posteriors [REFERENCE?].
+Operationally, for models $\Tk$ that can be encoded as wFSTs (such as the IBM and HMM word alignment models), the E-step posteriors $q_k$ can be carried out efficiently and exactly using dynamic programming \cite{Eisner02}. 
+Other models resort to approximation techniques -- for example, the fertility-based word alignment models apply hill-climbing and sampling heuristics in order to efficiently estimate the posteriors [REFERENCE -- it's not Brown et al 1993?].
 
 From the computed posteriors $q_k$ we collect expected counts for each event, used to construct the M-step optimization objective. 
-Since the $\method{MIR}$ regularizer couples only the t-table parameters, the update rule for any remaining parameter is left unchanged (in word alignment, this implies the usual closed-form count-and-divide solution).
+Since the \method{MIR} regularizer couples only the t-table parameters, the update rule for any remaining parameter is left unchanged (that is, one can use the usual closed-form count-and-divide solution).
 
-Now, let $\Ch_1^{e,f} $ and $\Ch_2^{e,f}$ denote the expected counts for the t-table parameters. That is $\Ch_k^{e,f}$ denotes the expected number of times a source-entity type $e$ is seen aligned to a target-entity type $f$ according to the posterior $q_k$. 
-The M-step maximization problem in $t_1, t_2$ is:
+Now, let $\Ch_1^{e,f} $ and $\Ch_2^{e,f}$ denote the expected counts for the t-table parameters. That is, $\Ch_k^{e,f}$ denotes the expected number of times a source-symbol type $e$ is seen aligned to a target-symbol type $f$ according to the posterior $q_k$. 
+In the M-step, we maximize the following with respect to $t_1$ and  $t_2$:\marginpar{This seems exactly the same as the previous equation -- why the new notation?}
 \begin{align}
 \arg\max_{t_1, t_2}&\sum_{e,f}  \Ch_1^{e,f}\log t_1(f \mid e) + 
 \\
@@ -214,7 +217,8 @@ The M-step maximization problem in $t_1, t_2$ is:
 \end{align}
 which can be efficiently solved using convex programming techniques due to the   concavity of $R$ and the complete-data log-likelihoods in both $t_1$ and $t_2$.
 
-In our implementation we used Projected Gradient Descent \cite{bertsekas1999nonlinear} where at each step, the parameters $(t_1, t_2)$ are updated according to the gradient of the M-step objective at $(t_1, t_2)$ and then projected back onto the probability simplex. 
+\marginpar{cite Schoenemann, Vaswani?}
+In our implementation we used Projected Gradient Descent \cite{bertsekas1999nonlinear}, where at each step, the parameters $(t_1, t_2)$ are updated according to the gradient of the M-step objective at $(t_1, t_2)$ and then projected back onto the probability simplex. 
 We used simple stopping conditions based on objective function value convergence and a bounded number of iterations.
 
 %
