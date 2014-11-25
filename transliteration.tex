@@ -50,6 +50,16 @@ In any case, it is important to note that $\mathtt{ENG}$ and $\mathtt{KTKN}$ are
 
 \subsection{Training and Tuning}
 
+\begin{figure*}[t]
+\begin{center}
+\begin{tabular}{cc}
+\includegraphics[scale=0.4]{figures/model_11_vanilla} & \includegraphics[scale=0.4]{figures/model_11_gm}
+\end{tabular}
+\caption{The 1-to-1 mapping submatrix of the $t_1$ transliteration table for independent training (left) and $\method{MIR}$ (right). $\method{MIR}$ learns sparser, peaked models than independent training does.}
+\label{fig:mapping}
+\end{center}
+\end{figure*}
+
 % We used the 
 %This was done by manipulating Carmel to output the E-step posteriors which were then used to construct the M-step objective externally. The M-step was solved using our own PGD implementation.
 We trained and tuned 4 models:
@@ -75,15 +85,6 @@ $\alpha \in \set{1,2,3}$ used to exponentiated the model parameters before decod
 Decoding of Japanese terms was done using the Viterbi algorithm, applied on the selected $t_1$ model (We use \eqn{eqn:reparam} to convert the $\method{bi\mbox{-}EM}$ model $\theta$ to $tA$).
 Note that symmetrization heuristics are not applicable since they require parallel data.
 
-\begin{figure*}[t]
-\begin{center}
-\begin{tabular}{cc}
-\includegraphics[scale=0.4]{figures/model_11_vanilla} & \includegraphics[scale=0.4]{figures/model_11_gm}
-\end{tabular}
-\caption{The 1-to-1 mapping submatrix of the $t_1$ transliteration table for independent training (left) and $\method{MIR}$ (right). $\method{MIR}$ learns sparser, peaked models than independent training does.}
-\label{fig:mapping}
-\end{center}
-\end{figure*}
 
 \subsection{Senator Name Decoding}
 We compiled our own test set, consisting of 100 US senator names (first and last) and compared the performance of the four algorithms.
