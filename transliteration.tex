@@ -10,10 +10,10 @@ For example, the word "computer" has a phonetic representation as a sequence of 
 
 Using their model, \newcite{RK09} report whole-name error rates (WNER\footnote{In WNER, a decoding is correct if both the first and last name are correctly decoded}) of 40\% with parallel data (trained over 3.3K word pairs), compared to 73\% WNER without parallel data (trained over 9.5K Japanese words only), thus demonstrating a big performance gap for alignment methods that do not use parallel data.
 
-\begin{figure*}[t]
+\begin{figure*}[t!]
 \begin{center}
 \begin{tabular}{c}
-\includegraphics[scale=0.62]{figures/fsts}\tabularnewline
+\includegraphics[scale=0.92]{figures/transliteration-cascade}\tabularnewline
 \end{tabular}
 \caption{\label{font-table} The transliteration generative story as a cascade of wFSTs. Each box represents a transducer. \textbf{Top:} transliteration of the word ``computer'' to Japanese. \textbf{Bottom:} the reverse process. $\method{MIR}$ jointly trains the two cascades by maximizing the regularized data log-likelihood with respect to the two (shaded) phoneme mapping models. 
 %The blank wFSTs are held fixed.
