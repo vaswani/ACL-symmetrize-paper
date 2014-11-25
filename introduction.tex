@@ -4,27 +4,44 @@ Similarly, in translation, the back-translation of a translation of a word is li
 
 In NLP, however, commonly-used generative models describing such phenomena are directional, only concerned with the transfer of source-language symbols to target-language symbols or vice versa, but not both directions.
 Left unchecked, independently training two such directional models (source-to-target and target-to-source) often yields two models that diverge from this invertibility intuition. In word alignment, this can lead to disagreements between the alignments inferred by a model trained in one direction and those inferred by a model trained in the reverse direction.
-To remedy this disparity (and other shortcomings), it is common to turn to alignment symmetrization techniques such as grow-diag-final-and \cite{koehn+:2003} which heuristically combine alignments from both directions.
+To remedy this disparity (and other shortcomings), it is common to turn to alignment symmetrization techniques such as grow-diag-final-and \cite{koehn+:2003} which heuristically combines alignments from both directions.
+
+------ VERSION 1
 
 \marginpar{DC: Consider mentioning MIR before ABA}
 \newcite{liang+:2006:align} suggest a more fundamental approach they call Alignment by Agreement ($\method{ABA}$), which jointly trains the two models by maximizing their data-likelihoods along with a regularizer that rewards agreement between their alignment posteriors (computed over each parallel sentence pair).
 Although their EM-like optimization procedure is heuristic, 
-\marginpar{\bluetext{"we use a heuristic approximation which nonetheless works well in practice."}} 
+\marginpar{\bluetext{"Liang et al.: we use a heuristic approximation which nonetheless works well in practice."}} 
 it proves effective at jointly training bidirectional models. 
 
 In this paper we develop a different approach for jointly training bidirectional sequence alignment models called Model Invertibility Regularization, or \method{MIR} (Section \ref{sec:method}).
 Our approach has several benefits over \method{ABA}:
 First, \method{MIR} can be applied to sequence alignment even without parallel data.
-Second, a single implementation extends to all IBM models, including the fertility based models.
+Second, a single implementation seamlessly extends to all IBM models, including the fertility based models.
 Finally, the \method{MIR} algorithm faithfully follows the EM recipe and inherits its theoretical convergence guarantees.
 
 The key idea facilitating the extension to complex models and to non-parallel data settings is in our regularizer, which operates on the model parameters as opposed to their inferences. 
 Specifically, \method{MIR} was designed to reward model pairs whose translation tables respect the invertibility intuition.
 
+---- VERSION 2 (new)
+
+In this paper we develop an approach we call Model Invertibility Regularization, or \method{MIR} (Section \ref{sec:method}). Our approach jointly trains two bidirectional sequence alignment models, while regularizing their parameters to respect the invertibility intuition.
+
+Our approach is similar to the Alignment by Agreement ($\method{ABA}$) approach of \newcite{liang+:2006:align} who suggest to maximize the two models' data-likelihoods along with a regularizer that rewards agreement between their alignment posteriors (computed over each parallel sentence pair). 
+
+\method{MIR} has several benefits over \method{ABA}:
+First, \method{MIR} can be applied to sequence alignment even without parallel data.
+Second, a single implementation seamlessly extends to all IBM models, including the fertility based models.
+Finally, the \method{MIR} algorithm faithfully follows the EM recipe and inherits its theoretical convergence guarantees. This is in contrast to \method{ABA} which resorts to an approximation heuristic.
+
+The key idea facilitating the extension to complex models and to non-parallel data settings is in our regularizer, which operates on the model parameters as opposed to their inferences. 
+
+---- END
+
 We tested \method{MIR} against competitive baselines on two sequence alignment tasks: word alignment and back-transliteration without parallel data.
 
-On Czech-English and Chinese-English word alignment (Section \ref{sec:alignment}), restricted to the HMM model, our approach attains F- and BLEU score improvements that are quantitatively comparable to those of ABA, but qualitatively different, so that combining both alignments yields additive gains over each method by itself.
-We further apply our approach to the fertility-based IBM Model 4, showing significant gains in BLEU compared to ordinary models.\marginpar{DC: what are ordinary models}
+On Czech-English and Chinese-English word alignment (Section \ref{sec:alignment}), restricted to the HMM model, our approach attains F- and \bleu score improvements that are quantitatively comparable to those of \method{ABA}, but qualitatively different, so that combining both alignments yields additive gains over each method by itself.
+We further apply our approach to the fertility-based IBM Model 4, showing significant gains in \bleu compared to baseline model.\marginpar{DC: what are ordinary models. \bluetext{TL: changed to "baseline"}}
 
 On English-Japanese back-transliteration decipherment (Section \ref{sec:transliteration}), we apply \method{MIR} to the cascade of wFSTs approach proposed by \newcite{RK09}.
 Using \method{MIR}, we are able to reduce the whole-name error-rate relative to a model trained on parallel data by 33\%, as well as significantly outperform the joint model of \newcite{Mylonakis2007}.

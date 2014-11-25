@@ -15,7 +15,7 @@ The model assigns the following probability to the observed data:
 p(\vf; \Theta) = \sum_{\ve} p(\ve) \sum_{\va} p(\va,\,\vf \mid \ve).
 \label{eqn:decipherment}
 \end{equation}
-That is, the sequence $\vf$ can arise from any sequence $\ve$ by first selecting $\ve \sim p(\ve)$ and then proceeding according to the parallel-data generative story (\ref{eqn:parallel}).
+That is, the sequence $\vf$ can arise from any sequence $\ve$ by first selecting $\ve \sim p(\ve)$ and then proceeding according to the parallel-data generative story (\eqn{eqn:parallel}).
 
 Unsupervised training of such models entails maximizing the data log-likelihood $L(\Theta)$:
 \begin{align*}
