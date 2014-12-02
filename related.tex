@@ -4,7 +4,7 @@
 Our approach is most similar to ``Alignment by Agreement'' \cite{liang+:2006:align} who first proposed a single joint objective for two word alignment models.
 The difference between our objective (\eqn{eqn:joint}) and theirs lies in their proposed regularizer which rewards the per-sample agreement of the two models' posteriors:
 $$\sum_n \log \sum_\vz  p_1(\vz\mid \vx^n)\cdot p_2(\vz\mid \vx^n)$$
-Where $\vx^n = (\ve^n, \vf^n)$ and $\vz$ ranges over the set of possible alignments between $\ve^n$ and $\vf^n$ (In practice, $\vz$ ranges only over 1-to-1 alignment, since each model infers only one-to-many alignments).
+Where $\vx^n = (\ve^n, \vf^n)$ and where $\vz$ ranges over the possible alignments between $\ve^n$ and $\vf^n$ (Practically, only over 1-to-1 alignments, since each model is only capable of producing one-to-many alignments).
 
 \newcite{liang+:2006:align} note that proper EM optimization of their regularized joint objective leads to an intractable E-step. 
 %(computing the normalization constant per sample over the set of all possible alignments is a \#P-complete problem even for IBM model 1.)
@@ -13,36 +13,39 @@ Unable to exactly and efficiently compute posteriors, they resort to a product-o
 Compared to $\method{ABA}$, $\method{MIR}$ regularization has both theoretical and practical advantages which make our method more convenient and broadly applicable:
 \begin{enumerate}
 \item By regularizing for posterior agreement, $\method{ABA}$ is restricted to a parallel data setting, whereas $\method{MIR}$ can be applied even without parallel data.
-\item The posteriors of more advanced models (such as fertility-based models) do not correspond to alignments, and furthermore, are already estimated with approximation techniques.
+\item The posteriors of more advanced word alignment models (such as fertility-based models) do not correspond to alignments, and furthermore, are already estimated with approximation techniques.
 Thus, even if we adapt $\method{ABA}$'s product-of-marginals heuristic to such models, we run the risk of estimating highly inaccurate posteriors (specifically, 0 valued posteriors).
 In contrast, $\method{MIR}$ does~not add heuristics -- The M-step computation can be done exactly and efficiently with convex optimization. 
 
-\item $\method{MIR}$ matches the theoretical convergence guarantees of the underlying algorithms.
+\item $\method{MIR}$ provides the same theoretical convergence guarantees as the underlying algorithms.
 \end{enumerate}
 
 
-\subsection{Non-Parallel Data Baseline: $\method{bi\mbox{-}EM}$}
-\newcite{Mylonakis2007} reparameterize the two directional models using a single joint model $\theta$. Specifically, both directional models, originally consisting of a t-table only, are reparameterized:
+\subsection{Non-Parallel Data Baseline: $\method{bi\mbox{-}EM}$ \label{sec:biEM}}
+
+\newcite{Mylonakis2007} cast the two directional models as a single joint model by reparameterization and normalization.
+That is, both directional models, consisting of a t-table only, are reparameterized as:
 \begin{equation}
-\tA(f\mid e) = \frac{\theta_{e,f}}{\sum_{f} \theta_{e,f}}
+\tA(f\mid e) = \frac{\beta_{e,f}}{\sum_{f} \beta_{e,f}}
 \,\,\text{ and }\,\,
-\tB(e\mid f) = \frac{\theta_{e,f}}{\sum_{e} \theta_{e,f}}
+\tB(e\mid f) = \frac{\beta_{e,f}}{\sum_{e} \beta_{e,f}}
 \label{eqn:reparam}
 \end{equation}
-They then formulate an optimization program in $\theta$, maximizing the likelihood of \emph{monolingual} observations from both languages:
+They then maximize the likelihood of \emph{monolingual} sequences from both languages:
 \begin{equation}
-\max_\theta L_1(\set{\vf^n}; \theta) + L_2(\set{\ve^n}; \theta)
+\max_\beta L_1(\set{\vf^n}; \beta) + L_2(\set{\ve^n}; \beta)
 \label{eqn:biEM}
 \end{equation}
 where for example:
 \begin{align*}
-L_1(\set{\vf^n}; \theta)&=
-\log \prod_n \sum_\ve p(\vf^n, \ve)\\
+L_1(\set{\vf^n}; \beta)
+&=\log \prod_n p(\vf^n)\\
+&=\log \prod_n \sum_\ve p(\vf^n\mid \ve)p(\ve)\\
 &=\log \prod_n \sum_\ve p(\ve) \prod_{m} t_1(\vf^n_m\mid\ve_m)
 \end{align*}
-with $p(\ve)$ denoting the probability of $\ve$ according to a fixed source language model.
+where $p(\ve)$ denotes the probability of $\ve$ according to a fixed source language model.
 
-Using the trained model $\theta$, we can decode an observed $f$ by recasting $\theta$ as an ordinary wFST $\tA$ using the equation above, and apply Viterbi decoding.
+To decode an observed target sequence $\vf$, we can then simply cast $\beta$ back in terms of $t_1$ and apply Viterbi decoding.
 
 \newcite{Mylonakis2007} report improved results on POS-tagging and monotone noun sequence translation without parallel data.
 In the Appendix we discuss their algorithm $\method{bi\mbox{-}EM}$ and argue that the M-step solution does not correspond to an MLE solution and therefore erroneous. Nevertheless, due to their improved results, we regarded $\method{bi\mbox{-}EM}$ as a competitive baseline for $\method{MIR}$.

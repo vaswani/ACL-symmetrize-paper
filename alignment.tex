@@ -40,41 +40,11 @@ For $\method{ABA}$ training, we used the authors' toolkit\footnote{cs.stanford.e
 Vanilla EM training was done using the popular word alignment toolkit  GIZA++\footnote{code.google.com/p/giza-pp/} which supports all IBM models as well as the HMM model. 
 We implemented $\method{MIR}$ on top of GIZA++ and plan to release our toolkit as a patch over GIZA++, for practitioners to use in their translation experiments.
 
-Since the $\method{ABA}$ implementation is limited to the HMM model, we conducted two sets of experiments - In the first, only HMM models were trained and we compared all methods. In the second only the baseline and $\method{MIR}$ were compared using IBM4 model.
-
-
-%\begin{table*}
-%\begin{center}
-%\renewcommand{\arraystretch}{1.1}
-%\begin{tabular}{c|c|c|l|l|l|lll}
-%\textbf{Task} & \textbf{Data(tokens)}& \textbf{System} & \textbf{Align F1} (\%)  &\multicolumn{3}{c}{\textbf{\bleu} (\%)} \\
-%     &      &        &             & 2008 & 2009 & 2010 \\
-%\hline
-%\multirow{3}{*}{Chi / Eng} & \multirow{3}{*}{5.3M / 6.6M} & EM-HMM & 64.6&  23.6& & \\
-%        &       & $\method{MIR}$-HMM &  70.9 (+6.3) & 24.0 (+0.4) & &\\
-%        &       & $\method{ABA}$-HMM  & 70.8 (+6.2)& 24.4 (+0.8) &\\
-%        &       & $\method{ABA\mbox{+}MIR}$-HMM  &    & 25.1 (+1.5) &\\
-%\hdashline
-%        &       & EM-M4 & - & - & &  \\
-%        &       & $\method{MIR}$-M4  & -& - & \\
-%
-%\hline
-%\multirow{3}{*}{Cze / Eng} & \multirow{3}{*}{1.6M / 1.8M} & HMM-EM & 65.0 & & 16.7 & 17.1  \\
-%        &       & $\method{MIR}$-HMM   & 69.6 (+4.6)& & 17.1 (+0.4)& 17.6 (+0.5)& \\
-%        &       & $\method{ABA}$-HMM   & 70.4 (+5.4)& & 17.1 (+0.4)& 17.7 (+0.6)&\\
-%        &       & $\method{ABA\mbox{+}MIR}$-HMM  &  & & 17.4 (+0.7)& 17.9 (+0.8)&\\
-%\hdashline
-%        &       & EM-M4 &  &  & - &  - \\
-%        &       & $\method{MIR}$-M4  & &  & -&-\\
-%\end{tabular}
-%\end{center}
-
-
 \begin{table*}
 \begin{center}
 \renewcommand{\arraystretch}{1.1}
 \begin{tabular}{c|c|c|l|l|l|lll}
-\textbf{Task} & \textbf{System} & \textbf{Align F1} (\%)  &\multicolumn{3}{c}{\textbf{\bleu} (\%)} \\
+\textbf{Task} & \textbf{System} & \textbf{Align F1}  &\multicolumn{3}{c}{\textbf{\bleu} (\%)} \\
       &        &             & \multicolumn{1}{|c|}{2008} & \multicolumn{1}{|c|}{2009} & \multicolumn{1}{|c|}{2010} \\
 \hline
 \multirow{3}{*}{Chi / Eng} & EM-HMM & 64.6&  23.6& & \\
@@ -82,8 +52,8 @@ Since the $\method{ABA}$ implementation is limited to the HMM model, we conducte
       & $\method{ABA}$-HMM  & 70.8 (+6.2)& 24.4 (+0.8) &&\\
       & $\method{ABA\mbox{+}MIR}$-HMM  &    & 25.1 (+1.5) &&\\
 \hdashline
-       & EM-M4 & - & - & &  \\
-       & $\method{MIR}$-M4  & -& - && \\
+       & EM-M4 & X & X & &  \\
+       & $\method{MIR}$-M4  & Y & Y && \\
 
 \hline
 \multirow{3}{*}{Cze / Eng} & HMM-EM & 65.0 & & 16.7 & 17.1  \\
@@ -91,8 +61,8 @@ Since the $\method{ABA}$ implementation is limited to the HMM model, we conducte
        & $\method{ABA}$-HMM   & 70.4 (+5.4)& & 17.1 (+0.4)& 17.7 (+0.6)&\\
        & $\method{ABA\mbox{+}MIR}$-HMM  &  & & 17.4 (+0.7)& 17.9 (+0.8)&\\
 \hdashline
-       & EM-M4 & X &  & - &  - \\
-       & $\method{MIR}$-M4  & Y &  & -&-\\
+       & EM-M4 & X &  & X &  X \\
+       & $\method{MIR}$-M4  & Y &  & X&X\\
 \end{tabular}
 \end{center}
 
@@ -102,19 +72,22 @@ Since the $\method{ABA}$ implementation is limited to the HMM model, we conducte
 \end{table*}
 
 
-\subsection{Experiments}
+\subsection{Data}
 
 We used the following parallel data to train the word alignment models:
-\begin{itemize}
-\item \textbf{Chinese-English}: ?K sentence pairs from the NIST 2009 Open MT Evaluation constrained task.
-\item \textbf{Czech-English}: 85K sentence pairs from the News Commentary corpus.
-\end{itemize}
+\begin{description}[leftmargin=0.5em]
+\item[Chinese-English:] 155K sentence pairs from the NIST 2009 Open MT Evaluation constrained task.
+\item[Czech-English:] 85K sentence pairs from the News Commentary corpus.
+\end{description}
 Sentence length was restricted to at most 40 tokens.
+
+\subsection{Experiments}
+Since the $\method{ABA}$ implementation is limited to the HMM model, we conducted two sets of experiments - In the first, only HMM models were trained and we compared all methods. In the second only the baseline and $\method{MIR}$ were compared using IBM4 model.
 
 All methods were trained in both directions, using either 5 iterations of Model~1 and then 5 of an advanced model, or alternatively 10 iteration each.
 Symmetrized alignments were obtained in the following manner:
 For the HMM models, we implemented a symmetrization technique based on the \emph{posterior decoding} \cite{liang+:2006:align} technique used by the $\method{ABA}$ implementation.
-For IBM model 4, we applied the standard grow-diag-final-and (gdfa) symmetrizaition heuristic (REFERENCE).
+For IBM model 4, we used the standard grow-diag-final-and (gdfa) symmetrizaition heuristic~\cite{koehn+:2003}.
 
 For each method, we selected iteration numbers (5 or 10) and hyperparameter values by tuning alignment F-score on a validation set of $460$ hand-aligned Czech-English and $1102$ Chinese-English sentences. 
 In particular, for $\method{MIR}$ we found the regularizer coefficient $\lambda=300$ to work best on both datasets.
@@ -128,8 +101,6 @@ for Czech-English, $2051$ sentences from the WMT10 translation workshop. We used
 On both language pairs, $\method{MIR}$ performs significantly better than vanilla EM training, and compares favorably with ABA. The \bleu{} difference between $\method{MIR}$ and $\method{ABA}$ for Chinese-English and Czech is not statistically significant according to a bootstrap resampling significance test~\cite{koehn-stat:2004}. However, the two approaches are not producing the same alignments. For example, by combining the alignments (simply concatenating two copies of the parallel text with the two alignments) the total improvements reaches +1.5 \bleu{} on the Chinese-to-English task.
 
 Table~\ref{tab:results} summarizes our word alignment F-scores and MT \bleu score results.
-
-
 
 %
 %
