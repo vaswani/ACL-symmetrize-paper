@@ -81,17 +81,19 @@ We train and tune 4 models:
 \item \method{Oracle}: As an upper bound, we train the model of \newcite{RK09} as if it was given the correct English origin for each Japanese term. (i.e., over 4.2K \emph{parallel} English-Japanese phoneme sequences).
 \end{description} 
 
+
 We train the model of each method for 15 EM iterations, while keeping the LM and pronunciation wFSTs fixed.
 
 Training was done using the Carmel finite-state toolkit\footnote{http://www.isi.edu/licensed-sw/carmel/}.
 Specifically, $\method{baseline}$ and $\method{oracle}$ rely on Carmel exclusively, while for $\method{MIR}$ and $\method{bi\mbox{-}EM}$, we manipulated Carmel to output the E-step posteriors, which we then used to construct and solve the M-step objective using our own implementation.
 
-We tuned the different models over a development set consisting of 50 frequent Japanese terms and their English origin.
+The different models were tuned over a development set consisting of 50 frequent Japanese terms and their English origin.
 For each method, we selected the model that minimized the development back-transliteration error rate over the 15 iterations, the so-called stretch-factor 
-$\alpha \in \set{1,2,3}$ used to exponentiated the model parameters before decoding (see \newcite{RK09}) and our model's $\lambda\in \set{1,2,3,4}$.
+$\alpha \in \set{1,2,3}$ used to exponentiated the model parameters before decoding (see \newcite{RK09}) and our model's hyperparameter $\lambda\in \set{1,2,3,4}$.
 
-Decoding of Japanese terms was done using the Viterbi algorithm, applied on the selected $\tA$ model (We use \eqn{eqn:reparam} to convert the $\method{bi\mbox{-}EM}$ model $\beta$ back to to $\tA$).
-Note that symmetrization heuristics are not applicable since they require parallel data.
+We decoded Japanese terms using the Viterbi algorithm, applied on the selected $\tA$ model (using \eqn{eqn:reparam} to convert the $\method{bi\mbox{-}EM}$ model $\beta$ back to to $\tA$).
+
+We note that \method{ABA} training and symmetrization heuristics for decoding are not applicable, since they require parallel data.
 
 
 \subsection{Senator Name Decoding}
@@ -117,8 +119,8 @@ Figure \ref{fig:mapping} further compares the 1-to-1 portions of the best models
 \label{tbl:transliteration0}
 \end{table}
 
-Using $\method{MIR}$ we obtained a significantly reduction in error rate, closing the gap between the baseline method and one trained on parallel-data settings by 33\% in WNER and nearly half in NED.
-This error reduction clearly demonstrates the efficacy in proper joint training of these alignment models, and of the $\method{MIR}$ formulation in particular.
+Using $\method{MIR}$ we obtained significant reduction in error rates, closing the gap between the \method{baseline} method and \method{Oracle}, which was trained on parallel-data, by 33\% in WNER and nearly 50\% in NED.
+This error reduction clearly demonstrates the efficacy of \method{MIR} in the non-parallel data setting.
 
 %
 %In this section we present our experiments on deciphering transliterations.
