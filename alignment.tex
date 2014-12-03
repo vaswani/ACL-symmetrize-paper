@@ -42,29 +42,49 @@ We implemented $\method{MIR}$ on top of GIZA++ and plan to release our toolkit a
 
 \begin{table*}
 \begin{center}
-\renewcommand{\arraystretch}{1.1}
-\begin{tabular}{c|c|c|l|l|l|lll}
-\textbf{Task} & \textbf{System} & \textbf{Align F1}  &\multicolumn{3}{c}{\textbf{\bleu} (\%)} \\
-      &        &             & \multicolumn{1}{|c|}{2008} & \multicolumn{1}{|c|}{2009} & \multicolumn{1}{|c|}{2010} \\
-\hline
-\multirow{3}{*}{Chi / Eng} & EM-HMM & 64.6&  23.6& & \\
-\multirow{3}{*}{5.3M / 6.6M }      & $\method{MIR}$-HMM &  70.9 (+6.3) & 24.0 (+0.4) & &\\
-      & $\method{ABA}$-HMM  & 70.8 (+6.2)& 24.4 (+0.8) &&\\
-      & $\method{ABA\mbox{+}MIR}$-HMM  &    & 25.1 (+1.5) &&\\
-\hdashline
-       & EM-M4 & X & X & &  \\
-       & $\method{MIR}$-M4  & Y & Y && \\
-
-\hline
-\multirow{3}{*}{Cze / Eng} & HMM-EM & 65.0 & & 16.7 & 17.1  \\
-\multirow{3}{*}{1.6M / 1.8M}  & $\method{MIR}$-HMM   & 69.6 (+4.6)& & 17.1 (+0.4)& 17.6 (+0.5)& \\
-       & $\method{ABA}$-HMM   & 70.4 (+5.4)& & 17.1 (+0.4)& 17.7 (+0.6)&\\
-       & $\method{ABA\mbox{+}MIR}$-HMM  &  & & 17.4 (+0.7)& 17.9 (+0.8)&\\
-\hdashline
-       & EM-M4 & X &  & X &  X \\
-       & $\method{MIR}$-M4  & Y &  & X&X\\
+%\renewcommand{\arraystretch}{1.1}
+%\begin{tabular}{c|c|c|l|l|l|lll}
+%\textbf{Task} & \textbf{System} & \textbf{Align F1}  &\multicolumn{3}{c}{\textbf{\bleu} (\%)} \\
+%      &        &             & \multicolumn{1}{|c|}{2008} & \multicolumn{1}{|c|}{2009} & \multicolumn{1}{|c|}{2010} \\
+%\hline
+%\multirow{3}{*}{Chi / Eng} & EM-HMM & 64.6&  23.6& & \\
+%\multirow{3}{*}{5.3M / 6.6M }      & $\method{MIR}$-HMM &  70.9 (+6.3) & 24.0 (+0.4) & &\\
+%      & $\method{ABA}$-HMM  & 70.8 (+6.2)& 24.4 (+0.8) &&\\
+%      & $\method{ABA\mbox{+}MIR}$-HMM  &    & 25.1 (+1.5) &&\\
+%\hdashline
+%       & EM-M4 & X & X & &  \\
+%       & $\method{MIR}$-M4  & Y & Y && \\
+%
+%\hline
+%\multirow{3}{*}{Cze / Eng} & HMM-EM & 65.0 & & 16.7 & 17.1  \\
+%\multirow{3}{*}{1.6M / 1.8M}  & $\method{MIR}$-HMM   & 69.6 (+4.6)& & 17.1 (+0.4)& 17.6 (+0.5)& \\
+%       & $\method{ABA}$-HMM   & 70.4 (+5.4)& & 17.1 (+0.4)& 17.7 (+0.6)&\\
+%       & $\method{ABA\mbox{+}MIR}$-HMM  &  & & 17.4 (+0.7)& 17.9 (+0.8)&\\
+%\hdashline
+%       & EM-M4 & X &  & X &  X \\
+%       & $\method{MIR}$-M4  & Y &  & X&X\\
+%\end{tabular}
+%% -- new format 
+\renewcommand{\arraystretch}{1.2}
+\begin{tabular}{c|c|c|c|c|c}
+ & \multicolumn{2}{c|}{Chinese-English } & \multicolumn{3}{c}{Czech-English}\tabularnewline
+Method & \textbf{Align F1} & \textbf{NIST08} & \textbf{Align F1} & \textbf{WMT09} & \textbf{WMT10}\tabularnewline
+\hline 
+EM-HMM & 64.6 & 23.6 & 65.0 & 16.7 & 17.1\tabularnewline
+MIR-HMM & 70.9 (+6.3) & 24.0 (+0.4) & 69.6 (+4.6) & 17.1 (+0.4) & 17.6 (+0.5)\tabularnewline
+ABA-HMM & 70.8 (+6.2) & 24.4 (+0.8) & 70.4 (+5.4) & 17.1 (+0.4) & 17.7 (+0.6)\tabularnewline
+MIR+ABA-HMM & - & 25.1 (+1.5) & - & 17.4 (+0.7) & 17.9 (+0.8)\tabularnewline
+\hline 
+EM-M4 & X & X & 66.0 & X & X\tabularnewline
+MIR-M4 & Y & Y & 70.7 (+4.6) & Y & Y\tabularnewline
 \end{tabular}
+
+
+
 \end{center}
+
+
+
 
 
 \caption{For Czech-English, the year refers to the WMT shared task; for Chinese-English, the year refers to the NIST Open MT Evaluation. Both $\method{ABA}$ and $\method{MIR}$ obtain statistically significant results over vanilla EM training. Combining $\method{ABA}$ and $\method{MIR}$ alignments also improves \bleu{} score significantly over $\method{ABA\mbox{/}MIR}$, with $p<0.05$ for these improvements. The \bleu{} difference between $\method{ABA}$ and $\method{MIR}$ is not statistically significant.}
@@ -76,8 +96,10 @@ We implemented $\method{MIR}$ on top of GIZA++ and plan to release our toolkit a
 
 We used the following parallel data to train the word alignment models:
 \begin{description}[leftmargin=0.5em]
-\item[Chinese-English:] 155K sentence pairs from the NIST 2009 Open MT Evaluation constrained task.
-\item[Czech-English:] 85K sentence pairs from the News Commentary corpus.
+\item[Chinese-English:] 287K 
+% 287756
+sentence pairs from the NIST 2009 Open MT Evaluation constrained task consisting of 5.3M and 6.6M tokens respectively.
+\item[Czech-English:] 85K sentence pairs from the News Commentary corpus, consisting of 1.6M and 1.8M tokens respectively.
 \end{description}
 Sentence length was restricted to at most 40 tokens.
 
