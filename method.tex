@@ -214,7 +214,9 @@ We defer the discussion on the relationship and merits of our approach with resp
 %%its maximum when those distributions are sparse (need example?)
 
 \subsection{Optimization procedure}\label{subsec:optimization}
-Using our concave regularizer, \method{MIR} optimization (\eqn{eqn:joint}) neatly falls under the MAP-EM framework \cite{Dempster:1977}\marginpar{insert reference to MAP-EM. \bluetext{TL: mentioned in Dempster}} and inherits the convergence properties of the underlying algorithms.
+Using our concave regularizer, \method{MIR} optimization (\eqn{eqn:joint}) neatly falls under the MAP-EM framework \cite{Dempster:1977}
+%\marginpar{insert reference to MAP-EM. \bluetext{TL: mentioned in Dempster}}
+ and inherits the convergence properties of the underlying algorithms.
 %
 MAP-EM follows the same structure as standard EM - The E step remains identical to the standard E step; the M step maximizes the complete-data log-likelihood plus the regularization term.
 %
@@ -232,7 +234,9 @@ The only extra work is in the M-step, which optimizes a single (concave) objecti
 Specifically, let $\vz_n$ denote the missing data, where, in the parallel data setting, only the alignment is missing ($\vz\kn = \va\kn$) and in the non-parallel data setting, both alignment and source symbol are missing
 ($\vz_1^n = (\va_1^n, \ve^n), \vz_2^n = (\va_2^n, \vf^n)$).
 
-In the E-step, each model $\Tk$ ($k\in\set{1,2}$) is held fixed and its posterior distribution over the missing data $\vz_k^n$\marginpar{DC: z appears out of the blue \bluetext{TL: better now?}} is computed per each observation, $\vx_k^n$:
+In the E-step, each model $\Tk$ ($k\in\set{1,2}$) is held fixed and its posterior distribution over the missing data $\vz_k^n$
+%\marginpar{DC: z appears out of the blue \bluetext{TL: better now?}} 
+is computed per each observation, $\vx_k^n$:
 $$q_k(\vz\kn, \vx\kn) \mathrel{:=} \pk(\vz\kn \mid \vx\kn ; \Tk)$$
 %\textbf{parallel data}: q_k(\va \mid \ve, \vf) :=& \pA(\va \mid \ve, \vf; \TA) \\
 %\textbf{decipherment}: q_1(\va, \ve \mid \vf) :=& \pA(\va, \ve \mid \vf; \TA)
@@ -247,7 +251,8 @@ In the M-step, the computed posteriors are used to define a convex optimization 
 +
 \sum_{k\in\set{1,2}} \sum_{n=1}^{N_k}  q_k(\vz\kn, \vx\kn) \log p_k(\vx\kn, \vz\kn)
 \end{align*}
-where $n$ ranges over the appropriate sample set.\marginpar{DC: two different $n$'s can be misleading, \bluetext{added $N_k$ here and above}}
+where $n$ ranges over the appropriate sample set.
+%\marginpar{DC: two different $n$'s can be misleading, \bluetext{added $N_k$ here and above}}
 
 Operationally, for models $\Tk$ that can be encoded as wFSTs (such as the IBM and HMM word alignment models), the E-step 
 %posteriors $q_k$ 
