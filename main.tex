@@ -36,9 +36,9 @@
 \begin{document}
 \maketitle
 \begin{abstract}
-We present Model Invertibility Regularization (\method{MIR}), a method for jointly training two directional word alignment models
+We present Model Invertibility Regularization (\method{MIR}), a method for jointly training two directional sequence alignment models
 that relies on the simple intuition that the back-translation of a translation should likely be itself.
-By coupling the two models through their parameters (as opposed to through their inferences, as in Liang et al.'s Alignment by Agreement (\method{ABA}) method), our method remains applicable to all IBM-style alignment models and as well as to alignment without parallel data.
+By coupling the two models through their parameters (as opposed to through their inferences, as in Liang et al.'s Alignment by Agreement (\method{ABA}) method), our method remains applicable to all IBM-style word alignment models and as well as to sequence alignment without parallel data.
 Our proposed algorithm is mathematically sound and enjoys the convergence guarantees of EM.
 We tested \method{MIR} on two tasks:
 (1)~On Czech-English and Chinese-English word alignment, our method attains significant F- and \bleu score improvements compared to both GIZA++ and \method{ABA}.

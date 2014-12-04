@@ -75,8 +75,8 @@ MIR-HMM & 70.9 (+6.3) & 24.0 (+0.4) & 69.6 (+4.6) & 17.1 (+0.4) & 17.6 (+0.5)\ta
 ABA-HMM & 70.8 (+6.2) & 24.4 (+0.8) & 70.4 (+5.4) & 17.1 (+0.4) & 17.7 (+0.6)\tabularnewline
 MIR+ABA-HMM & - & 25.1 (+1.5) & - & 17.4 (+0.7) & 17.9 (+0.8)\tabularnewline
 \hline 
-EM-M4 & X & X & 66.0 & X & X\tabularnewline
-MIR-M4 & 72.9 (+x.x) & Y & 70.7 (+4.6) & Y & Y\tabularnewline
+EM-M4 & X & X & 66.0 & 16.6 & 17.1\tabularnewline
+MIR-M4 & 72.9 (+x.x) & Y & 70.7 (+4.6) & 17.0 (+0.4) & 17.5 (+0.4)\tabularnewline
 \end{tabular}
 \end{center}
 
@@ -103,7 +103,7 @@ Since the $\method{ABA}$ implementation is limited to the HMM model, we conducte
 All methods were trained in both directions, using either 5 iterations of Model~1 and then 5 of an advanced model, or alternatively 10 iteration each.
 Symmetrized alignments were obtained in the following manner:
 For the HMM models, we implemented a symmetrization technique based on the \emph{posterior decoding} \cite{liang+:2006:align} technique used by the $\method{ABA}$ implementation.
-For IBM model 4, we used the standard grow-diag-final-and (gdfa) symmetrizaition heuristic~\cite{koehn+:2003}.
+For IBM model 4, we used the standard grow-diag-final-and (gdfa) symmetrization heuristic~\cite{koehn+:2003}.
 
 For each method, we selected iteration numbers (5 or 10) and hyperparameter values by tuning alignment F-score on a validation set of $460$ hand-aligned Czech-English and $1102$ Chinese-English sentences. 
 In particular, for $\method{MIR}$ we found the regularizer coefficient $\lambda=300$ to work best on both datasets.
