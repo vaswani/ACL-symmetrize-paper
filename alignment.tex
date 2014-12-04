@@ -66,9 +66,9 @@ We implemented $\method{MIR}$ on top of GIZA++ and plan to release our toolkit a
 %\end{tabular}
 %% -- new format 
 \renewcommand{\arraystretch}{1.2}
-\begin{tabular}{c|c|c|c|c|c}
+\begin{tabular}{r|l|l|l|l|l}
  & \multicolumn{2}{c|}{Chinese-English } & \multicolumn{3}{c}{Czech-English}\tabularnewline
-Method & \textbf{Align F1} & \textbf{NIST08} & \textbf{Align F1} & \textbf{WMT09} & \textbf{WMT10}\tabularnewline
+Method &\,\,\,\textbf{Align F1} &\,\,\,\textbf{NIST08} &\,\,\,\textbf{Align F1} &\,\,\,\,\textbf{WMT09} &\,\,\,\textbf{WMT10}\tabularnewline
 \hline 
 EM-HMM & 64.6 & 23.6 & 65.0 & 16.7 & 17.1\tabularnewline
 MIR-HMM & 70.9 (+6.3) & 24.0 (+0.4) & 69.6 (+4.6) & 17.1 (+0.4) & 17.6 (+0.5)\tabularnewline
@@ -76,15 +76,9 @@ ABA-HMM & 70.8 (+6.2) & 24.4 (+0.8) & 70.4 (+5.4) & 17.1 (+0.4) & 17.7 (+0.6)\ta
 MIR+ABA-HMM & - & 25.1 (+1.5) & - & 17.4 (+0.7) & 17.9 (+0.8)\tabularnewline
 \hline 
 EM-M4 & X & X & 66.0 & X & X\tabularnewline
-MIR-M4 & Y & Y & 70.7 (+4.6) & Y & Y\tabularnewline
+MIR-M4 & 72.9 (+x.x) & Y & 70.7 (+4.6) & Y & Y\tabularnewline
 \end{tabular}
-
-
-
 \end{center}
-
-
-
 
 
 \caption{For Czech-English, the year refers to the WMT shared task; for Chinese-English, the year refers to the NIST Open MT Evaluation. Both $\method{ABA}$ and $\method{MIR}$ obtain statistically significant results over vanilla EM training. Combining $\method{ABA}$ and $\method{MIR}$ alignments also improves \bleu{} score significantly over $\method{ABA\mbox{/}MIR}$, with $p<0.05$ for these improvements. The \bleu{} difference between $\method{ABA}$ and $\method{MIR}$ is not statistically significant.}
