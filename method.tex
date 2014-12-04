@@ -265,15 +265,15 @@ Since the \method{MIR} regularizer couples only the t-table parameters, the upda
 Now, let $\Ch_1^{e,f} $ and $\Ch_2^{e,f}$ denote the expected counts for the t-table parameters. That is, $\Ch_k^{e,f}$ denotes the expected number of times a source-symbol type $e$ is seen aligned to a target-symbol type $f$ according to the posterior $q_k$. 
 In the M-step, we maximize the following objective with respect to $t_1$ and  $t_2$:\marginpar{DC: This seems exactly the same as the previous equation -- why the new notation?}
 \begin{align}
-\arg\max_{t_1, t_2}\sum_{e,f}  \Ch_1^{e,f}\log t_1(f \mid e) +\nonumber \\
-\sum_{e,f} \Ch_2^{e,f} \log t_2(e \mid f) + 
-\lambda R(t_1, t_2) 
+\arg\max_{\tA, \tB}\sum_{e,f}  \Ch_1^{e,f}\log \tA(f \mid e) +\nonumber \\
+\sum_{e,f} \Ch_2^{e,f} \log \tB(e \mid f) + 
+\lambda R(\tA, \tB) 
 \label{eqn:Mobj}
 \end{align}
 which can be efficiently solved using convex programming techniques due to the   concavity of $R$ and the complete-data log-likelihoods in both $t_1$ and $t_2$.
 
 \marginpar{cite Schoenemann, Vaswani? \bluetext{TL: revealing our identity?}}
-To solve \eqn{eqn:Mobj} we applied Projected Gradient Descent \cite{bertsekas1999nonlinear}, where at each step, the parameters are updated in the direction of the M-step objective gradient at $(t_1, t_2)$ and then projected back onto the probability simplex. 
+To solve \eqn{eqn:Mobj} we applied Projected Gradient Descent \cite{bertsekas1999nonlinear}, where at each step, the parameters are updated in the direction of the M-step objective gradient at $(\tA, \tB)$ and then projected back onto the probability simplex. 
 We used simple stopping conditions based on objective function value convergence and a bounded number of iterations.
 
 %
