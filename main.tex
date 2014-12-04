@@ -96,7 +96,7 @@ We tested \method{MIR} on two tasks:
 
 \section{Conclusion}
 We presented Model Invertibility Regularization (\method{MIR}), an unsupervised method for jointly training two bidirectional sequence alignment models with or without parallel data.
-Our formulation is based on the simple observation that the alignment tasks at hand are inherently invertible and encourages the translation tables in both models to behave more like pseudo-inverses of each other.
+Our formulation is based on the simple observation that the alignment tasks at hand are inherently invertible and encourages the translation tables in both models to behave like pseudo-inverses of each other.
 
 We derived an efficient MAP-EM algorithm and demonstrated our method's effectiveness on two different alignment tasks. On word alignment, \method{MIR} yielded \bleu improvements comparable to the Alignment by Agreement method \cite{liang+:2006:align}, and orthogonal in the sense that combining the two methods yielded further improvement (up to 1.5 \bleu). On Japanese-English back-transliteration without parallel data, we obtain significant error rate reduction beating two baseline methods \cite{RK09,Mylonakis2007}.
 
