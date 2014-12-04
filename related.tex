@@ -31,7 +31,7 @@ That is, both directional models, consisting of a t-table only, are reparameteri
 \tB(e\mid f) = \frac{\beta_{e,f}}{\sum_{e} \beta_{e,f}}
 \label{eqn:reparam}
 \end{equation}
-They then maximize the likelihood of \emph{monolingual} sequences from both languages:
+They then maximize the likelihood of observed \emph{monolingual} sequences from both languages:
 \begin{equation}
 \max_\beta L_1(\set{\vf^n}; \beta) + L_2(\set{\ve^n}; \beta)
 \label{eqn:biEM}
@@ -43,14 +43,14 @@ L_1(\set{\vf^n}; \beta)
 &=\log \prod_n \sum_\ve p(\vf^n\mid \ve)p(\ve)\\
 &=\log \prod_n \sum_\ve p(\ve) \prod_{m} t_1(\vf^n_m\mid\ve_m)
 \end{align*}
-where $p(\ve)$ denotes the probability of $\ve$ according to a fixed source language model.
+Here, $p(\ve)$ denotes the probability of $\ve$ according to a fixed source language model.
 
 Once training of $\beta$ is complete, we can decode an observed target sequence $\vf$, by casting $\beta$ back in terms of $\tA$ and apply the Viterbi decoding algorithm.
 
 To solve for $\beta$ in \eqn{eqn:biEM}, \newcite{Mylonakis2007} propose \method{bi\mbox{-}EM}; an iterative EM style algorithm in which both E- and M- steps have a closed-form solution. They do not provide the algorithm derivation. 
 %we observe that the solution they proposed for the M-step does not follow from their M-step objective. 
 
-Inspecting their M-step objective and its proposed solution, we determined that (1) the objective is not concave, hinting that a closed-form solution for the maximizer is unlikely, and (2) the proposed solution is the maximizer of a different objective function, obtained by simply omitting the normalization denominators (See \eqn{eqn:reparam}) from their M-step objective.
+Inspecting their M-step objective and its proposed solution, we determined that (1) the objective is not concave, hinting that a closed-form solution for the maximizer is unlikely, and (2) the proposed solution is the maximizer of a different objective function, obtained by omitting the normalization denominators in \eqn{eqn:reparam} from their M-step objective.
 
 Despite its heuristic M-step, \method{bi\mbox{-}EM} shows improved results on both POS-tagging and monotone noun sequence translation without parallel data compared to standard EM. We compare \method{MIR} against \method{bi\mbox{-}EM} in Section \ref{sec:transliteration}.
 
