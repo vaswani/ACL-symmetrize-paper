@@ -3,7 +3,7 @@ For example, in transliteration, a source-language word is mapped to a target la
 Similarly, in translation, the back-translation of a translation of a word is likely to be that same word itself.
 
 In NLP, however, commonly-used generative models describing such phenomena are directional, only concerned with the transfer of source-language symbols to target-language symbols or vice versa, but not both directions.
-Left unchecked, independently training two such directional models (source-to-target and target-to-source) often yields two models that diverge from this invertibility intuition. In word alignment, this can lead to disagreements between the alignments inferred by a model trained in one direction and those inferred by a model trained in the reverse direction.
+Left unchecked, independently training two such directional models (source-to-target and target-to-source) often yields two models that diverge from this invertibility intuition. In word alignment, this can lead to disagreements between alignments inferred by a model trained in one direction and those inferred by a model trained in the reverse direction.
 To remedy this disparity (and other shortcomings), it is common to turn to alignment symmetrization techniques such as grow-diag-final-and \cite{koehn+:2003} which heuristically combines alignments from both directions.
 
 %------ VERSION 1
@@ -44,7 +44,7 @@ On Czech-English and Chinese-English word alignment (Section \ref{sec:alignment}
 We further apply our approach to the fertility-based IBM Model 4, showing significant gains in \bleu compared to baseline model.\marginpar{DC: what are ordinary models. \bluetext{TL: changed to "baseline"}}
 
 On English-Japanese back-transliteration decipherment (Section \ref{sec:transliteration}), we apply \method{MIR} to the cascade of wFSTs approach proposed by \newcite{RK09}.
-Using \method{MIR}, we are able to reduce the whole-name error-rate relative to a model trained on parallel data by 33\%, as well as significantly outperform the joint model of \newcite{Mylonakis2007}.
+Using \method{MIR}, we are able to reduce the whole-name error-rate relative to a model trained on parallel data by 33\%, as well as significantly outperform the joint model proposed by \newcite{Mylonakis2007}.
 
 
 
