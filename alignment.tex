@@ -39,7 +39,8 @@ We carried out Czech-English and Chinese-English word alignment and MT experimen
 For $\method{ABA}$ training, we used the authors' toolkit\footnote{cs.stanford.edu/$\sim$pliang/software/cross-em-aligner-1.3.zip}   which supports the IBM1 and HMM models. 
 Vanilla EM training was done using the popular word alignment toolkit  GIZA++\footnote{code.google.com/p/giza-pp/} which supports all IBM models as well as the HMM model. 
 We implemented $\method{MIR}$ on top of GIZA++ and plan to release our toolkit as a patch over GIZA++.
-\begin{table*}
+
+\begin{table}
 \begin{center}
 %\renewcommand{\arraystretch}{1.1}
 %\begin{tabular}{c|c|c|l|l|l|lll}
@@ -64,29 +65,51 @@ We implemented $\method{MIR}$ on top of GIZA++ and plan to release our toolkit a
 %       & $\method{MIR}$-M4  & Y &  & X&X\\
 %\end{tabular}
 %% -- new format 
-\renewcommand{\arraystretch}{1.2}
-\begin{tabular}{r|l|l|l|l|l}
- & \multicolumn{2}{c|}{Chinese-English } & \multicolumn{3}{c}{Czech-English}\tabularnewline
-Method &\,\,\,\textbf{Align F1} &\,\,\,\textbf{NIST08} &\,\,\,\textbf{Align F1} &\,\,\,\,\textbf{WMT09} &\,\,\,\textbf{WMT10}\tabularnewline
+%\renewcommand{\arraystretch}{1.2}
+%\begin{tabular}{r|l|l|l|l|l}
+% & \multicolumn{2}{c|}{Chinese-English } & \multicolumn{3}{c}{Czech-English}\tabularnewline
+%Method &\,\,\,\textbf{Align F1} &\,\,\,\textbf{NIST08} &\,\,\,\textbf{Align F1} &\,\,\,\,\textbf{WMT09} &\,\,\,\textbf{WMT10}\tabularnewline
+%\hline 
+%EM-HMM & 64.6 & 23.6 & 65.0 & 16.7 & 17.1\tabularnewline
+%MIR-HMM & 70.9 (+6.3) & 24.0 (+0.4) & 69.6 (+4.6) & 17.1 (+0.4) & 17.6 (+0.5)\tabularnewline
+%ABA-HMM & 70.8 (+6.2) & 24.4 (+0.8) & 70.4 (+5.4) & 17.1 (+0.4) & 17.7 (+0.6)\tabularnewline
+%MIR+ABA-HMM & - & 25.1 (+1.5) & - & 17.4 (+0.7) & 17.9 (+0.8)\tabularnewline
+%\hline 
+%EM-M4 & 68.4 & X & 67.3 & 16.6 & 17.1\tabularnewline
+%MIR-M4 & 72.9 (+x.x) & Y & 70.7 (+4.6) & 17.0 (+0.4) & 17.5 (+0.4)\tabularnewline
+
+
+\begin{tabular}{r|l|l}
+ & \multicolumn{1}{c|}{Chinese-English } & \multicolumn{1}{c}{Czech-English}\tabularnewline
+Method & \textbf{Align F1} & \textbf{Align F1}\tabularnewline
 \hline 
-EM-HMM & 64.6 & 23.6 & 65.0 & 16.7 & 17.1\tabularnewline
-MIR-HMM & 70.9 (+6.3) & 24.0 (+0.4) & 69.6 (+4.6) & 17.1 (+0.4) & 17.6 (+0.5)\tabularnewline
-ABA-HMM & 70.8 (+6.2) & 24.4 (+0.8) & 70.4 (+5.4) & 17.1 (+0.4) & 17.7 (+0.6)\tabularnewline
-MIR+ABA-HMM & - & 25.1 (+1.5) & - & 17.4 (+0.7) & 17.9 (+0.8)\tabularnewline
+EM-HMM & 64.6 & 65.0\tabularnewline
+MIR-HMM & 70.9 (+6.3) & 69.6 (+4.6)\tabularnewline
+ABA-HMM & 70.8 (+6.2) & 70.4 (+5.4)\tabularnewline
 \hline 
-EM-M4 & 68.4 & X & 67.3 & 16.6 & 17.1\tabularnewline
-MIR-M4 & 72.9 (+x.x) & Y & 70.7 (+4.6) & 17.0 (+0.4) & 17.5 (+0.4)\tabularnewline
+EM-M4 & 68.4 & 67.3\tabularnewline
+MIR-M4 & 72.9 & 70.7 (+4.6)\tabularnewline
 \end{tabular}
 \end{center}
-
-
 \caption{For Czech-English, the year refers to the WMT shared task; for Chinese-English, the year refers to the NIST Open MT Evaluation. Both $\method{ABA}$ and $\method{MIR}$ obtain statistically significant results over vanilla EM training. Combining $\method{ABA}$ and $\method{MIR}$ alignments also improves \bleu{} score significantly over $\method{ABA\mbox{/}MIR}$, with $p<0.05$ for these improvements. The \bleu{} difference between $\method{ABA}$ and $\method{MIR}$ is not statistically significant.}
-\label{tab:results}
-\end{table*}
+\label{tab:resultsF}
+\end{table}
+
+
+\begin{table}
+\begin{tabular}{r|l|l|l}
+ & \multicolumn{1}{c|}{Chi-Eng} & \multicolumn{2}{c}{Cze-Eng}\tabularnewline
+Method & \textbf{NIST08} & \textbf{WMT09} & \textbf{WMT10}\tabularnewline
+\hline 
+EM-HMM & 23.6 & 16.7 & 17.1\tabularnewline
+MIR-HMM & 24.0 (+0.4) & 17.1 (+0.4) & 17.6 (+0.5)\tabularnewline
+ABA-HMM & 24.4 (+0.8) & 17.1 (+0.4) & 17.7 (+0.6)\tabularnewline
+combined & 25.1 (+1.5) & 17.4 (+0.7) & 17.9 (+0.8)\tabularnewline
+\end{tabular}
+\end{table}
 
 
 \subsection{Data}
-
 We used the following parallel data to train the word alignment models:
 \begin{description}[leftmargin=0.5em]
 \item[Chinese-English:] 287K 
@@ -97,7 +120,7 @@ sentence pairs from the NIST 2009 Open MT Evaluation constrained task consisting
 Sentence length was restricted to at most 40 tokens.
 
 \subsection{Experiments}
-Since the $\method{ABA}$ implementation is limited to the HMM model, we conducted two sets of experiments - In the first, only HMM models were trained and we compared all methods. In the second only the baseline and $\method{MIR}$ were compared using IBM4 model.
+Since the \method{ABA} implementation is limited to the HMM model, we conducted two sets of experiments - In the first, only HMM models were trained and we compared all methods. In the second only the baseline and $\method{MIR}$ were compared using IBM4 model.
 
 All methods were trained in both directions, using either 5 iterations of Model~1 and then 5 of an advanced model, or alternatively 10 iteration each.
 Symmetrized alignments were obtained in the following manner:
