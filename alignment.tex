@@ -79,8 +79,6 @@ We implemented $\method{MIR}$ on top of GIZA++ and plan to release our toolkit a
 %EM-M4 & 68.4 & X & 67.3 & 16.6 & 17.1\tabularnewline
 %MIR-M4 & 72.9 (+x.x) & Y & 70.7 (+4.6) & 17.0 (+0.4) & 17.5 (+0.4)\tabularnewline
 
-
-
 \subsection{Data}
 We used the following parallel data to train the word alignment models:
 \begin{description}[leftmargin=0.5em]
@@ -94,16 +92,16 @@ Sentence length was restricted to at most 40 tokens.
 
 \subsection{Word Alignment Experiments}
 
-All methods were trained in both directions, using either 5 iterations of Model~1 and then 5 of an advanced model, or alternatively 10 iteration each.
-Symmetrized alignments were obtained in the following manner:
-For the HMM models, we implemented a symmetrization technique based on the~ \emph{posterior decoding} \cite{liang+:2006:align} technique used by the $\method{ABA}$ implementation.
-For IBM model~4, we used the standard grow-diag-final-and (gdfa) symmetrization heuristic~\cite{koehn+:2003}.
+The HMM models were trained using either $k\in{5,10}$ iterations for IBM1 model and HMM.
+IBM4 models were then obtained by following with 5 iterations of IBM3 and 10 iterations of IBM4.
+We then extracted symmetrized alignments in the following manner:
+For all HMM models, we used the \emph{posterior decoding} technique from \cite{liang+:2006:align} as used by the $\method{ABA}$ implementation.
+For IBM4 model, we used the standard grow-diag-final-and (gdfa) symmetrization heuristic~\cite{koehn+:2003}.
 
-For each method, we selected iteration numbers (5 or 10) and hyperparameter values by tuning alignment F-score on a validation set of $460$ hand-aligned Czech-English and $1102$ Chinese-English sentences. 
-In particular, for $\method{MIR}$ we found the regularizer coefficient $\lambda=300$ to work best on both datasets.
+We tuned hyperparameters ($k$ and our $\lambda$) to maximize the alignment F-score on a validation set of $460$ hand-aligned Czech-English and $1102$ Chinese-English sentences.
 
-
-Table~\ref{tab:resultsF} summarizes our MT \bleu score results.
+Table~\ref{tab:resultsF} summarizes our alignment F-scores. 
+Using $\method{MIR}$ we gained modest improvement on Czech-English (the smaller task) and almost doubled 
 
 \begin{table}[h]
 \begin{tabular}{r|l|l}
@@ -118,7 +116,7 @@ EM-M4 & 68.4 & 67.3\tabularnewline
 MIR-M4 & 72.9 & 70.7 (+4.6)\tabularnewline
 \end{tabular}
 %\end{center}
-\caption{Word alignment F1 scores. \method{MIR} with IBM model 4 attains higher F scores compared to \method{ABA}.}
+\caption{Word alignment F1 scores.}
 \label{tab:resultsF}
 \end{table}
 
