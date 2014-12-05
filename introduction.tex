@@ -1,6 +1,6 @@
 The transfer of information between languages is a common natural language phenomenon that is intuitively invertible. 
-For example, in transliteration, a source-language word is mapped to a target language's writing system under a sound preserving mapping (for example, ``computer'' to Japanese Romaji, ``konpyutaa''). The original word should then be easily recoverable from its transliterated version.
-Similarly, in translation, the back-translation of a translation of a word is likely to be that same word itself.
+For example, in transliteration, a source-language word is mapped to a target language's writing system under a sound preserving mapping (for example, ``computer'' to Japanese Romaji, ``konpyutaa''). The original word should then be recoverable from its transliterated version.
+Similarly, in translation, the back-translation of the translation of a word is likely to be that same word itself.
 
 In NLP, however, commonly-used generative models describing such phenomena are directional, only concerned with the transfer of source-language symbols to target-language symbols or vice versa, but not both directions.
 Left unchecked, independently training two such directional models (source-to-target and target-to-source) often yields two models that diverge from this invertibility intuition. 
@@ -18,11 +18,11 @@ it proves effective at jointly training bidirectional models.
 
 In this paper we develop a different approach for jointly training general bidirectional sequence alignment models called Model Invertibility Regularization, or \method{MIR} (Section \ref{sec:method}).
 Our approach has several benefits over \method{ABA}:
-First, \method{MIR} can be applied to sequence alignment even without parallel data.
+First, \method{MIR} can be applied to sequence alignment without parallel data.
 Second, a single implementation seamlessly extends to all IBM models, including the fertility based models.
-Finally, the \method{MIR} algorithm faithfully follows the EM recipe and inherits its theoretical convergence guarantees.
+Finally, as \method{MIR} follows the EM framework, it inherits its desirable theoretical convergence guarantees.
 
-The key idea facilitating the extension to complex models and to non-parallel data settings is in our regularizer, which operates on the model parameters as opposed to their inferences. 
+The key idea facilitating the easy extension to complex models and to non-parallel data settings is in our regularizer, which operates on the model parameters as opposed to their inferences. 
 Specifically, \method{MIR} was designed to reward model pairs whose translation tables respect the invertibility intuition.
 
 %---- VERSION 2 (new)
@@ -42,8 +42,8 @@ Specifically, \method{MIR} was designed to reward model pairs whose translation 
 
 We tested \method{MIR} against competitive baselines on two sequence alignment tasks: word alignment (with parallel data) and back-transliteration decipherment (without parallel data).
 
-On Czech-English and Chinese-English word alignment (Section \ref{sec:alignment}), restricted to the HMM model, \method{MIR} attains F- and \bleu score improvements that are quantitatively comparable to those of \method{ABA}. 
-We further apply \method{MIR} beyond HMM, on the fertility-based IBM Model 4, showing gains in F-score compared to both the baseline IBM model 4 and \method{ABA}.
+On Czech-English and Chinese-English word alignment (Section \ref{sec:alignment}), restricted to the HMM model, \method{MIR} attains F- and \bleu score improvements that are comparable to those of \method{ABA}. 
+We further apply \method{MIR} beyond HMM, on the fertility-based IBM Models, showing gains in F-score compared to both the baseline IBM models and \method{ABA}.
 Interestingly, the alignments obtained by \method{ABA} and \method{MIR} are qualitatively different, so that combining the two yields additive gains over each method by itself.
 
 On English-Japanese back-transliteration decipherment (Section \ref{sec:transliteration}), we apply \method{MIR} to the cascade of wFSTs approach proposed by \newcite{RK09}.
