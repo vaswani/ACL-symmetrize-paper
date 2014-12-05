@@ -41,7 +41,7 @@ Vanilla EM training was done using the popular word alignment toolkit  GIZA++\fo
 We implemented $\method{MIR}$ on top of GIZA++ and plan to release our toolkit as a patch over GIZA++.
 
 \begin{table}
-\begin{center}
+%\begin{center}
 %\renewcommand{\arraystretch}{1.1}
 %\begin{tabular}{c|c|c|l|l|l|lll}
 %\textbf{Task} & \textbf{System} & \textbf{Align F1}  &\multicolumn{3}{c}{\textbf{\bleu} (\%)} \\
@@ -90,7 +90,7 @@ ABA-HMM & 70.8 (+6.2) & 70.4 (+5.4)\tabularnewline
 EM-M4 & 68.4 & 67.3\tabularnewline
 MIR-M4 & 72.9 & 70.7 (+4.6)\tabularnewline
 \end{tabular}
-\end{center}
+%\end{center}
 \caption{For Czech-English, the year refers to the WMT shared task; for Chinese-English, the year refers to the NIST Open MT Evaluation. Both $\method{ABA}$ and $\method{MIR}$ obtain statistically significant results over vanilla EM training. Combining $\method{ABA}$ and $\method{MIR}$ alignments also improves \bleu{} score significantly over $\method{ABA\mbox{/}MIR}$, with $p<0.05$ for these improvements. The \bleu{} difference between $\method{ABA}$ and $\method{MIR}$ is not statistically significant.}
 \label{tab:resultsF}
 \end{table}
@@ -105,7 +105,9 @@ EM-HMM & 23.6 & 16.7 & 17.1\tabularnewline
 MIR-HMM & 24.0 (+0.4) & 17.1 (+0.4) & 17.6 (+0.5)\tabularnewline
 ABA-HMM & 24.4 (+0.8) & 17.1 (+0.4) & 17.7 (+0.6)\tabularnewline
 combined & 25.1 (+1.5) & 17.4 (+0.7) & 17.9 (+0.8)\tabularnewline
+
 \end{tabular}
+\label{tab:resultsB}
 \end{table}
 
 
