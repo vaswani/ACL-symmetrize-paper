@@ -38,11 +38,11 @@
 \begin{abstract}
 We present Model Invertibility Regularization (\method{MIR}), a method that jointly trains two directional sequence alignment models, one in each direction, and takes into account the invertibility of the alignment task.
 By coupling the two models through their parameters
-(as opposed to through their inferences, as in Liang et al.'s Alignment by Agreement (\method{ABA})), our method seamlessly extends to all IBM-style word alignment models as well as to sequence alignment \emph{without} parallel data.
+(as opposed to through their inferences, as in Liang et al.'s Alignment by Agreement (\method{ABA})), our method seamlessly extends to all IBM-style word alignment models as well as to alignment \emph{without} parallel data.
 Our proposed algorithm is mathematically sound and inherits convergence guarantees from EM.
-
-We evaluated \method{MIR} on two tasks:
-(1)~On word alignment, applying \method{MIR} on fertility based models we attain higher F-scores than \method{ABA}. Interestingly, combining the alignments produced by both methods significantly outperform either method alone on \bleu.
+We evaluate \method{MIR} on two tasks:
+(1)~On word alignment, applying \method{MIR} on fertility based models we attain higher F-scores than \method{ABA}. 
+%Interestingly, combining the alignments produced by both methods significantly outperform either method alone on \bleu.
 (2)~On Japanese-to-English back-transliteration without parallel data, applied to the decipherment model of Ravi and Knight, \method{MIR} learns sparser models that close the gap in whole-name error rate by 33\% relative to a model trained on parallel data, and further, beats a previous approach by \newcite{Mylonakis2007}.
 
 %In "Alignment by Agreement" (ABA) Liang. et al. propose to train two directional word alignment models by maximizing their joint data-likelihood and a term that measures their inferences agreements.

@@ -38,8 +38,7 @@ We carried out Czech-English and Chinese-English word alignment and MT experimen
 
 For $\method{ABA}$ training, we used the authors' toolkit\footnote{cs.stanford.edu/$\sim$pliang/software/cross-em-aligner-1.3.zip}   which supports the IBM1 and HMM models. 
 Vanilla EM training was done using the popular word alignment toolkit  GIZA++\footnote{code.google.com/p/giza-pp/} which supports all IBM models as well as the HMM model. 
-We implemented $\method{MIR}$ on top of GIZA++ and plan to release our toolkit as a patch over GIZA++, for practitioners to use in their translation experiments.
-
+We implemented $\method{MIR}$ on top of GIZA++ and plan to release our toolkit as a patch over GIZA++.
 \begin{table*}
 \begin{center}
 %\renewcommand{\arraystretch}{1.1}
@@ -102,8 +101,8 @@ Since the $\method{ABA}$ implementation is limited to the HMM model, we conducte
 
 All methods were trained in both directions, using either 5 iterations of Model~1 and then 5 of an advanced model, or alternatively 10 iteration each.
 Symmetrized alignments were obtained in the following manner:
-For the HMM models, we implemented a symmetrization technique based on the \emph{posterior decoding} \cite{liang+:2006:align} technique used by the $\method{ABA}$ implementation.
-For IBM model 4, we used the standard grow-diag-final-and (gdfa) symmetrization heuristic~\cite{koehn+:2003}.
+For the HMM models, we implemented a symmetrization technique based on the~ \emph{posterior decoding} \cite{liang+:2006:align} technique used by the $\method{ABA}$ implementation.
+For IBM model~4, we used the standard grow-diag-final-and (gdfa) symmetrization heuristic~\cite{koehn+:2003}.
 
 For each method, we selected iteration numbers (5 or 10) and hyperparameter values by tuning alignment F-score on a validation set of $460$ hand-aligned Czech-English and $1102$ Chinese-English sentences. 
 In particular, for $\method{MIR}$ we found the regularizer coefficient $\lambda=300$ to work best on both datasets.

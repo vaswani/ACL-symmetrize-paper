@@ -42,10 +42,9 @@ Specifically, \method{MIR} was designed to reward model pairs whose translation 
 
 We tested \method{MIR} against competitive baselines on two sequence alignment tasks: word alignment (with parallel data) and back-transliteration decipherment (without parallel data).
 
-On Czech-English and Chinese-English word alignment (Section \ref{sec:alignment}), restricted to the HMM model, \method{MIR} attains F- and \bleu score improvements that are quantitatively comparable to those of \method{ABA}. We further apply \method{MIR} beyond HMM, on the fertility-based IBM Model 4, showing gains in F-score compared to both the baseline IBM model 4 and \method{ABA}.
-
-
-but qualitatively different, so that combining both alignments yields additive gains over each method by itself (over two of the three translation test sets).
+On Czech-English and Chinese-English word alignment (Section \ref{sec:alignment}), restricted to the HMM model, \method{MIR} attains F- and \bleu score improvements that are quantitatively comparable to those of \method{ABA}. 
+We further apply \method{MIR} beyond HMM, on the fertility-based IBM Model 4, showing gains in F-score compared to both the baseline IBM model 4 and \method{ABA}.
+Interestingly, the alignments obtained by \method{ABA} and \method{MIR} are qualitatively different, so that combining the two yields additive gains over each method by itself.
 
 On English-Japanese back-transliteration decipherment (Section \ref{sec:transliteration}), we apply \method{MIR} to the cascade of wFSTs approach proposed by \newcite{RK09}.
 Using \method{MIR}, we are able to reduce the whole-name error-rate relative to a model trained on parallel data by 33\%, as well as significantly outperform the joint model proposed by \newcite{Mylonakis2007}.

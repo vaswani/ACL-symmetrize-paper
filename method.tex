@@ -6,7 +6,7 @@ We therefore name our method \emph{Model Invertibility Regularization} (\method{
 
 Our regularizer operates on the t-table parameters $\tA, \tB$ of the two models, as follows:
 Let matrices $T_1, T_2$ denote the t-tables $\tA, \tB$ in matrix form and consider their multiplication $T=T_1 T_2$. 
-The resulting matrix $T$ is a stochastic square matrix of dimension $|V_1|\times|V_1|$ where $|V_1|$ is the size of the source-language vocabulary.
+The resulting matrix $T$ is a stochastic square matrix of dimension $|V_1|\times|V_1|$ where $|V_1|$ denotes the size of the source-language vocabulary.
 Each entry $T_{ij}$ represents the total probability mass mapped from source word $e_i$ to source word $e_j$ by first applying the source-to-target mapping $T_1$ and then the target-to-source mapping $T_2$.
 
 In particular, each diagonal entry $T_{ii}$ holds the probability of mapping a source symbol back onto itself, a quantity we intuitively believe should be high.
@@ -22,7 +22,7 @@ Unfortunately, the trace is not concave in both $T_1$ and $T_2$, a property whic
 We therefore modify the trace regularizer by applying the entrywise square root operator on $T_1,\,T_2$ and denote the new term $R$:
 \begin{align}
 R(t_{1},t_{2})&=Tr[\sqrt{T1}\sqrt{T2}]\nonumber\\
-&=\sum_{e,f}\sqrt{t_{1}(f\mid e) \; t_{2}(e\mid f)}
+&=\sum_{e}\sum_{f}\sqrt{t_{1}(f\mid e) \; t_{2}(e\mid f)}
 \label{eqn:R}
 \end{align}
 Note that $R$ is also maximized whenever $\sqrt{T1}\sqrt{T2}=I$.
@@ -36,7 +36,7 @@ Concavity of $R$ in both $t_1, t_2$ (or equivalently $T_1, T_2$) follows by obse
 \subsection{Joint objective function}
 
 We apply \method{MIR} in two data scenarios:
-In the parallel data setting, we observe $N$ sequences pairs $\set{\vx^n_1}_{n}=\set{(\ve^n, \vf^n)}_{n}$ or, equivalently, $\set{\vx^n_2}_{n}=\set{(\vf^n, \ve^n)}_{n}$.
+In the parallel data setting, we observe $N$ sequences pair $\set{\vx^n_1}_{n}=\set{(\ve^n, \vf^n)}_{n}$ or, equivalently, $\set{\vx^n_2}_{n}=\set{(\vf^n, \ve^n)}_{n}$.
 
 In the non-parallel setting, two monolingual datasets are observed -- $N_1$ source sequences $\set{\vx^n_1}_{n}=\set{\ve^n}_{n}$ and $N_2$ target sequences $\set{\vx^n_2}_{n}=\set{\vf^n}_{n}$.
 
@@ -51,10 +51,10 @@ whereas in the non-parallel data setting, the probability is defined:
 \pA(\vx_1^n; \TA) = p(\vf^n; \TA)\\
 \pB(\vx_2^n; \TB) = p(\ve^n; \TB)
 \end{align*}
-\marginpar{DC: I feel that the x notation is over-complex. Would it help to not try to unify the parallel and non-parallel cases?}
+%\marginpar{DC: I feel that the x notation is over-complex. Would it help to not try to unify the parallel and non-parallel cases?}
 
 Using the above definitions and the \method{MIR} regularizer $R$ (Eq. \ref{eqn:R}), we formulate an optimization program for maximizing the regularized log-likelihoods of the observed data:
-\marginpar{DC: The use of symbols $t$ and $\Theta$ for nearly the same thing can be confusing}
+%\marginpar{DC: The use of symbols $t$ and $\Theta$ for nearly the same thing can be confusing}
 \begin{equation}
 \max_{\TA, \TB}\,\, \lambda R(t_1, t_2)
 %+\sum_{k\in\set{1,2}} \log \sum_n \pk(\vx^n; \Tk)
@@ -62,7 +62,7 @@ Using the above definitions and the \method{MIR} regularizer $R$ (Eq. \ref{eqn:R
 +\sum_{k\in\set{1,2}} \sum_{n=1}^{N_k} \log p_k(\vx_k^n; \Tk)
 \label{eqn:joint}
 \end{equation}
-where $\lambda\ge0$ is a tunable hyperparameter and, in the parallel case $N=N_1=N_2$.
+where $\lambda\ge0$ is a tunable hyperparameter (note that in the parallel case $N=N_1=N_2$).
 
 We defer the discussion on the relationship and merits of our approach with respect to \method{ABA} \cite{liang+:2006:align} to Section \ref{sec:related}.
 
@@ -263,7 +263,7 @@ From the computed posteriors $q_k$ we collect expected counts for each event, us
 Since the \method{MIR} regularizer couples only the t-table parameters, the update rule for any remaining parameter is left unchanged (that is, one can use the usual closed-form count-and-divide solution).
 
 Now, let $\Ch_1^{e,f} $ and $\Ch_2^{e,f}$ denote the expected counts for the t-table parameters. That is, $\Ch_k^{e,f}$ denotes the expected number of times a source-symbol type $e$ is seen aligned to a target-symbol type $f$ according to the posterior $q_k$. 
-In the M-step, we maximize the following objective with respect to $t_1$ and  $t_2$:\marginpar{DC: This seems exactly the same as the previous equation -- why the new notation?}
+In the M-step, we maximize the following objective with respect to $t_1$ and  $t_2$:%I\marginpar{DC: This seems exactly the same as the previous equation -- why the new notation?}
 \begin{align}
 \arg\max_{\tA, \tB}\sum_{e,f}  \Ch_1^{e,f}\log \tA(f \mid e) +\nonumber \\
 \sum_{e,f} \Ch_2^{e,f} \log \tB(e \mid f) + 
@@ -272,8 +272,9 @@ In the M-step, we maximize the following objective with respect to $t_1$ and  $t
 \end{align}
 which can be efficiently solved using convex programming techniques due to the   concavity of $R$ and the complete-data log-likelihoods in both $t_1$ and $t_2$.
 
-\marginpar{cite Schoenemann, Vaswani? \bluetext{TL: revealing our identity?}}
-To solve \eqn{eqn:Mobj} we applied Projected Gradient Descent \cite{bertsekas1999nonlinear}, where at each step, the parameters are updated in the direction of the M-step objective gradient at $(\tA, \tB)$ and then projected back onto the probability simplex. 
+In our implementation, 
+%\marginpar{cite Schoenemann, Vaswani? \bluetext{TL: revealing our identity?}}
+we applied Projected Gradient Descent \cite{bertsekas1999nonlinear}, where at each step, the parameters are updated in the direction of the M-step objective gradient at $(\tA, \tB)$ and then projected back onto the probability simplex. 
 We used simple stopping conditions based on objective function value convergence and a bounded number of iterations.
 
 %
