@@ -1,5 +1,5 @@
 
-\newcite{RK09} consider a challenging task called Japanese Transliteration decipherment - the goal is to correctly decode a list of 100 US senator names written in Katakana script, without having access to English-Japanese parallel data.
+\newcite{RK09} consider a challenging task called Japanese transliteration decipherment - the goal is to correctly decode a list of 100 US senator names written in Katakana script, without having access to English-Japanese parallel data.
 
 In this section, we reproduce their decipherment experiment and show that applying \method{MIR} on their baseline model significantly outperforms both baseline, and the  \method{bi\mbox{-}EM} method (Section \ref{sec:biEM}), as proposed by \newcite{Mylonakis2007}.
 
@@ -20,7 +20,7 @@ They apply their trained transliteration model to decode a list of 100 US senato
 \begin{tabular}{c}
 \includegraphics[scale=0.92]{figures/transliteration-cascade}\tabularnewline
 \end{tabular}
-\caption{\label{font-table} The transliteration generative story as a cascade of wFSTs. Each box represents a transducer. \textbf{Top:} transliteration of the word ``computer'' to Japanese. \textbf{Bottom:} the reverse process. $\method{MIR}$ jointly trains the two cascades by maximizing the regularized data log-likelihood with respect to the two (shaded) phoneme mapping models. 
+\caption{\label{font-table} The transliteration generative story as a cascade of wFSTs. Each box represents a transducer. \textbf{Top:} transliteration of the word ``computer'' to Japanese Katakana. \textbf{Bottom:} the reverse process. $\method{MIR}$ jointly trains the two cascades by maximizing the regularized data log-likelihood with respect to the two (shaded) phoneme mapping models $\tA, \tB$.
 %The blank wFSTs are held fixed.
 }
 \label{fig:fsts}
