@@ -82,7 +82,7 @@ We train and tune 4 models:
 \end{description} 
 
 
-We train the model of each method for 15 EM iterations, while keeping the LM and pronunciation wFSTs fixed.
+We train each method for 15 EM iterations, while keeping the LM and pronunciation wFSTs fixed.
 
 Training was done using the Carmel finite-state toolkit\footnote{http://www.isi.edu/licensed-sw/carmel/}.
 Specifically, $\method{baseline}$ and $\method{oracle}$ rely on Carmel exclusively, while for $\method{MIR}$ and $\method{bi\mbox{-}EM}$, we manipulated Carmel to output the E-step posteriors, which we then used to construct and solve the M-step objective using our own implementation.
@@ -96,7 +96,7 @@ We decoded Japanese terms using the Viterbi algorithm, applied on the selected $
 We note that \method{ABA} training and symmetrization heuristics for decoding are not applicable, since they require parallel data.
 
 
-\subsection{Senator Name Decoding}
+\subsection{Senator Name Decoding Results}
 We compiled our own test set, consisting of 100 US senator names (first and last) and compared the performance of the four algorithms.
 
 %Table \ref{tbl:transliteration0}  % ref not working for some reason

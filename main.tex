@@ -96,15 +96,15 @@ We evaluate \method{MIR} on two tasks:
 \label{sec:transliteration}
 \input{transliteration.tex}
 
-
 \section{Conclusion}
 We presented Model Invertibility Regularization (\method{MIR}), an unsupervised method for jointly training two bidirectional sequence alignment models with or without parallel data.
 Our formulation is based on the simple observation that the alignment tasks at hand are inherently invertible and encourages the translation tables in both models to behave like pseudo-inverses of each other.
 
-We derived an efficient MAP-EM algorithm and demonstrated our method's effectiveness on two different alignment tasks. On word alignment, \method{MIR} yielded \bleu improvements comparable to the Alignment by Agreement method \cite{liang+:2006:align}, and orthogonal in the sense that combining the two methods yielded further improvement (up to 1.5 \bleu). On Japanese-English back-transliteration without parallel data, we obtain significant error rate reduction beating two baseline methods \cite{RK09,Mylonakis2007}.
+We derived an efficient MAP-EM algorithm and demonstrated our method's effectiveness on two different alignment tasks. On word alignment, \method{MIR} yielded \bleu improvements comparable to the Alignment by Agreement method \cite{liang+:2006:align}, and complementary in that, combining the produced alignments yielded further improvement (up to 1.5 \bleu). 
+On Japanese-English back-transliteration with no parallel data, we obtain significant error reduction beating two baseline methods \cite{RK09,Mylonakis2007}.
 
 As future work, we plan to apply \method{MIR} on large-scale MT decipherment \cite{Ravi11,Dou13}, where, so far, only a single directional model has been used.
-Another promising direction is to encourage invertibility not only between words, but also their senses and synonyms. 
+Another promising direction is to encourage invertibility not only between words, but between their senses and synonyms. 
 %\section*{Appendix}
 %To prove $h(x,y) = \sqrt{xy}$ is concave over $x,y\in [0,1]$, we show $h(\alpha (x_0, y_0) + (1-\alpha)(x_1, y_1)) \ge \alpha h(x_0,y_0) + (1-\alpha) h(x_1, y_1)$:
 %\begin{align*}

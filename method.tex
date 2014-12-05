@@ -33,7 +33,7 @@ Concavity of $R$ in both $t_1, t_2$ (or equivalently $T_1, T_2$) follows by obse
 
 %----- VERION 1 
 
-\subsection{Joint objective function}
+\subsection{Joint Objective Function}
 
 We apply \method{MIR} in two data scenarios:
 In the parallel data setting, we observe $N$ sequences pair $\set{\vx^n_1}_{n}=\set{(\ve^n, \vf^n)}_{n}$ or, equivalently, $\set{\vx^n_2}_{n}=\set{(\vf^n, \ve^n)}_{n}$.
@@ -213,7 +213,7 @@ We defer the discussion on the relationship and merits of our approach with resp
 %%values when the conditional distributions agree, $R_{GM}$ attains
 %%its maximum when those distributions are sparse (need example?)
 
-\subsection{Optimization procedure}\label{subsec:optimization}
+\subsection{Optimization Procedure}\label{subsec:optimization}
 Using our concave regularizer, \method{MIR} optimization (\eqn{eqn:joint}) neatly falls under the MAP-EM framework \cite{Dempster:1977}
 %\marginpar{insert reference to MAP-EM. \bluetext{TL: mentioned in Dempster}}
  and inherits the convergence properties of the underlying algorithms.
@@ -273,8 +273,7 @@ In the M-step, we maximize the following objective with respect to $t_1$ and  $t
 which can be efficiently solved using convex programming techniques due to the   concavity of $R$ and the complete-data log-likelihoods in both $t_1$ and $t_2$.
 
 In our implementation, 
-%\marginpar{cite Schoenemann, Vaswani? \bluetext{TL: revealing our identity?}}
-we applied Projected Gradient Descent \cite{bertsekas1999nonlinear}, where at each step, the parameters are updated in the direction of the M-step objective gradient at $(\tA, \tB)$ and then projected back onto the probability simplex. 
+we applied Projected Gradient Descent \cite{bertsekas1999nonlinear,schoenemann:2011conll}, where at each step, the parameters are updated in the direction of the M-step objective gradient at $(\tA, \tB)$ and then projected back onto the probability simplex. 
 We used simple stopping conditions based on objective function value convergence and a bounded number of iterations.
 
 %
