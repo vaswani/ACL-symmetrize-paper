@@ -1,11 +1,11 @@
 
-In this section we propose a method for jointly training two word alignment models, a source-to-target model $\TA$ and a target-to-source model $\TB$, by regularizing their parameters to respect the invertibility of the alignment task. 
+In this section we propose a method for jointly training two word alignment models, a source-to-target model $\TA$ and a target-to-source model $\TB$, by regularizing their parameters to respect the invertibility of the alignment task.
 We therefore name our method \emph{Model Invertibility Regularization} (\method{MIR}).
 
 \subsection{Regularizer}
 
 Our regularizer operates on the t-table parameters $\tA, \tB$ of the two models, as follows:
-Let matrices $T_1, T_2$ denote the t-tables $\tA, \tB$ in matrix form and consider their multiplication $T=T_1 T_2$. 
+Let matrices $T_1, T_2$ denote the t-tables $\tA, \tB$ in matrix form and consider their multiplication $T=T_1 T_2$.
 The resulting matrix $T$ is a stochastic square matrix of dimension $|V_1|\times|V_1|$ where $|V_1|$ denotes the size of the source-language vocabulary.
 Each entry $T_{ij}$ represents the total probability mass mapped from source word $e_i$ to source word $e_j$ by first applying the source-to-target mapping $T_1$ and then the target-to-source mapping $T_2$.
 
@@ -27,11 +27,11 @@ R(t_{1},t_{2})&=Tr[\sqrt{T1}\sqrt{T2}]\nonumber\\
 \end{align}
 Note that $R$ is also maximized whenever $\sqrt{T1}\sqrt{T2}=I$.
 
-Concavity of $R$ in both $t_1, t_2$ (or equivalently $T_1, T_2$) follows by observing that it is a sum of concave functions -- each term in the summation is a geometric mean, which is concave in its parameters. 
+Concavity of $R$ in both $t_1, t_2$ (or equivalently $T_1, T_2$) follows by observing that it is a sum of concave functions -- each term in the summation is a geometric mean, which is concave in its parameters.
 
 
 
-%----- VERION 1 
+%----- VERION 1
 
 \subsection{Joint Objective Function}
 
@@ -96,7 +96,7 @@ We defer the discussion on the relationship and merits of our approach with resp
 
 
 %\subsection{remove me}
-%In word alignment, it is common practice to train alignment models in both source-to-target and target-to-source directions and then apply symmetrization techniques to the resulting source-to-target and target-to-source alignments. 
+%In word alignment, it is common practice to train alignment models in both source-to-target and target-to-source directions and then apply symmetrization techniques to the resulting source-to-target and target-to-source alignments.
 %%Alignment symmetrization heuristics, such as intersection, union or grow-diag-final-and play a significant role in reducing alignment errors and ultimately improving translation quality.
 %The improvement gained by these post-processing heuristics suggest that each (directional) model suffers from different errors, and that those errors can be mitigated by symmetrization.
 %
@@ -127,7 +127,7 @@ We defer the discussion on the relationship and merits of our approach with resp
 %$L_k(\set{\vx^n_k}; \Tk)=\sum_n \log\pk(\vx_k^n; \Tk)$
 %%
 %%\begin{align*}
-%%\max_{\Tk}\,\,L_k(\set{\vx^n_k}; \Tk)= 
+%%\max_{\Tk}\,\,L_k(\set{\vx^n_k}; \Tk)=
 %%\max_{\Tk}\,\,  \sum_n \log \pk(\vx_k^n; \Tk)
 %%\end{align*}
 %
@@ -143,7 +143,7 @@ We defer the discussion on the relationship and merits of our approach with resp
 %
 %\subsection{Parameter Agreement Measure}
 %Both the word alignment and transliteration models presented in Section \ref{sec:background} are parameterized by a translation table.
-%Considering these tables in both directions, $t_1$ and $t_2$, we suggest the following parameter agreement measure: 
+%Considering these tables in both directions, $t_1$ and $t_2$, we suggest the following parameter agreement measure:
 %\begin{equation}
 %R(\TA, \TB) = \sum_{e,f} \sqrt{t_1(f \mid e) \cdot t_2(e \mid f)}
 %\label{eqn:R}
@@ -154,14 +154,14 @@ We defer the discussion on the relationship and merits of our approach with resp
 %Our agreement measure has several appealing properties.
 %Using the Cauchy-Schwarz inequality, we can bound $R(\TA, \TB) \le \sqrt{|V_E|\cdot|V_F|}$ where $|V_E|, |V_F|$ denote the source and target vocabulary size.
 %%\begin{align*}
-%%R(\TA, \TB) 
-%%%\sum_{e,f} \sqrt{(t_1(\ve \mid \vf) \cdot t_2(\vf \mid \ve))} 
+%%R(\TA, \TB)
+%%%\sum_{e,f} \sqrt{(t_1(\ve \mid \vf) \cdot t_2(\vf \mid \ve))}
 %%\le &\sqrt{ (\sum_{e,f} t_1(\vf \mid \ve)) (\sum_{e,f} t_2(\ve \mid \vf))}\\
 %%= &\sqrt{(|V_E|\cdot|V_F|)}
 %%\end{align*}
 %In particular, when $|V_E|=|V_F|$, the maximum is attained on parameter configurations for which $t_1(\vf \mid \ve) = t_2(\ve \mid \vf)$ over all entity pairs.
 %% demonstrating that this agreement term is not biased towards any particular property (e.g, sparsity).
-%Thus, the objective in \eqn{eqn:joint} balances between similarity in parameter magnitude and data likelihood. 
+%Thus, the objective in \eqn{eqn:joint} balances between similarity in parameter magnitude and data likelihood.
 %%\marginpar{\bluetext{TL: this seems like a good place to say something about invertibility}}
 %
 %Another appealing property of $R$ is its concavity, which follows since $R$ is the sum of concave functions $h(x, y)=\sqrt{xy}$ over a closed convex set (see the concavity proof for $h$ in the appendix).
@@ -170,10 +170,10 @@ We defer the discussion on the relationship and merits of our approach with resp
 %
 %%We now describe our method, which we call Parameter Agreement Training.
 %%In translation, we believe that if a word $e$ can be translated
-%%to a word $f$, then $f$ can be translated to~$e$. 
+%%to a word $f$, then $f$ can be translated to~$e$.
 %%This intuition holds for other tasks such as word or phoneme alignment.
 %%Thus, a desirable form of model agreement is parameter
-%%sparsity agreement: 
+%%sparsity agreement:
 %%\begin{align*}
 %%P_{0}(f\mid e) = 0 \text{ iff } P_{1}(e\mid f)=0.
 %%\end{align*}
@@ -193,8 +193,8 @@ We defer the discussion on the relationship and merits of our approach with resp
 %%\begin{itemize}
 %%\item It is concave on the probability simplex which lends to an efficiently solvable convex optimization program when the log-likelihood terms are themselves concave.
 %
-%%Concavity proof: 
-%%The regularizer is a sum of concave functions defined over a convex set. 
+%%Concavity proof:
+%%The regularizer is a sum of concave functions defined over a convex set.
 %%each summand is concave  the region $[0,1]^{2}$ and the sum of concave functions is concave)
 %%\item It encourages parameter sparsity agreement - If $\PP(e \mid f) = 0$ but $\QQ(f\mid e) > 0$, shifting weight away from $\QQ(f \mid e)$ could only increase the regularizer value.
 %%\end{itemize}
@@ -204,7 +204,7 @@ We defer the discussion on the relationship and merits of our approach with resp
 %%%R_{CD}(P_{0},\, P_{1}) & =  -\frac{1}{2}\sum_{e,f}(P_{0}(e\mid f)-P_{1}(f\mid e))^{2}
 %%\end{align*}
 %%Where \emph{GM }stands for 'geometric mean' and \emph{CD} for 'conditional
-%%difference'. 
+%%difference'.
 %%
 %%Note that both regularizers are concave on the probability simplex
 %%- each term in their summation is concave over the region $[0,1]^{2}$,
@@ -218,9 +218,9 @@ Using our concave regularizer, \method{MIR} optimization (\eqn{eqn:joint}) neatl
 %\marginpar{insert reference to MAP-EM. \bluetext{TL: mentioned in Dempster}}
  and inherits the convergence properties of the underlying algorithms.
 %
-MAP-EM follows the same structure as standard EM - The E step remains identical to the standard E step; the M step maximizes the complete-data log-likelihood plus the regularization term.
+MAP-EM follows the same structure as standard EM - The E-step remains identical to the standard E-step; the M-step maximizes the complete-data log-likelihood plus the regularization term.
 %
-In the case of \method{MIR}, the E-step can be carried out independently for each model. 
+In the case of \method{MIR}, the E-step can be carried out independently for each model.
 %In this sense, $\method{MIR}$ is orthogonal to the complexity of the models' inference space.
 The only extra work is in the M-step, which optimizes a single (concave) objective function.
 
@@ -235,7 +235,7 @@ Specifically, let $\vz_n$ denote the missing data, where, in the parallel data s
 ($\vz_1^n = (\va_1^n, \ve^n), \vz_2^n = (\va_2^n, \vf^n)$).
 
 In the E-step, each model $\Tk$ ($k\in\set{1,2}$) is held fixed and its posterior distribution over the missing data $\vz_k^n$
-%\marginpar{DC: z appears out of the blue \bluetext{TL: better now?}} 
+%\marginpar{DC: z appears out of the blue \bluetext{TL: better now?}}
 is computed per each observation, $\vx_k^n$:
 $$q_k(\vz\kn, \vx\kn) \mathrel{:=} \pk(\vz\kn \mid \vx\kn ; \Tk)$$
 %\textbf{parallel data}: q_k(\va \mid \ve, \vf) :=& \pA(\va \mid \ve, \vf; \TA) \\
@@ -245,7 +245,7 @@ $$q_k(\vz\kn, \vx\kn) \mathrel{:=} \pk(\vz\kn \mid \vx\kn ; \Tk)$$
 In the M-step, the computed posteriors are used to define a convex optimization program that maximizes the regularized sum of expected complete-data log-likelihoods:
  %$\TA, \TB$:
 \begin{align*}
-%(\TA', \TB') 
+%(\TA', \TB')
 \max_{\TA, \TB}
 \lambda R(t_1,t_2)
 +
@@ -254,48 +254,48 @@ In the M-step, the computed posteriors are used to define a convex optimization 
 where $n$ ranges over the appropriate sample set.
 %\marginpar{DC: two different $n$'s can be misleading, \bluetext{added $N_k$ here and above}}
 
-Operationally, for models $\Tk$ that can be encoded as wFSTs (such as the IBM and HMM word alignment models), the E-step 
-%posteriors $q_k$ 
-can be carried out efficiently and exactly using dynamic programming \cite{Eisner02}. 
+Operationally, for models $\Tk$ that can be encoded as wFSTs (such as the IBM and HMM word alignment models), the E-step
+%posteriors $q_k$
+can be carried out efficiently and exactly using dynamic programming \cite{Eisner02}.
 Other models resort to approximation techniques -- for example, the fertility-based word alignment models apply hill-climbing and sampling heuristics in order to efficiently estimate the posteriors \cite{brown+alii:1993}
 
-From the computed posteriors $q_k$ we collect expected counts for each event, used to construct the M-step optimization objective. 
+From the computed posteriors $q_k$ we collect expected counts for each event, used to construct the M-step optimization objective.
 Since the \method{MIR} regularizer couples only the t-table parameters, the update rule for any remaining parameter is left unchanged (that is, one can use the usual closed-form count-and-divide solution).
 
-Now, let $\Ch_1^{e,f} $ and $\Ch_2^{e,f}$ denote the expected counts for the t-table parameters. That is, $\Ch_k^{e,f}$ denotes the expected number of times a source-symbol type $e$ is seen aligned to a target-symbol type $f$ according to the posterior $q_k$. 
+Now, let $\Ch_1^{e,f} $ and $\Ch_2^{e,f}$ denote the expected counts for the t-table parameters. That is, $\Ch_k^{e,f}$ denotes the expected number of times a source-symbol type $e$ is seen aligned to a target-symbol type $f$ according to the posterior $q_k$.
 In the M-step, we maximize the following objective with respect to $t_1$ and  $t_2$:%I\marginpar{DC: This seems exactly the same as the previous equation -- why the new notation?}
 \begin{align}
 \arg\max_{\tA, \tB}\sum_{e,f}  \Ch_1^{e,f}\log \tA(f \mid e) +\nonumber \\
-\sum_{e,f} \Ch_2^{e,f} \log \tB(e \mid f) + 
-\lambda R(\tA, \tB) 
+\sum_{e,f} \Ch_2^{e,f} \log \tB(e \mid f) +
+\lambda R(\tA, \tB)
 \label{eqn:Mobj}
 \end{align}
 which can be efficiently solved using convex programming techniques due to the   concavity of $R$ and the complete-data log-likelihoods in both $t_1$ and $t_2$.
 
-In our implementation, 
-we applied Projected Gradient Descent \cite{bertsekas1999nonlinear,schoenemann:2011conll}, where at each step, the parameters are updated in the direction of the M-step objective gradient at $(\tA, \tB)$ and then projected back onto the probability simplex. 
+In our implementation,
+we applied Projected Gradient Descent \cite{bertsekas1999nonlinear,schoenemann:2011conll}, where at each step, the parameters are updated in the direction of the M-step objective gradient at $(\tA, \tB)$ and then projected back onto the probability simplex.
 We used simple stopping conditions based on objective function value convergence and a bounded number of iterations.
 
 %
 %\iffalse
 %\subsection{MIR for Word Alignment}
-%As described in section~\ref{subsec:optimization}, in the E-step, we compute the posterior distribution over alignments in each direction, which amounts to computing the expected counts  $\E_1[C(e,f)] $ and $\E_2[C(e,f)] $, where $C(e,f)$ is the number of times $e$ is seen aligned to $f$. 
-%In the M-step, we use the expected counts to re-estimate model parameters by maximizing the coupled expected complete data log likelihood. 
-%In our work, we only encourage agreement between the translation probabilities $t(e \mid f)$ and $t(f \mid e)$. 
+%As described in section~\ref{subsec:optimization}, in the E-step, we compute the posterior distribution over alignments in each direction, which amounts to computing the expected counts  $\E_1[C(e,f)] $ and $\E_2[C(e,f)] $, where $C(e,f)$ is the number of times $e$ is seen aligned to $f$.
+%In the M-step, we use the expected counts to re-estimate model parameters by maximizing the coupled expected complete data log likelihood.
+%In our work, we only encourage agreement between the translation probabilities $t(e \mid f)$ and $t(f \mid e)$.
 %Thus, the M-step objective function with respect to the translation probabilities is:
 %\begin{align*}
-%&\sum_{e,f}  \E_1[C(e,f)] \log t(e \mid f)  + {}\\ 
-%&\quad \E_2[C(e,f)] \log t(f \mid e) + \sqrt{t(e \mid f)t(f \mid e)}, 
+%&\sum_{e,f}  \E_1[C(e,f)] \log t(e \mid f)  + {}\\
+%&\quad \E_2[C(e,f)] \log t(f \mid e) + \sqrt{t(e \mid f)t(f \mid e)},
 %\end{align*}
-%which is maximized with projected gradient descent. 
+%which is maximized with projected gradient descent.
 %
-%The estimation of the distortion probabilities is thus left unchanged (count and divide). We leave PAT of the distortion parameters for future work. 
+%The estimation of the distortion probabilities is thus left unchanged (count and divide). We leave PAT of the distortion parameters for future work.
 %\fi
 
 
-%At each time step, the models $\PP, \QQ$ are updated according to the gradient of the regularized objective function 
+%At each time step, the models $\PP, \QQ$ are updated according to the gradient of the regularized objective function
 %%$\frac{\partial}{\partial \PP}(L(\PP \mid X)+\lambda R(\PP, \QQ)$
-%and projected back onto the probability simplex. 
+%and projected back onto the probability simplex.
 %
 %Inspecting the regularizer's gradient we see that each update brings the two models closer:
 %\begin{align*}
@@ -309,7 +309,7 @@ We used simple stopping conditions based on objective function value convergence
 
 
 %\subsection{Agreement Training}
-%In word alignment, it is common practice to train alignment models in both source-to-target and target-to-source directions and then apply symmetrization techniques to the resulting source-to-target and target-to-source alignments. 
+%In word alignment, it is common practice to train alignment models in both source-to-target and target-to-source directions and then apply symmetrization techniques to the resulting source-to-target and target-to-source alignments.
 %%Alignment symmetrization heuristics, such as intersection, union or grow-diag-final-and play a significant role in reducing alignment errors and ultimately improving translation quality.
 %The improvement gained by these post-processing heuristics suggest that each (directional) model suffers from different errors, and that those errors can be mitigated by symmetrization.
 %
@@ -340,7 +340,7 @@ We used simple stopping conditions based on objective function value convergence
 %$L_k(\set{\vx^n_k}; \Tk)=\sum_n \log\pk(\vx_k^n; \Tk)$
 %%
 %%\begin{align*}
-%%\max_{\Tk}\,\,L_k(\set{\vx^n_k}; \Tk)= 
+%%\max_{\Tk}\,\,L_k(\set{\vx^n_k}; \Tk)=
 %%\max_{\Tk}\,\,  \sum_n \log \pk(\vx_k^n; \Tk)
 %%\end{align*}
 %
@@ -356,7 +356,7 @@ We used simple stopping conditions based on objective function value convergence
 %
 %\subsection{Parameter Agreement Measure}
 %Both the word alignment and transliteration models presented in Section \ref{sec:background} are parameterized by a translation table.
-%Considering these tables in both directions, $t_1$ and $t_2$, we suggest the following parameter agreement measure: 
+%Considering these tables in both directions, $t_1$ and $t_2$, we suggest the following parameter agreement measure:
 %\begin{equation}
 %R(\TA, \TB) = \sum_{e,f} \sqrt{t_1(f \mid e) \cdot t_2(e \mid f)}
 %\label{eqn:R}
@@ -367,14 +367,14 @@ We used simple stopping conditions based on objective function value convergence
 %Our agreement measure has several appealing properties.
 %Using the Cauchy-Schwarz inequality, we can bound $R(\TA, \TB) \le \sqrt{|V_E|\cdot|V_F|}$ where $|V_E|, |V_F|$ denote the source and target vocabulary size.
 %%\begin{align*}
-%%R(\TA, \TB) 
-%%%\sum_{e,f} \sqrt{(t_1(\ve \mid \vf) \cdot t_2(\vf \mid \ve))} 
+%%R(\TA, \TB)
+%%%\sum_{e,f} \sqrt{(t_1(\ve \mid \vf) \cdot t_2(\vf \mid \ve))}
 %%\le &\sqrt{ (\sum_{e,f} t_1(\vf \mid \ve)) (\sum_{e,f} t_2(\ve \mid \vf))}\\
 %%= &\sqrt{(|V_E|\cdot|V_F|)}
 %%\end{align*}
 %In particular, when $|V_E|=|V_F|$, the maximum is attained on parameter configurations for which $t_1(\vf \mid \ve) = t_2(\ve \mid \vf)$ over all entity pairs.
 %% demonstrating that this agreement term is not biased towards any particular property (e.g, sparsity).
-%Thus, the objective in \eqn{eqn:joint} balances between similarity in parameter magnitude and data likelihood. 
+%Thus, the objective in \eqn{eqn:joint} balances between similarity in parameter magnitude and data likelihood.
 %%\marginpar{\bluetext{TL: this seems like a good place to say something about invertibility}}
 %
 %Another appealing property of $R$ is its concavity, which follows since $R$ is the sum of concave functions $h(x, y)=\sqrt{xy}$ over a closed convex set (see the concavity proof for $h$ in the appendix).
@@ -383,10 +383,10 @@ We used simple stopping conditions based on objective function value convergence
 %
 %%We now describe our method, which we call Parameter Agreement Training.
 %%In translation, we believe that if a word $e$ can be translated
-%%to a word $f$, then $f$ can be translated to~$e$. 
+%%to a word $f$, then $f$ can be translated to~$e$.
 %%This intuition holds for other tasks such as word or phoneme alignment.
 %%Thus, a desirable form of model agreement is parameter
-%%sparsity agreement: 
+%%sparsity agreement:
 %%\begin{align*}
 %%P_{0}(f\mid e) = 0 \text{ iff } P_{1}(e\mid f)=0.
 %%\end{align*}
@@ -406,8 +406,8 @@ We used simple stopping conditions based on objective function value convergence
 %%\begin{itemize}
 %%\item It is concave on the probability simplex which lends to an efficiently solvable convex optimization program when the log-likelihood terms are themselves concave.
 %
-%%Concavity proof: 
-%%The regularizer is a sum of concave functions defined over a convex set. 
+%%Concavity proof:
+%%The regularizer is a sum of concave functions defined over a convex set.
 %%each summand is concave  the region $[0,1]^{2}$ and the sum of concave functions is concave)
 %%\item It encourages parameter sparsity agreement - If $\PP(e \mid f) = 0$ but $\QQ(f\mid e) > 0$, shifting weight away from $\QQ(f \mid e)$ could only increase the regularizer value.
 %%\end{itemize}
@@ -417,7 +417,7 @@ We used simple stopping conditions based on objective function value convergence
 %%%R_{CD}(P_{0},\, P_{1}) & =  -\frac{1}{2}\sum_{e,f}(P_{0}(e\mid f)-P_{1}(f\mid e))^{2}
 %%\end{align*}
 %%Where \emph{GM }stands for 'geometric mean' and \emph{CD} for 'conditional
-%%difference'. 
+%%difference'.
 %%
 %%Note that both regularizers are concave on the probability simplex
 %%- each term in their summation is concave over the region $[0,1]^{2}$,
@@ -438,7 +438,7 @@ We used simple stopping conditions based on objective function value convergence
 %where, in the parallel data setting, only the alignment is missing ($\vz\kn = \va\kn$) and in the non-parallel data setting, both the alignment and the origin entity are missing
 %($\vz_1^n = (\va_1^n, \ve^n), \vz_2^n = (\va_2^n, \vf^n)$).
 %
-%Both the word alignment and transliteration models considered in this paper can be encoded as wFST instances. This implies that the E-step posteriors $q_k$ can be efficiently computed using dynamic programming \cite{Eisner02}. Specifically, for the alignment and transliteration models, this amounts to computing the expected counts  $\E_1[C(e,f)] $ and $\E_2[C(e,f)] $, where $C(e,f)$ is the number of times $e$ is seen aligned to $f$ in a alignment sequence. 
+%Both the word alignment and transliteration models considered in this paper can be encoded as wFST instances. This implies that the E-step posteriors $q_k$ can be efficiently computed using dynamic programming \cite{Eisner02}. Specifically, for the alignment and transliteration models, this amounts to computing the expected counts  $\E_1[C(e,f)] $ and $\E_2[C(e,f)] $, where $C(e,f)$ is the number of times $e$ is seen aligned to $f$ in a alignment sequence.
 %
 %In the M-step, the computed posteriors are used to construct the coupled sum of expected complete data log-likelihoods. The resulting expression is maximized with respect to the model parameters:
 % %$\TA, \TB$:
@@ -449,35 +449,35 @@ We used simple stopping conditions based on objective function value convergence
 %\end{align*}
 %with $k\in\set{1,2}$ and $n$ ranging over the appropriate set of samples. For the IBM and the HMM word alignment models, the modeling assumptions allow the distortion and the translation parameters to be optimized independently in the M-step. Applying the parameter agreement measure to the translation probabilities (Equation~\ref{eqn:R}), the above objective function can be defined for $t_1(f \mid e)$ and $t_2(e \mid f)$ as:
 %\begin{align*}
-%&\sum_{e,f}  \E_1[C(e,f)] \log t_1(f \mid e)  + {}\\ 
+%&\sum_{e,f}  \E_1[C(e,f)] \log t_1(f \mid e)  + {}\\
 %&\quad \E_2[C(e,f)] \log t_2(e \mid f) + \sqrt{t_1(f \mid e)t_2(e \mid f)}
 %\end{align*}
 %
 %\noindent
-%where the expected counts were computed in the E-step. This objective function applies for the $t_1(f \mid e)$ and $t_2(e \mid f)$ parameters in transliteration as well. Since we only encourage agreement between $t_1$ and $t_2$, the estimation of the distortion probabilities is left unchanged. We leave agreement training of the distortion parameters for future work. 
+%where the expected counts were computed in the E-step. This objective function applies for the $t_1(f \mid e)$ and $t_2(e \mid f)$ parameters in transliteration as well. Since we only encourage agreement between $t_1$ and $t_2$, the estimation of the distortion probabilities is left unchanged. We leave agreement training of the distortion parameters for future work.
 %
-%Owing to the concavity of both $R$ and the data log-likelihood functions, this maximization problem can be efficiently solved using convex programming techniques. 
+%Owing to the concavity of both $R$ and the data log-likelihood functions, this maximization problem can be efficiently solved using convex programming techniques.
 %We use projected gradient descent \cite{bertsekas1999nonlinear} where at each step, the current $(\TA, \TB)$ parameters are updated according to the gradient of the M-step objective and then projected back onto the probability simplex. We used simple stopping conditions based on objective function convergence or a limited number of iterations.
 %
 %\iffalse
 %\subsection{PAT for Word Alignment}
-%As described in section~\ref{subsec:optimization}, in the E-step, we compute the posterior distribution over alignments in each direction, which amounts to computing the expected counts  $\E_1[C(e,f)] $ and $\E_2[C(e,f)] $, where $C(e,f)$ is the number of times $e$ is seen aligned to $f$. 
-%In the M-step, we use the expected counts to re-estimate model parameters by maximizing the coupled expected complete data log likelihood. 
-%In our work, we only encourage agreement between the translation probabilities $t(e \mid f)$ and $t(f \mid e)$. 
+%As described in section~\ref{subsec:optimization}, in the E-step, we compute the posterior distribution over alignments in each direction, which amounts to computing the expected counts  $\E_1[C(e,f)] $ and $\E_2[C(e,f)] $, where $C(e,f)$ is the number of times $e$ is seen aligned to $f$.
+%In the M-step, we use the expected counts to re-estimate model parameters by maximizing the coupled expected complete data log likelihood.
+%In our work, we only encourage agreement between the translation probabilities $t(e \mid f)$ and $t(f \mid e)$.
 %Thus, the M-step objective function with respect to the translation probabilities is:
 %\begin{align*}
-%&\sum_{e,f}  \E_1[C(e,f)] \log t(e \mid f)  + {}\\ 
-%&\quad \E_2[C(e,f)] \log t(f \mid e) + \sqrt{t(e \mid f)t(f \mid e)}, 
+%&\sum_{e,f}  \E_1[C(e,f)] \log t(e \mid f)  + {}\\
+%&\quad \E_2[C(e,f)] \log t(f \mid e) + \sqrt{t(e \mid f)t(f \mid e)},
 %\end{align*}
-%which is maximized with projected gradient descent. 
+%which is maximized with projected gradient descent.
 %
-%The estimation of the distortion probabilities is thus left unchanged (count and divide). We leave PAT of the distortion parameters for future work. 
+%The estimation of the distortion probabilities is thus left unchanged (count and divide). We leave PAT of the distortion parameters for future work.
 %\fi
 %
 %
-%%At each time step, the models $\PP, \QQ$ are updated according to the gradient of the regularized objective function 
+%%At each time step, the models $\PP, \QQ$ are updated according to the gradient of the regularized objective function
 %%%$\frac{\partial}{\partial \PP}(L(\PP \mid X)+\lambda R(\PP, \QQ)$
-%%and projected back onto the probability simplex. 
+%%and projected back onto the probability simplex.
 %%
 %%Inspecting the regularizer's gradient we see that each update brings the two models closer:
 %%\begin{align*}
@@ -487,4 +487,4 @@ We used simple stopping conditions based on objective function value convergence
 %%&=\sqrt{\frac{t_1(\vf\mid\ve)}{2 t_2(\ve\mid\vf)}}
 %%\end{align*}
 %%%
-%%With symmetric terms for the gradient in $\QQ$. Note that the square root is taken entry-wise.
+%%With symmetric terms for the gradient in $\QQ$. Note that the square root is taken entry-wise. 

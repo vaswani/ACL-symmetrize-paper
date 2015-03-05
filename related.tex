@@ -6,7 +6,7 @@ The difference between our objective (\eqn{eqn:joint}) and theirs lies in their 
 $$\sum_n \log \sum_\vz  p_1(\vz\mid \vx^n)\cdot p_2(\vz\mid \vx^n)$$
 where $\vx^n = (\ve^n, \vf^n)$ and where $\vz$ ranges over the possible alignments between $\ve^n$ and $\vf^n$ (practically, only over 1-to-1 alignments, since each model is only capable of producing one-to-many alignments).
 
-\newcite{liang+:2006:align} note that proper EM optimization of their regularized joint objective leads to an intractable E-step. 
+\newcite{liang+:2006:align} note that proper EM optimization of their regularized joint objective leads to an intractable E-step.
 %(computing the normalization constant per sample over the set of all possible alignments is a \#P-complete problem even for IBM model 1.)
 Unable to exactly and efficiently compute alignment posteriors, they resort to a product-of-marginals heuristic which breaks EM's convergence guarantees, but has a closed-form solution and works well in practice.
 
@@ -15,7 +15,7 @@ $\method{MIR}$ regularization has both theoretical and practical advantages comp
 \item By regularizing for posterior agreement, $\method{ABA}$ is restricted to a parallel data setting, whereas $\method{MIR}$ can be applied even without parallel data.
 \item The posteriors of more advanced word alignment models (such as fertility-based models) do not correspond to alignments, and furthermore, are already estimated with approximation techniques.
 Thus, even if we somehow adapt $\method{ABA}$'s product-of-marginals heuristic to such models, we run the risk of estimating highly inaccurate posteriors (specifically, 0 valued posteriors).
-In contrast, $\method{MIR}$ extends to all IBM-style word alignment models and does not add heuristics -- The M-step computation can be done exactly and efficiently with convex optimization. 
+In contrast, $\method{MIR}$ extends to all IBM-style word alignment models and does not add heuristics -- The M-step computation can be done exactly and efficiently with convex optimization.
 
 \item $\method{MIR}$ provides the same theoretical convergence guarantees as the underlying algorithms.
 \end{enumerate}
@@ -48,14 +48,14 @@ Here, $p(\ve)$ denotes the probability of $\ve$ according to a fixed source lang
 Once training of $\beta$ is complete, we can decode an observed target sequence $\vf$, by casting $\beta$ back in terms of $\tA$ and apply the Viterbi decoding algorithm.
 
 To solve for $\beta$ in \eqn{eqn:biEM}, \newcite{Mylonakis2007} propose \method{bi\mbox{-}EM}, an iterative EM style algorithm in which both E- and M- steps have a closed-form solution. They do not provide the algorithm derivation.
-%we observe that the solution they proposed for the M-step does not follow from their M-step objective. 
+%we observe that the solution they proposed for the M-step does not follow from their M-step objective.
 
 Inspecting their M-step objective we determined that it is not concave, hinting that a closed-form solution for the maximizer is unlikely.
 In fact, their proposed solution for the M-step can be obtained from an approximation of their M-step objective in which the normalization factors were omitted.
 
 %Inspecting their M-step objective and its proposed solution, we determined that (1) the objective is not concave, hinting that a closed-form solution for the maximizer is unlikely, and (2) the proposed solution is the maximizer of a different objective function, obtained by omitting the normalization denominators in \eqn{eqn:reparam} from their M-step objective.
 
-Despite its heuristic M-step, \method{bi\mbox{-}EM} attains improved results compared to standard EM on both POS-tagging and monotone noun sequence translation without parallel data. We compare \method{MIR} against \method{bi\mbox{-}EM} in Sec. \ref{sec:transliteration}.
+Despite this issue, \method{bi\mbox{-}EM} attains improved results compared to standard EM on both POS-tagging and monotone noun sequence translation without parallel data. We compare \method{MIR} against \method{bi\mbox{-}EM} in Sec. \ref{sec:transliteration}.
 
 
 %\subsection{Other Related Work}
