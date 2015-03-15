@@ -63,7 +63,7 @@ In any case, it is important to note that $\mathtt{ENG}$ and $\mathtt{KTKN}$ are
 \begin{tabular}{cc}
 \includegraphics[scale=0.4]{figures/model_11_vanilla} & \includegraphics[scale=0.4]{figures/model_11_gm}
 \end{tabular}
-\caption{The 1-to-1 mapping submatrix of the $\tA$ transliteration table for independent training (left) and $\method{MIR}$ (right). 
+\caption{The 1-to-1 mapping submatrix of the $\tA$ transliteration table for independent training (left) and $\method{MIR}$ (right).
 $\method{MIR}$ learns sparser, peaked models compared to those learned by independent training.}
 \label{fig:mapping}
 \end{center}
@@ -101,7 +101,8 @@ Finally, note that \method{ABA} training and symmetrization decoding heuristics 
 We compiled our own test set, consisting of 100 US senator names (first and last) and compared the performance of the four algorithms.
 
 %Table \ref{tbl:transliteration0}  % ref not working for some reason
-Table 2
+%Table 3
+Table \ref{tbl:transliteration0}
 reports WNER, average normalized edit distance (NED) and the number of model parameters with value greater than 0.01 ($\tA>0.01$) as an indication of sparsity.
 Figure \ref{fig:mapping} further compares the 1-to-1 portions of the best models learned by the \method{baseline} method vs. that learned by \method{MIR}, depicting the difference in parameter sparsity.
 \begin{table}[h]
@@ -114,10 +115,11 @@ Figure \ref{fig:mapping} further compares the 1-to-1 portions of the best models
 \method{MIR} & \textbf{59}\% & \textbf{17.3} & \textbf{421}\tabularnewline
 \hdashline
 \method{Oracle} & 43\% & 10.8 & 152\tabularnewline
+
 \end{tabular}
-\caption{$\method{MIR}$ reduces error rates (WNER, NED) and learns sparser models (number of $\tA$ parameters greater than 0.01) compared to the other models.}
+\caption{$\method{MIR}$ reduces error rates (WNER, NED) and learns sparser models (number of $\tA$ parameters greater than 0.01) compared to the other models.\label{tbl:transliteration0}}
 \end{center}
-\label{tbl:transliteration0}
+
 \end{table}
 
 Using $\method{MIR}$ we obtained significant reduction in error rates, closing the gap between the \method{baseline} method and \method{Oracle}, which was trained on parallel-data, by 33\% in WNER and nearly 50\% in NED.

@@ -21,11 +21,11 @@ Since $T$ is stochastic, setting it to the identity matrix $I$ maximizes its tra
 Unfortunately, the trace is not concave in both $T_1$ and $T_2$, a property which will become desirable in optimization.
 We therefore modify the trace regularizer by applying the entrywise square root operator on $T_1,\,T_2$ and denote the new term $R$:
 \begin{align}
-R(t_{1},t_{2})&=Tr[\sqrt{T1}\sqrt{T2}]\nonumber\\
+R(t_{1},t_{2})&=Tr[\sqrt{T_1}\sqrt{T_2}]\nonumber\\
 &=\sum_{e}\sum_{f}\sqrt{t_{1}(f\mid e) \; t_{2}(e\mid f)}
 \label{eqn:R}
 \end{align}
-Note that $R$ is also maximized whenever $\sqrt{T1}\sqrt{T2}=I$.
+Note that $R$ is also maximized when $\sqrt{T_1}\sqrt{T_2}=I$.
 
 Concavity of $R$ in both $t_1, t_2$ (or equivalently $T_1, T_2$) follows by observing that it is a sum of concave functions -- each term in the summation is a geometric mean, which is concave in its parameters.
 
@@ -38,7 +38,7 @@ Concavity of $R$ in both $t_1, t_2$ (or equivalently $T_1, T_2$) follows by obse
 We apply \method{MIR} in two data scenarios:
 In the parallel data setting, we observe $N$ sequences pair $\set{\vx^n_1}_{n}=\set{(\ve^n, \vf^n)}_{n}$ or, equivalently, $\set{\vx^n_2}_{n}=\set{(\vf^n, \ve^n)}_{n}$.
 
-In the non-parallel setting, two monolingual datasets are observed -- $N_1$ source sequences $\set{\vx^n_1}_{n}=\set{\ve^n}_{n}$ and $N_2$ target sequences $\set{\vx^n_2}_{n}=\set{\vf^n}_{n}$.
+In the non-parallel setting, two monolingual datasets are observed -- $N_1$ source sequences $\set{\vx^n_1}_{n}=\set{\vf^n}_{n}$ and $N_2$ target sequences $\set{\vx^n_2}_{n}=\set{\ve^n}_{n}$.
 
 The probability of the $n$th sample under the $k$th ($k\in\set{1,2}$) model $\Tk$ is denoted $\pk(\vx_k^n; \Tk)$.
 Specifically, in the parallel data setting, the probability of $\vx_k^n$ under its model is\footnote{This slight notation abuse helps represent both data scenarios succinctly.}:
@@ -254,7 +254,7 @@ In the M-step, the computed posteriors are used to define a convex optimization 
 where $n$ ranges over the appropriate sample set.
 %\marginpar{DC: two different $n$'s can be misleading, \bluetext{added $N_k$ here and above}}
 
-Operationally, for models $\Tk$ that can be encoded as wFSTs (such as the IBM and HMM word alignment models), the E-step
+Operationally, for models $\Tk$ that can be encoded as wFSTs (such as the IBM1, IBM2 and HMM word alignment models), the E-step
 %posteriors $q_k$
 can be carried out efficiently and exactly using dynamic programming \cite{Eisner02}.
 Other models resort to approximation techniques -- for example, the fertility-based word alignment models apply hill-climbing and sampling heuristics in order to efficiently estimate the posteriors \cite{brown+alii:1993}

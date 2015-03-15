@@ -1,4 +1,4 @@
-%Given a \emph{target} French sentence, $\mathbf{f_{1}^{J}} =  f_{1}, f_{2}, \ldots , f_{j}, \ldots, f_{J}$, and a \emph{source} English sentence, $\mathbf{e_{1}^{I}} =  e_{1}, e_{2}, \ldots , e_{i}, \ldots, e_{I}$, word alignment models describe the generative process by which the source sentence creates the target ($E \rightarrow F$) ausing latent alignments $\mathbf{a_{1}^{J}} = a_{1}, a_{2}, \ldots , a_{j}, \ldots, a_{J}$. The alignment variable $a_{j}$ specifies the English word $e_{a_{j}}$ that the French word $f_j$ is aligned to. 
+%Given a \emph{target} French sentence, $\mathbf{f_{1}^{J}} =  f_{1}, f_{2}, \ldots , f_{j}, \ldots, f_{J}$, and a \emph{source} English sentence, $\mathbf{e_{1}^{I}} =  e_{1}, e_{2}, \ldots , e_{i}, \ldots, e_{I}$, word alignment models describe the generative process by which the source sentence creates the target ($E \rightarrow F$) ausing latent alignments $\mathbf{a_{1}^{J}} = a_{1}, a_{2}, \ldots , a_{j}, \ldots, a_{J}$. The alignment variable $a_{j}$ specifies the English word $e_{a_{j}}$ that the French word $f_j$ is aligned to.
 %
 %The IBM Models 1--2 and the HMM alignment models have two sets of parameters, the translation probabilities $P_{t}(f_{j} \mid e_{a_{j}})$ and distortion probabilities, $P_{d}(a_{j}\mid a_{j-1},j)$. These models differ in their implementation and estimation of the distortion probabilities, but share the same translation probabilities. The general form of the joint probability  of a target sentence and alignment given the source sentence is:
 %
@@ -6,12 +6,12 @@
 %P(\mathbf{f_{1}^{J}}, \mathbf{a_{1}^{J}} \mid \mathbf{e_{1}^{I}})  = \prod_{j=1}^{J} P_{d}(a_{j}\mid a_{j-1},j) P_{t}(f_{j} \mid e_{a_{j}})
 %\end{equation}
 %
-%During training, we typically estimate the parameters that maximize 
+%During training, we typically estimate the parameters that maximize
 %\begin{equation}
 %\log \sum_{a_{1}^{J}}  P(\mathbf{f_{1}^{J}}, \mathbf{a_{1}^{J}} \mid \mathbf{e_{1}^{I}}) = \log P(\mathbf{f_{1}^{J}} \mid \mathbf{e_{1}^{I}})
 %\end{equation}.
 %
-%For details on parameter estimation of these models, and how to deal with empty words, the reader can refer to ~\newcite{och+ney:2003}. For translation, we use the \emph{Viterbi} alignments, 
+%For details on parameter estimation of these models, and how to deal with empty words, the reader can refer to ~\newcite{och+ney:2003}. For translation, we use the \emph{Viterbi} alignments,
 %\begin{equation}
 %\hat{\mathbf{a_{1}^{J}}} = \argmax_{\mathbf{a_{1}^{J}}} P(\mathbf{f_{1}^{J}}, \mathbf{a_{1}^{J}} \mid \mathbf{e_{1}^{I}})
 %\end{equation}
@@ -21,13 +21,13 @@
 %\begin{table}[h]
 %\begin{center}
 %\begin{tabular}{|c|c|c|c|}
-%\cline{2-4} 
+%\cline{2-4}
 %\multicolumn{1}{c|}{} & de-en & cz-en & $\PP > 0.01$\tabularnewline
-%\hline 
+%\hline
 %~\newcite{liang+:2006:align}  & $71$\% & $70$\%  & -\tabularnewline
-%\hline 
+%\hline
 %PAT (our) & $71$\% & $69$\%  & -\tabularnewline
-%\hline 
+%\hline
 %\end{tabular}
 %\label{tbl:Alignment Results}
 %\caption{Alignment F-score improves.}
@@ -38,8 +38,8 @@ We carry out Czech-English and Chinese-English word alignment experiments compar
 We further compare the methods beyond alignment on an extrinsic measure - the MT \bleu score. Since \method{ABA} is restricted to HMM model, extrinsic evaluations were also restricted to HMM.
 
 \subsection{Implementation}
-For $\method{ABA}$ training, we used the authors' toolkit\footnote{cs.stanford.edu/$\sim$pliang/software/cross-em-aligner-1.3.zip}   which supports the IBM1 and HMM models. 
-Vanilla EM training was done using the popular word alignment toolkit  GIZA++\footnote{code.google.com/p/giza-pp/} which supports all IBM models as well as the HMM model. 
+For $\method{ABA}$ training, we used the authors' toolkit\footnote{cs.stanford.edu/$\sim$pliang/software/cross-em-aligner-1.3.zip}   which supports the IBM1 and HMM models.
+Vanilla EM training was done using the popular word alignment toolkit  GIZA++\footnote{code.google.com/p/giza-pp/} which supports all IBM models as well as the HMM model.
 We implemented $\method{MIR}$ on top of GIZA++ and plan to release our toolkit as a patch over GIZA++.
 
 %\begin{center}
@@ -65,24 +65,28 @@ We implemented $\method{MIR}$ on top of GIZA++ and plan to release our toolkit a
 %       & EM-M4 & X &  & X &  X \\
 %       & $\method{MIR}$-M4  & Y &  & X&X\\
 %\end{tabular}
-%% -- new format 
-%\renewcommand{\arraystretch}{1.2}
-%\begin{tabular}{r|l|l|l|l|l}
-% & \multicolumn{2}{c|}{Chinese-English } & \multicolumn{3}{c}{Czech-English}\tabularnewline
-%Method &\,\,\,\textbf{Align F1} &\,\,\,\textbf{NIST08} &\,\,\,\textbf{Align F1} &\,\,\,\,\textbf{WMT09} &\,\,\,\textbf{WMT10}\tabularnewline
-%\hline 
-%EM-HMM & 64.6 & 23.6 & 65.0 & 16.7 & 17.1\tabularnewline
-%MIR-HMM & 70.9 (+6.3) & 24.0 (+0.4) & 69.6 (+4.6) & 17.1 (+0.4) & 17.6 (+0.5)\tabularnewline
-%ABA-HMM & 70.8 (+6.2) & 24.4 (+0.8) & 70.4 (+5.4) & 17.1 (+0.4) & 17.7 (+0.6)\tabularnewline
-%MIR+ABA-HMM & - & 25.1 (+1.5) & - & 17.4 (+0.7) & 17.9 (+0.8)\tabularnewline
-%\hline 
-%EM-M4 & 68.4 & X & 67.3 & 16.6 & 17.1\tabularnewline
-%MIR-M4 & 72.9 (+x.x) & Y & 70.7 (+4.6) & 17.0 (+0.4) & 17.5 (+0.4)\tabularnewline
+%% -- new format
+\renewcommand{\arraystretch}{1.2}
+\begin{table*}
+\begin{tabular}{r|l|l|l|l|l}
+ & \multicolumn{2}{c|}{Chinese-English0 } & \multicolumn{3}{c}{Czech-English}\tabularnewline
+Method &\,\,\,\textbf{Align F1} &\,\,\,\textbf{NIST08} &\,\,\,\textbf{Align F1} &\,\,\,\,\textbf{WMT09} &\,\,\,\textbf{WMT10}\tabularnewline
+\hline
+EM-HMM & 64.6 & 23.6 & 65.0 & 16.7 & 17.1\tabularnewline
+MIR-HMM & 70.9 (+6.3) & 24.0 (+0.4) & 69.6 (+4.6) & 17.1 (+0.4) & 17.6 (+0.5)\tabularnewline
+ABA-HMM & 70.8 (+6.2) & 24.4 (+0.8) & 70.4 (+5.4) & 17.1 (+0.4) & 17.7 (+0.6)\tabularnewline
+MIR+ABA-HMM & - & 25.1 (+1.5) & - & 17.4 (+0.7) & 17.9 (+0.8)\tabularnewline
+\hline
+EM-M4 & 68.4 & X & 67.3 & 16.8 & 17.2\tabularnewline
+MIR-M4 & 72.9 (+x.x) & Y & 71.1 (+6.1) & 17.3 (+0.6) & 17.4 (+0.3)\tabularnewline
+\end{tabular}
+\end{table*}
+
 
 \subsection{Data}
 We used the following parallel data to train the word alignment models:
 \begin{description}[leftmargin=0.5em]
-\item[Chinese-English:] 287K 
+\item[Chinese-English:] 287K
 % 287756
 sentence pairs from the NIST 2009 Open MT Evaluation constrained task consisting of 5.3M and 6.6M tokens respectively.
 \item[Czech-English:] 85K sentence pairs from the News Commentary corpus, consisting of 1.6M and 1.8M tokens respectively.
@@ -106,11 +110,11 @@ By applying \method{MIR} to fertility based IBM models, we obtain even further i
 \begin{tabular}{r|c|c}
  & \multicolumn{1}{c|}{Chi-Eng } & \multicolumn{1}{c}{Cze-Eng}\tabularnewline
 Method & \textbf{Align F1} & \textbf{Align F1}\tabularnewline
-\hline 
+\hline
 EM-HMM & 64.6 & 65.0\tabularnewline
 \method{MIR}-HMM & 70.9 & 69.6\tabularnewline
 \method{ABA}-HMM & 70.8 & 70.4\tabularnewline
-\hline 
+\hline
 EM-IBM4 & 68.4 & 67.3\tabularnewline
 \method{MIR}-IBM4 & 72.9 & 70.7\tabularnewline
 \end{tabular}
@@ -122,9 +126,11 @@ EM-IBM4 & 68.4 & 67.3\tabularnewline
 \subsection{MT Experiments}
 
 We run MT experiments using the Moses~\cite{koehn2007moses} phrase-based translation system\footnote{http://www.statmt.org/moses/}.
-The feature weights were trained discriminatively using MIRA \cite{chiang+alii:2008mira}, and we used a $5$-gram language model trained on the Xinhua portion of English Gigaword (LDC2007T07). All other parameters remained with their default settings. The development data used for discriminative training were: for Chinese-English, data from the NIST 2004 and NIST 2006 test sets;
+The feature weights were trained discriminatively using MIRA \cite{chiang+alii:2008mira}, and we used a $5$-gram language model trained on the Xinhua portion of English Gigaword (LDC2007T07). All other parameters remained with their default settings. 
+
+The development data used for discriminative training were: for Chinese-English, data from the NIST 2004 and NIST 2006 test sets;
 % from the GALE program (LDC2006E92) %DC: this must refer to the gold word alignments
-for Czech-English, $2051$ sentences from the WMT10 translation workshop. We used case-insensitive IBM \bleu{} (closest reference length) as our metric. 
+for Czech-English, $2051$ sentences from the WMT10 translation workshop. We used case-insensitive IBM \bleu{} (closest reference length) as our metric.
 
 On both language pairs, $\method{MIR}$ performs significantly better than standard EM training, and attains comparable scores to those of \method{ABA}. The \bleu difference between $\method{MIR}$ and $\method{ABA}$ for Chinese-English and Czech-English is not statistically significant according to a bootstrap resampling significance test~\cite{koehn-stat:2004}. However, the two approaches are not producing the same alignments. For example, by combining the alignments (simply concatenating aligned bitexts) the total improvements reaches +1.5 \bleu on the Chinese-to-English task.
 Table~\ref{tab:resultsB} summarizes our MT \bleu score results.
@@ -135,14 +141,15 @@ Table~\ref{tab:resultsB} summarizes our MT \bleu score results.
 \begin{tabular}{r|l|l|l}
  & \multicolumn{1}{c|}{Chi-Eng} & \multicolumn{2}{c}{Cze-Eng}\tabularnewline
 Method & \textbf{NIST08} & \textbf{WMT09} & \textbf{WMT10}\tabularnewline
-\hline 
+\hline
 EM-HMM & 23.6 & 16.7 & 17.1\tabularnewline
 \method{MIR}-HMM & 24.0 (+0.4) & 17.1 (+0.4) & 17.6 (+0.5)\tabularnewline
 \method{ABA}-HMM & 24.4 (+0.8) & 17.1 (+0.4) & 17.7 (+0.6)\tabularnewline
 combined & 25.1 (+1.5) & 17.4 (+0.7) & 17.9 (+0.8)\tabularnewline
+\label{tab:resultsB}
 \end{tabular}}
 \caption{\bleu scores using only the HMM models. Both $\method{ABA}$ and $\method{MIR}$ obtain statistically significant gains over standard EM training. Combining $\method{ABA}$ and $\method{MIR}$ alignments improves \bleu{} score significantly over $\method{ABA\mbox{/}MIR}$ ($p<0.05$). All \bleu differences between $\method{ABA}$ and $\method{MIR}$ are not statistically significant.}
-\label{tab:resultsB}
+
 \end{table}
 
 
@@ -155,13 +162,13 @@ combined & 25.1 (+1.5) & 17.4 (+0.7) & 17.9 (+0.8)\tabularnewline
 %For the HMM models, we implemented a symmetrization technique based on the~ \emph{posterior decoding} \cite{liang+:2006:align} technique used by the $\method{ABA}$ implementation.
 %For IBM model~4, we used the standard grow-diag-final-and (gdfa) symmetrization heuristic~\cite{koehn+:2003}.
 %
-%For each method, we selected iteration numbers (5 or 10) and hyperparameter values by tuning alignment F-score on a validation set of $460$ hand-aligned Czech-English and $1102$ Chinese-English sentences. 
+%For each method, we selected iteration numbers (5 or 10) and hyperparameter values by tuning alignment F-score on a validation set of $460$ hand-aligned Czech-English and $1102$ Chinese-English sentences.
 %In particular, for $\method{MIR}$ we found the regularizer coefficient $\lambda=300$ to work best on both datasets.
 %
-%We subsequently tested the effect of alignments obtained by $\method{MIR}$ on translation quality, using a phrase based translation system, Moses~\cite{koehn2007moses}.\footnote{http://www.statmt.org/moses/} 
+%We subsequently tested the effect of alignments obtained by $\method{MIR}$ on translation quality, using a phrase based translation system, Moses~\cite{koehn2007moses}.\footnote{http://www.statmt.org/moses/}
 %The feature weights were trained discriminatively using MIRA \cite{chiang+alii:2008mira}, and we used a $5$-gram language model trained on the Xinhua portion of English Gigaword (LDC2007T07). All other parameters remained with their default settings. The development data used for discriminative training were: for Chinese-English, data from the NIST 2004 and NIST 2006 test sets;
 %% from the GALE program (LDC2006E92) %DC: this must refer to the gold word alignments
-%for Czech-English, $2051$ sentences from the WMT10 translation workshop. We used case-insensitive IBM \bleu{} (closest reference length) as our metric. 
+%for Czech-English, $2051$ sentences from the WMT10 translation workshop. We used case-insensitive IBM \bleu{} (closest reference length) as our metric.
 %
 %\bluetext{Waiting for IBM4 results to re-write this paragraph:}
 %On both language pairs, $\method{MIR}$ performs significantly better than vanilla EM training, and compares favorably with ABA. The \bleu{} difference between $\method{MIR}$ and $\method{ABA}$ for Chinese-English and Czech is not statistically significant according to a bootstrap resampling significance test~\cite{koehn-stat:2004}. However, the two approaches are not producing the same alignments. For example, by combining the alignments (simply concatenating two copies of the parallel text with the two alignments) the total improvements reaches +1.5 \bleu{} on the Chinese-to-English task.
@@ -171,28 +178,28 @@ combined & 25.1 (+1.5) & 17.4 (+0.7) & 17.9 (+0.8)\tabularnewline
 %
 %
 %\subsection{Prediction With Posterior Decoding} \label{sec:pos-decoding}
-%Word alignments are used downstream in the machine translation pipeline to learn translation rules. Having trained our alignment models, we have to predict word alignments for each sentence pair in our bilingual corpus. 
+%Word alignments are used downstream in the machine translation pipeline to learn translation rules. Having trained our alignment models, we have to predict word alignments for each sentence pair in our bilingual corpus.
 %By combining the posterior probabilities of the alignments from the models in each direction, \newcite{liang+:2006:align} present two decoding approaches for predicting word alignments:
 %
 %\begin{itemize}
 %\item \textbf{D1}: For each sentence pair $(\mathbf{e},\mathbf{f})$, for each direction $k=\{1,2\}$, keep an alignment $a_j $ if $p(a_j \mid \mathbf{e},\mathbf{f},\Theta_k) \ge \delta$, where $\delta$ is a threshold that controls the tradeoff between precision and recall. By taking the union or intersection of the alignments in each direction, we can obtain single alignments for $(\mathbf{e},\mathbf{f})$.
 %
-%\item \textbf{D2}: For each sentence pair $(\mathbf{e},\mathbf{f})$, multiply the marginal posteriors of the alignments in each direction, keeping only the alignments that pass a threshold $\delta$, that is, keep alignments $a_j$ for which $p(a_j \mid \mathbf{e},\mathbf{f}; \Theta_1) p(a_j \mid \mathbf{e},\mathbf{f}; \Theta_2) \ge \delta$. 
+%\item \textbf{D2}: For each sentence pair $(\mathbf{e},\mathbf{f})$, multiply the marginal posteriors of the alignments in each direction, keeping only the alignments that pass a threshold $\delta$, that is, keep alignments $a_j$ for which $p(a_j \mid \mathbf{e},\mathbf{f}; \Theta_1) p(a_j \mid \mathbf{e},\mathbf{f}; \Theta_2) \ge \delta$.
 %\end{itemize}
 %
-%For $\method{ABA}$, we used \textbf{D1}, the default decoding approach provided by the toolkit. For vanilla EM training and PAT, we  experimented with both \textbf{D1} and \textbf{D2}, optimizing for alignment F-score on a validation set. 
+%For $\method{ABA}$, we used \textbf{D1}, the default decoding approach provided by the toolkit. For vanilla EM training and PAT, we  experimented with both \textbf{D1} and \textbf{D2}, optimizing for alignment F-score on a validation set.
 
 
 
 %\subsection{Experiments}
 %
-%For all our models, we selected alignments by tuning for alignment F-score on a validation set of $460$ hand-aligned Czech-English and $1102$ Chinese-English sentences. We found that $5$ iterations of Model~1 and the HMM alignment model produced better F-scores for $\method{ABA}$ than $10$ iterations of each. For vanilla EM training, we tuned the number of EM iterations and the threshold $\delta$ for alignment F-score using both decoding approaches \textbf{D1} and \textbf{D2}, and found that \textbf{D2} worked the best. We carried out the same optimization strategy for PAT, as well as tuning the regularization penalty $\lambda$. We found $\lambda=300$ to work best for both models. For $\method{MIR}$ on Chinese-English, \textbf{D1} with union gave us the best alignment F-score, while \textbf{D2} produced slightly better F-scores for Czech-English. Table~\ref{tab:results} summarizes these results. 
+%For all our models, we selected alignments by tuning for alignment F-score on a validation set of $460$ hand-aligned Czech-English and $1102$ Chinese-English sentences. We found that $5$ iterations of Model~1 and the HMM alignment model produced better F-scores for $\method{ABA}$ than $10$ iterations of each. For vanilla EM training, we tuned the number of EM iterations and the threshold $\delta$ for alignment F-score using both decoding approaches \textbf{D1} and \textbf{D2}, and found that \textbf{D2} worked the best. We carried out the same optimization strategy for PAT, as well as tuning the regularization penalty $\lambda$. We found $\lambda=300$ to work best for both models. For $\method{MIR}$ on Chinese-English, \textbf{D1} with union gave us the best alignment F-score, while \textbf{D2} produced slightly better F-scores for Czech-English. Table~\ref{tab:results} summarizes these results.
 %
-%We subsequently tested the effect of alignments obtained by $\method{MIR}$ on translation quality, using a phrase based translation system, Moses~\cite{koehn2007moses}.\footnote{http://www.statmt.org/moses/} 
+%We subsequently tested the effect of alignments obtained by $\method{MIR}$ on translation quality, using a phrase based translation system, Moses~\cite{koehn2007moses}.\footnote{http://www.statmt.org/moses/}
 %The feature weights were trained discriminatively using MIRA \cite{chiang+alii:2008mira}, and we used a $5$-gram language model trained on the Xinhua portion of English Gigaword (LDC2007T07). For all other parameters, we used the default settings provided by the toolkit. The development data used for discriminative training were: for Chinese-English, data from the NIST 2004 and NIST 2006 test sets;
 %% from the GALE program (LDC2006E92) %DC: this must refer to the gold word alignments
-%for Czech-English, $2051$ sentences from the WMT10 translation workshop. We used case-insensitive IBM \bleu{} (closest reference length) as our metric. 
+%for Czech-English, $2051$ sentences from the WMT10 translation workshop. We used case-insensitive IBM \bleu{} (closest reference length) as our metric.
 %
 %On both language pairs, $\method{MIR}$ performs significantly better than vanilla EM training, and compares favorably with ABA. The \bleu{} difference between $\method{MIR}$ and $\method{ABA}$ for Chinese-English and Czech is not statistically significant according to a bootstrap resampling significance test~\cite{koehn-stat:2004}. However, the two approaches are not producing the same alignments. For example, by combining the alignments (simply concatenating two copies of the parallel text with the two alignments) the total improvements reaches +1.5 \bleu{} on the Chinese-to-English task.
 %
-%We will release a toolkit  for parameter agreement training, as a patch over GIZA++, for practitioners to use in their translation experiments. 
+%We will release a toolkit  for parameter agreement training, as a patch over GIZA++, for practitioners to use in their translation experiments.
