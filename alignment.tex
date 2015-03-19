@@ -83,30 +83,6 @@ We implemented $\method{MIR}$ on top of GIZA++ and plan to release our toolkit a
 %\end{table*}
 
 
-\begin{table*}[t]
-\centering
-%\resizebox{\columnwidth}{3.8em}{
-{
-\begin{tabular}{r|l|l|l}
- & \multicolumn{1}{c|}{Chi-Eng} & \multicolumn{2}{c}{Cze-Eng}\tabularnewline
-Method & \textbf{NIST08} & \textbf{WMT09} & \textbf{WMT10}\tabularnewline
-\hline
-EM-HMM & 23.6 & 16.7 & 17.1\tabularnewline
-\method{MIR}-HMM & 24.0 (+0.4) & 17.1 (+0.4) & 17.6 (+0.5)\tabularnewline
-\method{ABA}-HMM & 24.4 (+0.8) & 17.1 (+0.4) & 17.7 (+0.6)\tabularnewline
-\method{PostCat}-HMM & 24.6 (+1.0) & 16.9 (+0.2) & 17.4 (+0.3)\tabularnewline
-\hline
-\method{EM}-IBM4 & 24.2 (+0.6) & 16.8 (+0.1) & 17.2 (+0.1)\tabularnewline
-\method{MIR}-IBM4 & 24.6 (+1.0) & 17.2 (+0.5) & 17.5 (+0.4)\tabularnewline
-\hline
-\method{ABA+MIR}-HMM & 25.1 (+1.5) & 17.4 (+0.7) & 17.9 (+0.8)
-\label{tab:resultsB}
-\end{tabular}}
-\caption{\bleu scores. $\method{MIR}$, $\method{ABA}$  obtain statistically significant gains over standard EM training. Combining $\method{ABA}$ and $\method{MIR}$ alignments improves \bleu{} score significantly over $\method{ABA\mbox{/}MIR}$ ($p<0.05$). All \bleu differences between $\method{ABA}$ and $\method{MIR}$ are not statistically significant.}
-
-\end{table*}
-
-
 \subsection{Data}
 We used the following parallel data to train the word alignment models:
 \begin{description} [leftmargin=0em]
@@ -150,6 +126,32 @@ EM-IBM4 & 68.4 & 67.3\tabularnewline
 \end{table}
 
 \subsection{MT Experiments}
+
+
+
+\begin{table*}[t]
+\centering
+%\resizebox{\columnwidth}{3.8em}{
+{
+\begin{tabular}{r|l|l|l}
+ & \multicolumn{1}{c|}{Chi-Eng} & \multicolumn{2}{c}{Cze-Eng}\tabularnewline
+Method & \textbf{NIST08} & \textbf{WMT09} & \textbf{WMT10}\tabularnewline
+\hline
+EM-HMM & 23.6 & 16.7 & 17.1\tabularnewline
+\method{MIR}-HMM & 24.0 (+0.4) & 17.1 (+0.4) & 17.6 (+0.5)\tabularnewline
+\method{ABA}-HMM & 24.4 (+0.8) & 17.1 (+0.4) & 17.7 (+0.6)\tabularnewline
+\method{PostCat}-HMM & 24.6 (+1.0) & 16.9 (+0.2) & 17.4 (+0.3)\tabularnewline
+\hline
+\method{EM}-IBM4 & 24.2 (+0.6) & 16.8 (+0.1) & 17.2 (+0.1)\tabularnewline
+\method{MIR}-IBM4 & 24.6 (+1.0) & 17.2 (+0.5) & 17.5 (+0.4)\tabularnewline
+\hline
+\method{ABA+MIR}-HMM & 25.1 (+1.5) & 17.4 (+0.7) & 17.9 (+0.8)
+\label{tab:resultsB}
+\end{tabular}}
+\caption{\bleu scores. $\method{MIR}$, $\method{ABA}$  obtain statistically significant gains over standard EM training. Combining $\method{ABA}$ and $\method{MIR}$ alignments improves \bleu{} score significantly over $\method{ABA\mbox{/}MIR}$ ($p<0.05$). All \bleu differences between $\method{ABA}$ and $\method{MIR}$ are not statistically significant.}
+
+\end{table*}
+
 
 We run MT experiments using the Moses~\cite{koehn2007moses} phrase-based translation system.\footnote{\url{http://www.statmt.org/moses/}}
 The feature weights were trained discriminatively using MIRA \cite{chiang+alii:2008mira}, and we used a $5$-gram language model trained on the Xinhua portion of English Gigaword (LDC2007T07). All other parameters remained with their default settings. The development data used for discriminative training were: for Chinese-English, data from the NIST 2004 and NIST 2006 test sets;
