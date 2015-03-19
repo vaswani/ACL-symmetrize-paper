@@ -12,20 +12,20 @@ Each entry $T_{ij}$ represents the total probability mass mapped from source wor
 In particular, each diagonal entry $T_{ii}$ holds the probability of mapping a source symbol back onto itself, a quantity we intuitively believe should be high.
 We therefore (initially) consider maximizing the trace of~$T$:
 \begin{equation*}
-Tr[T]=\sum_i T_{ii}=\sum_{e}\sum_f t_{1}(f\mid e)\; t_{2}(e\mid f)
+\trace[T]=\sum_i T_{ii}=\sum_{e}\sum_f t_{1}(f\mid e)\; t_{2}(e\mid f).
 \end{equation*}
-We further note that~$Tr[T]=Tr[T_{1}T_{2}]=Tr[T_{2}T_{1}]$, so that the trace captures equally well how much the target symbols map onto themselves.
+We further note that~$\trace[T]=\trace[T_{1}T_{2}]=\trace[T_{2}T_{1}]$, so that the trace captures equally well how much the target symbols map onto themselves.
 
 Since $T$ is stochastic, setting it to the identity matrix $I$ maximizes its trace. In other words, the more $T_1$ and $T_2$ behave as (pseudo-)inverses of each other, the higher the trace is. This exactly fits with our intuition regarding invertibility.
 
 Unfortunately, the trace is not concave in both $T_1$ and $T_2$, a property which will become desirable in optimization.
 We therefore modify the trace regularizer by applying the entrywise square root operator on $T_1,\,T_2$ and denote the new term $R$:
 \begin{align}
-R(t_{1},t_{2})&=Tr[\sqrt{T_1}\sqrt{T_2}]\nonumber\\
-&=\sum_{e}\sum_{f}\sqrt{t_{1}(f\mid e) \; t_{2}(e\mid f)}
+R(t_{1},t_{2})&=\trace\left[\sqrt{T_1}\sqrt{T_2}\right]\nonumber\\
+&=\sum_{e}\sum_{f}\sqrt{t_{1}(f\mid e) \; t_{2}(e\mid f)}.
 \label{eqn:R}
 \end{align}
-Note that $R$ is also maximized when $\sqrt{T_1}\sqrt{T_2}=I$.
+Note that $R$ is maximized when $\sqrt{T_1}\sqrt{T_2}=I$.
 
 Concavity of $R$ in both $t_1, t_2$ (or equivalently $T_1, T_2$) follows by observing that it is a sum of concave functions -- each term in the summation is a geometric mean, which is concave in its parameters.
 
@@ -36,20 +36,21 @@ Concavity of $R$ in both $t_1, t_2$ (or equivalently $T_1, T_2$) follows by obse
 \subsection{Joint Objective Function}
 
 We apply \method{MIR} in two data scenarios:
-In the parallel data setting, we observe $N$ sequences pair $\set{\vx^n_1}_{n}=\set{(\ve^n, \vf^n)}_{n}$ or, equivalently, $\set{\vx^n_2}_{n}=\set{(\vf^n, \ve^n)}_{n}$.
+In the parallel data setting, we observe $N$ sequence pairs $\set{\vx^n_1}_{n}=\set{(\ve^n, \vf^n)}_{n}$ or, equivalently, $\set{\vx^n_2}_{n}=\set{(\vf^n, \ve^n)}_{n}$.
 
-In the non-parallel setting, two monolingual datasets are observed -- $N_1$ source sequences $\set{\vx^n_1}_{n}=\set{\vf^n}_{n}$ and $N_2$ target sequences $\set{\vx^n_2}_{n}=\set{\ve^n}_{n}$.
+In the non-parallel setting, two monolingual datasets are observed: $N_1$ source sequences $\set{\vx^n_1}_{n}=\set{\ve^n}_{n}$ and $N_2$ target sequences $\set{\vx^n_2}_{n}=\set{\vf^n}_{n}$.
 
-The probability of the $n$th sample under the $k$th ($k\in\set{1,2}$) model $\Tk$ is denoted $\pk(\vx_k^n; \Tk)$.
-Specifically, in the parallel data setting, the probability of $\vx_k^n$ under its model is\footnote{This slight notation abuse helps represent both data scenarios succinctly.}:
+
+The probability of the $n$th sample under the $k$th model $\Tk$ (for $k\in\set{1,2}$) is denoted $\pk(\vx_k^n; \Tk)$.
+Specifically, in the parallel data setting, the probability of $\vx_k^n$ under its model is:\footnote{This slight notational abuse helps represent both data scenarios succinctly.}\marginpar{DC: I don't even see where the notational abuse is.}
 \begin{align*}
 \pA(\vx_1^n; \TA) = p(\vf^n \mid \ve^n; \TA)\\
 \pB(\vx_2^n; \TB) = p(\ve^n \mid \vf^n; \TB)
 \end{align*}
-whereas in the non-parallel data setting, the probability is defined:
+whereas in the non-parallel data setting, the probability is defined as:
 \begin{align*}
 \pA(\vx_1^n; \TA) = p(\vf^n; \TA)\\
-\pB(\vx_2^n; \TB) = p(\ve^n; \TB)
+\pB(\vx_2^n; \TB) = p(\ve^n; \TB).
 \end{align*}
 %\marginpar{DC: I feel that the x notation is over-complex. Would it help to not try to unify the parallel and non-parallel cases?}
 
@@ -62,9 +63,9 @@ Using the above definitions and the \method{MIR} regularizer $R$ (Eq. \ref{eqn:R
 +\sum_{k\in\set{1,2}} \sum_{n=1}^{N_k} \log p_k(\vx_k^n; \Tk)
 \label{eqn:joint}
 \end{equation}
-where $\lambda\ge0$ is a tunable hyperparameter (note that in the parallel case $N=N_1=N_2$).
+where $\lambda\ge0$ is a tunable hyperparameter (note that, in the parallel case, $N=N_1=N_2$).
 
-We defer the discussion on the relationship and merits of our approach with respect to \method{ABA} \cite{liang+:2006:align} to Section \ref{sec:related}.
+We defer discussion on the relationship and merits of our approach with respect to \method{ABA} \cite{liang+:2006:align} to Section \ref{sec:related}.
 
 %------ VERSION 2 (new)
 %
@@ -218,7 +219,7 @@ Using our concave regularizer, \method{MIR} optimization (\eqn{eqn:joint}) neatl
 %\marginpar{insert reference to MAP-EM. \bluetext{TL: mentioned in Dempster}}
  and inherits the convergence properties of the underlying algorithms.
 %
-MAP-EM follows the same structure as standard EM - The E-step remains identical to the standard E-step; the M-step maximizes the complete-data log-likelihood plus the regularization term.
+MAP-EM follows the same structure as standard EM: The E-step remains identical to the standard E-step, while the M-step maximizes the complete-data log-likelihood plus the regularization term.
 %
 In the case of \method{MIR}, the E-step can be carried out independently for each model.
 %In this sense, $\method{MIR}$ is orthogonal to the complexity of the models' inference space.
@@ -234,10 +235,10 @@ The only extra work is in the M-step, which optimizes a single (concave) objecti
 Specifically, let $\vz_n$ denote the missing data, where, in the parallel data setting, only the alignment is missing ($\vz\kn = \va\kn$) and in the non-parallel data setting, both alignment and source symbol are missing
 ($\vz_1^n = (\va_1^n, \ve^n), \vz_2^n = (\va_2^n, \vf^n)$).
 
-In the E-step, each model $\Tk$ ($k\in\set{1,2}$) is held fixed and its posterior distribution over the missing data $\vz_k^n$
+In the E-step, each model $\Tk$ (for $k\in\set{1,2}$) is held fixed and its posterior distribution over the missing data $\vz_k^n$
 %\marginpar{DC: z appears out of the blue \bluetext{TL: better now?}}
-is computed per each observation, $\vx_k^n$:
-$$q_k(\vz\kn, \vx\kn) \mathrel{:=} \pk(\vz\kn \mid \vx\kn ; \Tk)$$
+is computed per each observation,~$\vx_k^n$:
+$$q_k(\vz\kn, \vx\kn) \mathrel{:=} \pk(\vz\kn \mid \vx\kn ; \Tk).$$
 %\textbf{parallel data}: q_k(\va \mid \ve, \vf) :=& \pA(\va \mid \ve, \vf; \TA) \\
 %\textbf{decipherment}: q_1(\va, \ve \mid \vf) :=& \pA(\va, \ve \mid \vf; \TA)
 %\\----\\
@@ -265,9 +266,8 @@ Since the \method{MIR} regularizer couples only the t-table parameters, the upda
 Now, let $\Ch_1^{e,f} $ and $\Ch_2^{e,f}$ denote the expected counts for the t-table parameters. That is, $\Ch_k^{e,f}$ denotes the expected number of times a source-symbol type $e$ is seen aligned to a target-symbol type $f$ according to the posterior $q_k$.
 In the M-step, we maximize the following objective with respect to $t_1$ and  $t_2$:%I\marginpar{DC: This seems exactly the same as the previous equation -- why the new notation?}
 \begin{align}
-\arg\max_{\tA, \tB}\sum_{e,f}  \Ch_1^{e,f}\log \tA(f \mid e) +\nonumber \\
-\sum_{e,f} \Ch_2^{e,f} \log \tB(e \mid f) +
-\lambda R(\tA, \tB)
+\argmax_{\tA, \tB} &\sum_{e,f}  \Ch_1^{e,f}\log \tA(f \mid e) + {}\nonumber \\
+&\sum_{e,f} \Ch_2^{e,f} \log \tB(e \mid f) + \lambda R(\tA, \tB)
 \label{eqn:Mobj}
 \end{align}
 which can be efficiently solved using convex programming techniques due to the   concavity of $R$ and the complete-data log-likelihoods in both $t_1$ and $t_2$.

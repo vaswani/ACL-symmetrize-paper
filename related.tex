@@ -1,8 +1,8 @@
 %We describe two baseline approaches, contrast them with MIR and discuss other related work.
 
 \subsection{Parallel Data Baseline: $\method{ABA}$}
-Our approach is most similar to ``Alignment by Agreement'' \cite{liang+:2006:align} who first proposed a single joint objective for two word alignment models.
-The difference between our objective (\eqn{eqn:joint}) and theirs lies in their proposed regularizer which rewards the per-sample agreement of the two models' alignment posteriors:
+Our approach is most similar to Alignment by Agreement \cite{liang+:2006:align} which uses a single joint objective for two word alignment models.
+The difference between our objective (\eqn{eqn:joint}) and theirs lies in their proposed regularizer, which rewards the per-sample agreement of the two models' alignment posteriors:
 $$\sum_n \log \sum_\vz  p_1(\vz\mid \vx^n)\cdot p_2(\vz\mid \vx^n)$$
 where $\vx^n = (\ve^n, \vf^n)$ and where $\vz$ ranges over the possible alignments between $\ve^n$ and $\vf^n$ (practically, only over 1-to-1 alignments, since each model is only capable of producing one-to-many alignments).
 
@@ -14,29 +14,28 @@ $\method{MIR}$ regularization has both theoretical and practical advantages comp
 \begin{enumerate}[leftmargin=1.2em]
 \item By regularizing for posterior agreement, $\method{ABA}$ is restricted to a parallel data setting, whereas $\method{MIR}$ can be applied even without parallel data.
 \item The posteriors of more advanced word alignment models (such as fertility-based models) do not correspond to alignments, and furthermore, are already estimated with approximation techniques.
-Thus, even if we somehow adapt $\method{ABA}$'s product-of-marginals heuristic to such models, we run the risk of estimating highly inaccurate posteriors (specifically, 0 valued posteriors).
-In contrast, $\method{MIR}$ extends to all IBM-style word alignment models and does not add heuristics -- The M-step computation can be done exactly and efficiently with convex optimization.
+Thus, even if we somehow adapt $\method{ABA}$'s product-of-marginals heuristic to such models, we run the risk of estimating highly inaccurate posteriors (specifically, zero-valued posteriors).
+In contrast, $\method{MIR}$ extends to all IBM-style word alignment models and does not add heuristics. The M-step computation can be done exactly and efficiently with convex optimization.
 
 \item $\method{MIR}$ provides the same theoretical convergence guarantees as the underlying algorithms.
 \end{enumerate}
-
+%
 We compare \method{MIR} against \method{ABA} in Section \ref{sec:alignment}.
 
 \subsection{Non-Parallel Data Baseline: $\method{bi\mbox{-}EM}$ \label{sec:biEM}}
 \newcite{Mylonakis2007} cast the two directional models as a single joint model by reparameterization and normalization.
 That is, both directional models, consisting of a t-table only, are reparameterized as:
-\begin{equation}
-\tA(f\mid e) = \frac{\beta_{e,f}}{\sum_{f} \beta_{e,f}}
-\,\,\text{ and }\,\,
-\tB(e\mid f) = \frac{\beta_{e,f}}{\sum_{e} \beta_{e,f}}
+\begin{align}
+\tA(f\mid e) &= \frac{\beta_{e,f}}{\sum_{f} \beta_{e,f}}
+& \tB(e\mid f) &= \frac{\beta_{e,f}}{\sum_{e} \beta_{e,f}}
 \label{eqn:reparam}
-\end{equation}
+\end{align}
 They then maximize the likelihood of observed \emph{monolingual} sequences from both languages:
 \begin{equation}
 \max_\beta L_1(\set{\vf^n}; \beta) + L_2(\set{\ve^n}; \beta)
 \label{eqn:biEM}
 \end{equation}
-where for example:
+where, for example:
 \begin{align*}
 L_1(\set{\vf^n}; \beta)
 &=\log \prod_n p(\vf^n)\\
@@ -47,15 +46,18 @@ Here, $p(\ve)$ denotes the probability of $\ve$ according to a fixed source lang
 
 Once training of $\beta$ is complete, we can decode an observed target sequence $\vf$, by casting $\beta$ back in terms of $\tA$ and apply the Viterbi decoding algorithm.
 
-To solve for $\beta$ in \eqn{eqn:biEM}, \newcite{Mylonakis2007} propose \method{bi\mbox{-}EM}, an iterative EM style algorithm in which both E- and M- steps have a closed-form solution. They do not provide the algorithm derivation.
+To solve for $\beta$ in \eqn{eqn:biEM}, \newcite{Mylonakis2007} propose \method{bi\mbox{-}EM}, an iterative EM-style algorithm.
+%in which both E- and M- steps have a closed-form solution. They do not provide the algorithm derivation.
 %we observe that the solution they proposed for the M-step does not follow from their M-step objective.
-
-Inspecting their M-step objective we determined that it is not concave, hinting that a closed-form solution for the maximizer is unlikely.
-In fact, their proposed solution for the M-step can be obtained from an approximation of their M-step objective in which the normalization factors were omitted.
+The objective function in their M-step is
+%Inspecting their M-step objective, we determined that it is
+not concave, hinting that a closed-form solution for the maximizer is unlikely.
+The probability estimate that they use in the M-step appears to maximize
+an approximation of their M-step objective which omits normalization factors.\marginpar{DC: Will motivated readers be able to understand what ``omit normalization factors'' means?}
 
 %Inspecting their M-step objective and its proposed solution, we determined that (1) the objective is not concave, hinting that a closed-form solution for the maximizer is unlikely, and (2) the proposed solution is the maximizer of a different objective function, obtained by omitting the normalization denominators in \eqn{eqn:reparam} from their M-step objective.
 
-Despite this issue, \method{bi\mbox{-}EM} attains improved results compared to standard EM on both POS-tagging and monotone noun sequence translation without parallel data. We compare \method{MIR} against \method{bi\mbox{-}EM} in Sec. \ref{sec:transliteration}.
+Nevertheless, \method{bi\mbox{-}EM} attains improved results compared to standard EM on both POS-tagging and monotone noun sequence translation without parallel data. We compare \method{MIR} against \method{bi\mbox{-}EM} in Sec. \ref{sec:transliteration}.
 
 
 %\subsection{Other Related Work}
