@@ -66,20 +66,44 @@ We implemented $\method{MIR}$ on top of GIZA++ and plan to release our toolkit a
 %       & $\method{MIR}$-M4  & Y &  & X&X\\
 %\end{tabular}
 %% -- new format
-\renewcommand{\arraystretch}{1.2}
-\begin{table*}
-\begin{tabular}{r|l|l|l|l|l}
- & \multicolumn{2}{c|}{Chinese-English0 } & \multicolumn{3}{c}{Czech-English}\tabularnewline
-Method &\,\,\,\textbf{Align F1} &\,\,\,\textbf{NIST08} &\,\,\,\textbf{Align F1} &\,\,\,\,\textbf{WMT09} &\,\,\,\textbf{WMT10}\tabularnewline
+%\renewcommand{\arraystretch}{1.2}
+%\begin{table*}
+%\begin{tabular}{r|l|l|l|l|l}
+% & \multicolumn{2}{c|}{Chinese-English0 } & \multicolumn{3}{c}{Czech-English}\tabularnewline
+%Method &\,\,\,\textbf{Align F1} &\,\,\,\textbf{NIST08} &\,\,\,\textbf{Align F1} &\,\,\,\,\textbf{WMT09} &\,\,\,\textbf{WMT10}\tabularnewline
+%\hline
+%EM-HMM & 64.6 & 23.6 & 65.0 & 16.7 & 17.1\tabularnewline
+%MIR-HMM & 70.9 (+6.3) & 24.0 (+0.4) & 69.6 (+4.6) & 17.1 (+0.4) & 17.6 (+0.5)\tabularnewline
+%ABA-HMM & 70.8 (+6.2) & 24.4 (+0.8) & 70.4 (+5.4) & 17.1 (+0.4) & 17.7 (+0.6)\tabularnewline
+%MIR+ABA-HMM & - & 25.1 (+1.5) & - & 17.4 (+0.7) & 17.9 (+0.8)\tabularnewline
+%\hline
+%EM-M4 & 68.4 (+3.8) & 24.2 (+0.6) & 67.3 (+2.3) & 16.8 (+0.1) & 17.2 (+0.1)\tabularnewline
+%MIR-M4 & 72.9 (+8.3) & 24.6 (+1.0) & 70.7 (+5.7) & 17.2 (+0.5) & 17.5 (+0.4)\tabularnewline
+%\end{tabular}
+%\end{table*}
+
+
+\begin{table*}[t]
+\centering
+%\resizebox{\columnwidth}{3.8em}{
+{
+\begin{tabular}{r|l|l|l}
+ & \multicolumn{1}{c|}{Chi-Eng} & \multicolumn{2}{c}{Cze-Eng}\tabularnewline
+Method & \textbf{NIST08} & \textbf{WMT09} & \textbf{WMT10}\tabularnewline
 \hline
-EM-HMM & 64.6 & 23.6 & 65.0 & 16.7 & 17.1\tabularnewline
-MIR-HMM & 70.9 (+6.3) & 24.0 (+0.4) & 69.6 (+4.6) & 17.1 (+0.4) & 17.6 (+0.5)\tabularnewline
-ABA-HMM & 70.8 (+6.2) & 24.4 (+0.8) & 70.4 (+5.4) & 17.1 (+0.4) & 17.7 (+0.6)\tabularnewline
-MIR+ABA-HMM & - & 25.1 (+1.5) & - & 17.4 (+0.7) & 17.9 (+0.8)\tabularnewline
+EM-HMM & 23.6 & 16.7 & 17.1\tabularnewline
+\method{MIR}-HMM & 24.0 (+0.4) & 17.1 (+0.4) & 17.6 (+0.5)\tabularnewline
+\method{ABA}-HMM & 24.4 (+0.8) & 17.1 (+0.4) & 17.7 (+0.6)\tabularnewline
+\method{PostCat}-HMM & 24.6 (+1.0) & 16.9 (+0.2) & 17.4 (+0.3)\tabularnewline
 \hline
-EM-M4 & 68.4 & X & 67.3 & 16.8 & 17.2\tabularnewline
-MIR-M4 & 72.9 (+x.x) & Y & 71.1 (+6.1) & 17.3 (+0.6) & 17.4 (+0.3)\tabularnewline
-\end{tabular}
+\method{EM}-IBM4 & 24.2 (+0.6) & 16.8 (+0.1) & 17.2 (+0.1)\tabularnewline
+\method{MIR}-IBM4 & 24.6 (+1.0) & 17.2 (+0.5) & 17.5 (+0.4)\tabularnewline
+\hline
+\method{ABA+MIR}-HMM & 25.1 (+1.5) & 17.4 (+0.7) & 17.9 (+0.8)
+\label{tab:resultsB}
+\end{tabular}}
+\caption{\bleu scores. $\method{MIR}$, $\method{ABA}$  obtain statistically significant gains over standard EM training. Combining $\method{ABA}$ and $\method{MIR}$ alignments improves \bleu{} score significantly over $\method{ABA\mbox{/}MIR}$ ($p<0.05$). All \bleu differences between $\method{ABA}$ and $\method{MIR}$ are not statistically significant.}
+
 \end{table*}
 
 
@@ -112,8 +136,9 @@ By applying \method{MIR} to fertility based IBM models, we obtain even further i
 Method & \textbf{Align F1} & \textbf{Align F1}\tabularnewline
 \hline
 EM-HMM & 64.6 & 65.0\tabularnewline
-\method{MIR}-HMM & 70.9 & 69.6\tabularnewline
+\method{PostCat}-HMM & 69.8 & 69.6\tabularnewline
 \method{ABA}-HMM & 70.8 & 70.4\tabularnewline
+\method{MIR}-HMM & 70.9 & 69.6\tabularnewline
 \hline
 EM-IBM4 & 68.4 & 67.3\tabularnewline
 \method{MIR}-IBM4 & 72.9 & 70.7\tabularnewline
@@ -126,7 +151,7 @@ EM-IBM4 & 68.4 & 67.3\tabularnewline
 \subsection{MT Experiments}
 
 We run MT experiments using the Moses~\cite{koehn2007moses} phrase-based translation system\footnote{http://www.statmt.org/moses/}.
-The feature weights were trained discriminatively using MIRA \cite{chiang+alii:2008mira}, and we used a $5$-gram language model trained on the Xinhua portion of English Gigaword (LDC2007T07). All other parameters remained with their default settings. 
+The feature weights were trained discriminatively using MIRA \cite{chiang+alii:2008mira}, and we used a $5$-gram language model trained on the Xinhua portion of English Gigaword (LDC2007T07). All other parameters remained with their default settings.
 
 The development data used for discriminative training were: for Chinese-English, data from the NIST 2004 and NIST 2006 test sets;
 % from the GALE program (LDC2006E92) %DC: this must refer to the gold word alignments
@@ -134,23 +159,6 @@ for Czech-English, $2051$ sentences from the WMT10 translation workshop. We used
 
 On both language pairs, $\method{MIR}$ performs significantly better than standard EM training, and attains comparable scores to those of \method{ABA}. The \bleu difference between $\method{MIR}$ and $\method{ABA}$ for Chinese-English and Czech-English is not statistically significant according to a bootstrap resampling significance test~\cite{koehn-stat:2004}. However, the two approaches are not producing the same alignments. For example, by combining the alignments (simply concatenating aligned bitexts) the total improvements reaches +1.5 \bleu on the Chinese-to-English task.
 Table~\ref{tab:resultsB} summarizes our MT \bleu score results.
-
-\begin{table}[h]
-\centering
-\resizebox{\columnwidth}{3.8em}{
-\begin{tabular}{r|l|l|l}
- & \multicolumn{1}{c|}{Chi-Eng} & \multicolumn{2}{c}{Cze-Eng}\tabularnewline
-Method & \textbf{NIST08} & \textbf{WMT09} & \textbf{WMT10}\tabularnewline
-\hline
-EM-HMM & 23.6 & 16.7 & 17.1\tabularnewline
-\method{MIR}-HMM & 24.0 (+0.4) & 17.1 (+0.4) & 17.6 (+0.5)\tabularnewline
-\method{ABA}-HMM & 24.4 (+0.8) & 17.1 (+0.4) & 17.7 (+0.6)\tabularnewline
-combined & 25.1 (+1.5) & 17.4 (+0.7) & 17.9 (+0.8)\tabularnewline
-\label{tab:resultsB}
-\end{tabular}}
-\caption{\bleu scores using only the HMM models. Both $\method{ABA}$ and $\method{MIR}$ obtain statistically significant gains over standard EM training. Combining $\method{ABA}$ and $\method{MIR}$ alignments improves \bleu{} score significantly over $\method{ABA\mbox{/}MIR}$ ($p<0.05$). All \bleu differences between $\method{ABA}$ and $\method{MIR}$ are not statistically significant.}
-
-\end{table}
 
 
 %
