@@ -19,14 +19,14 @@ That is, the sequence $\vf$ can arise from any sequence $\ve$ by first selecting
 
 Unsupervised training of such models entails maximizing the data log-likelihood $L(\Theta)$:
 \begin{align*}
-\arg\max_{\Theta}\,\,L(\Theta)
+\argmax_{\Theta}\,\,L(\Theta)
 %=&\max_{\Theta}\,\,\log\prod_{n}p (\vx_n;\Theta)\\
-=&\arg\max_{\Theta}\,\,\sum_{x\in X}\log p (\vx;\Theta)
+=&\argmax_{\Theta}\,\,\sum_{x\in X}\log p (\vx;\Theta)
 \end{align*}
 %_{n=1}^{N}
 where $X=\set{(\ve^n,\vf^n)}_n$ in the parallel data setting and $X=\set{(\vf^n)}_n$ in the non-parallel data setting.
 
-Although the structure of $\Theta$ is unspecified, in practice, most models that follow these generative stories contain a source-to-target translation table (``t-table'') denoted $t$, with each parameter $t(f\mid e)$ representing the conditional probability of mapping a given source symbol $e$ to a target symbol~$f$. 
+Although the structure of $\Theta$ is unspecified, in practice, most models that follow these generative stories contain a word translation table (t-table) denoted $t$, with each parameter $t(f\mid e)$ representing the conditional probability of mapping a given source symbol $e$ to a target symbol~$f$. 
 %Henceforth, we assume each model $\Theta$ contain such a t-table parameter
 
 

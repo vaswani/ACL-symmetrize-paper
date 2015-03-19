@@ -15,26 +15,31 @@
 \usepackage{xspace}
 \usepackage{multirow}
 \usepackage{enumitem}
-\usepackage{draftwatermark}
-\SetWatermarkText{DRAFT}
-\SetWatermarkScale{1}
-\SetWatermarkLightness{0.92}
+%\usepackage{draftwatermark}
+%\SetWatermarkText{DRAFT}
+%\SetWatermarkScale{1}
+%\SetWatermarkLightness{0.92}
 
 %\setlength\titlebox{5cm}
 
 \title{Model Invertibility Regularization:\\Sequence Alignment With or Without Parallel Data}
-\author{Tomer Levinboim \\
-  University of Notre Dame\\
+\author{Tomer Levinboim$^\ast$ \\
+  %University of Notre Dame\\
   %Department of Computer Science\\
-  {\tt tomer.levinboim.1@nd.edu} \\\And
-  Ashish Vaswani \\
+  {\tt levinboim.1@nd.edu} \And
+  Ashish Vaswani$^\dag$ \\
   %University of Southern California \\
-  Information Sciences Institute \\
-  {\tt avaswani@isi.edu} \\\And
-  David Chiang \\
-  University of Notre Dame\\
+  %Information Sciences Institute \\
+  {\tt avaswani@isi.edu} \And
+  David Chiang$^\ast$ \\
+  %University of Notre Dame\\
   %Department of Computer Science\\
-  {\tt dchiang@nd.edu} \\
+  {\tt dchiang@nd.edu} 
+\AND
+\normalfont $^\ast$Dept. of Computer Science and Engineering \\
+University of Notre Dame \And
+\normalfont $^\dag$Information Sciences Institute \\
+University of Southern California
 }
 \date{}
 
@@ -52,7 +57,7 @@ Our proposed algorithm is mathematically sound and inherits convergence guarante
 We evaluate \method{MIR} on two tasks:
 (1)~On word alignment, applying \method{MIR} on fertility based models we attain higher F-scores than \method{ABA}.
 %Interestingly, combining the alignments produced by both methods significantly outperform either method alone on \bleu.
-(2)~On Japanese-to-English back-transliteration without parallel data, applied to the decipherment model of Ravi and Knight, \method{MIR} learns sparser models that close the gap in whole-name error rate by 33\% relative to a model trained on parallel data, and further, beats a previous approach by \newcite{Mylonakis2007}.
+(2)~On Japanese-to-English back-transliteration without parallel data, applied to the decipherment model of Ravi and Knight, \method{MIR} learns sparser models that close the gap in whole-name error rate by 33\% relative to a model trained on parallel data, and further, beats a previous approach by Mylonakis et al.
 
 %In "Alignment by Agreement" (ABA) Liang. et al. propose to train two directional word alignment models by maximizing their joint data-likelihood and a term that measures their inferences agreements.
 %Inspired by their method, we develop a joint training approach for general sequence alignment that relies on the simple intuition that a back-translation of a translation should likely be itself.
@@ -107,8 +112,8 @@ We evaluate \method{MIR} on two tasks:
 We presented Model Invertibility Regularization (\method{MIR}), an unsupervised method for jointly training two bidirectional sequence alignment models with or without parallel data.
 Our formulation is based on the simple observation that the alignment tasks at hand are inherently invertible and encourages the translation tables in both models to behave like pseudo-inverses of each other.
 
-We derived an efficient MAP-EM algorithm and demonstrated our method's effectiveness on two different alignment tasks. On word alignment, \method{MIR} yielded \bleu improvements comparable to the Alignment by Agreement method \cite{liang+:2006:align}, and complementary in that, combining the produced alignments yielded further improvement (up to 1.5 \bleu).
-On Japanese-English back-transliteration with no parallel data, we obtain significant error reduction beating two baseline methods \cite{RK09,Mylonakis2007}.
+We derived an efficient MAP-EM algorithm and demonstrated our method's effectiveness on two different alignment tasks. On word alignment, \method{MIR} yielded \bleu improvements comparable to the Alignment by Agreement method \cite{liang+:2006:align}, and complementary, so that combining the produced alignments yielded further improvement (up to 1.5 \bleu).
+On Japanese-English back-transliteration with no parallel data, we obtained a significant error reduction over two baseline methods \cite{RK09,Mylonakis2007}.
 
 As future work, we plan to apply \method{MIR} on large-scale MT decipherment \cite{Ravi11,Dou13}, where, so far, only a single directional model has been used.
 Another promising direction is to encourage invertibility not only between words, but between their senses and synonyms.
@@ -125,7 +130,11 @@ Another promising direction is to encourage invertibility not only between words
 %We have presented Parameter Agreement Training (PAT) - an approach for jointly training two conditional models that encourages agreement on parameter values.
 %We derived an optimization procedure based on the EM framework, and argued that it is efficiently solvable due to the concavity of our agreement regularizer.
 %In contrast to previous work on agreement training, we have demonstrated that our approach can be successfully applied even without parallel data.
-\newpage
+
+\section*{Acknowledgements}
+
+We would like to thank Markos Mylonakis and Khalil Sima'an for their help in understanding the derivation of their \method{bi\mbox{-}EM} method. This work was partially supported by DARPA grants DOI/NBC D12AP00225 and HR0011-12-C-0014 and a Google Faculty Research Award to Chiang.
+
 \bibliographystyle{naaclhlt2015}
 \bibliography{thesis}
 
