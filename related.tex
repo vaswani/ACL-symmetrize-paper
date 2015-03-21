@@ -22,8 +22,8 @@ In contrast, $\method{MIR}$ extends to all IBM-style word alignment models and d
 %
 
 \newcite{ganchev-gracca-taskar:2008} propose \method{PostCAT} which uses Posterior Regularization \cite{ganchev2010posterior} to enforce posterior agreement between the two models.
-Specifically, they add a KL-projection step after the E-step of the EM algorithm which returns the posterior $q(z\mid x)$ closest to ordinary E-step posterior (in the KL sense) but that also upholds certain constraints. 
-The particular constraints they suggest encode alignment agreement \emph{in expectation} between the two model' posteriors. See details in their paper \cite{ganchev-gracca-taskar:2008}. 
+Specifically, they add a KL-projection step after the E-step of the EM algorithm which returns the posterior $q(z\mid x)$ closest in KL-Divergence to ordinary E-step posterior which also upholds certain constraints. 
+The particular constraints they suggest encode alignment agreement \emph{in expectation} between the two model' posteriors. For details, the reader can refer to \cite{ganchev-gracca-taskar:2008}. 
 
 Similarly to \method{ABA}, with their suggested alignment agreement constraints $\method{PostCAT}$ cannot be applied without parallel data and it is unclear how to extend it to fertility based models (however, it does seems possible to apply other constraints using the general posterior regularization framework).
 

@@ -14,13 +14,14 @@ To remedy this disparity (and other shortcomings), it is common to turn to align
 \newcite{liang+:2006:align} suggest a more fundamental approach they call Alignment by Agreement ($\method{ABA}$), which jointly trains two word alignment models by maximizing their data-likelihoods along with a regularizer that rewards agreement between their alignment posteriors (computed over each parallel sentence pair).
 Although their EM-like optimization procedure is heuristic, 
 %\marginpar{\bluetext{"Liang et al.: we use a heuristic approximation which nonetheless works well in practice."}} 
-it proves effective at jointly training bidirectional models. 
+it proves effective at jointly training bidirectional models. \newcite{ganchev-gracca-taskar:2008} propose another approach for agreement between the directed translation models by adding constraints on the alignment posteriors. Unlike \method{ABA}, their optimization is exact, but it can be computationally expensive, requiring multiple forward-backward inferences in each E-step.
+%\comment{that encourage the directed translation models to agree on their alignments.}
 
 In this paper we develop a different approach for jointly training general bidirectional sequence alignment models called Model Invertibility Regularization, or \method{MIR} (Section \ref{sec:method}).
-Our approach has several benefits over \method{ABA}:
+Our approach has two key benefits over \method{ABA} and \method{PostCAT}:
 First, \method{MIR} can be applied to sequence alignment without parallel data.
 Second, a single implementation seamlessly extends to all IBM models, including the fertility based models.
-Finally, as \method{MIR} follows the EM framework, it inherits its desirable theoretical convergence guarantees.
+Furthermore, since \method{MIR} follows the MAP-EM framework, it inherits its desirable convergence guarantees.
 
 The key idea facilitating the easy extension to complex models and to non-parallel data settings is in our regularizer, which operates on the model parameters as opposed to their inferences. 
 Specifically, \method{MIR} was designed to reward model pairs whose translation tables respect the invertibility intuition.
