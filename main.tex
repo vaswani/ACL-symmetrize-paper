@@ -110,14 +110,16 @@ We evaluate \method{MIR} on two tasks:
 \input{transliteration.tex}
 
 \section{Conclusion}
-We presented Model Invertibility Regularization (\method{MIR}), an unsupervised method for jointly training two bidirectional sequence alignment models with or without parallel data.
+We presented Model Invertibility Regularization (\method{MIR}), an unsupervised method for jointly training bidirectional sequence alignment models with or without parallel data.
 Our formulation is based on the simple observation that the alignment tasks at hand are inherently invertible and encourages the translation tables in both models to behave like pseudo-inverses of each other.
 
-We derived an efficient MAP-EM algorithm and demonstrated our method's effectiveness on two different alignment tasks. On word alignment, \method{MIR} yielded \bleu improvements comparable to the Alignment by Agreement method \cite{liang+:2006:align}, and complementary, so that combining the produced alignments yielded further improvement (up to 1.5 \bleu).
+We derived an efficient MAP-EM algorithm and demonstrated our method's effectiveness on two different alignment tasks. On word alignment, applying \method{MIR} on IBM4 model yielded the highest F scores and the resulting \bleu scores were comparable to that of Alignment by Agreement \cite{liang+:2006:align} and \method{PostCAT} \cite{ganchev-gracca-taskar:2008}.
+%and complementary, so that combining the produced alignments yielded further improvement (up to 1.5 \bleu).
+Our best results (up to +1.5 \bleu improvement) were obtained by combining alignments from both \method{MIR} and \method{ABA}, indicating that the two methods learn complementary alignments.
 On Japanese-English back-transliteration with no parallel data, we obtained a significant error reduction over two baseline methods \cite{RK09,Mylonakis2007}.
 
 As future work, we plan to apply \method{MIR} on large-scale MT decipherment \cite{Ravi11,Dou13}, where, so far, only a single directional model has been used.
-Another promising direction is to encourage invertibility not only between words, but between their senses and synonyms.
+Another promising direction for \method{MIR} is to encourage invertibility not only between words, but between their senses and synonyms.
 %\section*{Appendix}
 %To prove $h(x,y) = \sqrt{xy}$ is concave over $x,y\in [0,1]$, we show $h(\alpha (x_0, y_0) + (1-\alpha)(x_1, y_1)) \ge \alpha h(x_0,y_0) + (1-\alpha) h(x_1, y_1)$:
 %\begin{align*}
